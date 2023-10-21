@@ -22,16 +22,23 @@ endfunction
 
 function void build_phase(uvm_phase phase);
 	super.build_phase(phase);
+	mon_port = new("mon_port" , this);
 	`uvm_info("MY_MONITOR","BUILD_PHASE",UVM_MEDIUM);
 endfunction 
 
 
 task run_phase(uvm_phase phase);
 	super.run_phase(phase);
-	//------
-	//-----
-	//-----
-	//mon_port.write(rsp_seq_item);
+	forever begin
+	rsp_seq_item = my_sequence_item:: type_id :: create("rsp_seq_item");
+     //@(posedge  bfm_vif.clk);
+     // rsp_seq_item.A   = bfm_vif.A   ;
+     // rsp_seq_item.B   = bfm_vif.B   ;
+     // rsp_seq_item.out = bfm_vif.out ;
+	 mon_port.write(rsp_seq_item);
+     
+	end
+ 
 endtask
 
 endclass	
