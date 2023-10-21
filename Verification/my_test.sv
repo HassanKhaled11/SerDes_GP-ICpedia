@@ -15,7 +15,7 @@ class my_test extends uvm_test;
 my_env          env         ;
 my_sequence     main_seq    ;
 reset_sequence  reset_seq   ;
-my_config_db    rx_cfg      ;
+my_config_db    cfg      ;
 
 function new(string name = "my_test" , uvm_component parent = null);
 	super.new(name,parent);
@@ -28,11 +28,11 @@ function void build_phase(uvm_phase phase);
   env       = my_env         :: type_id :: create("env"      ,this)   ;
   main_seq  = my_sequence    :: type_id :: create("main_seq" ,this)   ;
   reset_seq = reset_sequence :: type_id :: create("reset_seq",this)   ;
-  rx_cfg    = my_config_db   :: type_id :: create("rx_cfg"   ,this)   ;
-if(!uvm_config_db#(virtual BFM_if)::get(this, "", "bfm_if", rx_cfg.dut_vif))
+  cfg       = my_config_db   :: type_id :: create("cfg"      ,this)   ;
+if(!uvm_config_db#(virtual BFM_if)::get(this, "", "bfm_if", cfg.dut_vif))
 	`uvm_fatal("MY_TEST" , "FATAL GETTING BFM INTERFACE");
  
- uvm_config_db#(my_config_db)::set(this, "*", "CFG", rx_cfg);
+ uvm_config_db#(my_config_db)::set(this, "*", "CFG", cfg);
 
 endfunction 
 

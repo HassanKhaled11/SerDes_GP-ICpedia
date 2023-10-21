@@ -9,6 +9,8 @@ class my_driver extends uvm_driver #(my_sequence_item);
 
 `uvm_component_utils(my_driver);
 
+virtual BFM_if bfm_vif ;
+
 function new(string name = "my_driver" , uvm_component parent = null);
 	super.new(name,parent);
 endfunction

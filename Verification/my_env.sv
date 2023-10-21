@@ -34,5 +34,11 @@ function void build_phase(uvm_phase phase);
 endfunction 
 
 
+function void connect_phase(uvm_phase phase);
+	super.connect_phase(phase);
+	agent.agt_port.connect(scoreboard.sb_export);
+	agent.agt_port.connect(coverage.cov_export );
+endfunction
+
 endclass	
 endpackage	
