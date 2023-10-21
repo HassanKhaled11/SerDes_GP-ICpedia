@@ -17,12 +17,8 @@ initial begin
 	$display(first);
 	$display(second);
 	
-	forever #((second - first) / 100) CLK =  ~ CLK;//#((first - second) / 100)
+	forever #((second - first) / 100) CLK =  ~ CLK;
 end
 
-//always #(2) CLK =  ~ CLK;//(first -second) /50
-// wire delay_ref_clk;
-// assign delay_ref_clk = (second -first) /100;
-// buf(delay_ref_clk, Ref_Clk); // this delay used to create new clock pulses
-// xor(CLK, delay_ref_clk, Ref_Clk);
+
 endmodule
