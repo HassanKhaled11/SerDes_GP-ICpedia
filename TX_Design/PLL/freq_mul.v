@@ -1,7 +1,7 @@
 `timescale 1ps/1ps
 module freq_mul(
 			input Ref_Clk,
-			//input RST,
+			input RST,
 			output reg CLK
 			);
 
@@ -17,7 +17,12 @@ initial begin
 	$display(first);
 	$display(second);
 	
-	forever #((second - first) / 100) CLK =  ~ CLK;
+	forever begin
+	 if(!RST)
+	 	CLK = 0;
+	 else  
+	 	#((second - first) / 100) CLK =  ~ CLK;//#((first - second) / 100)
+	end 
 end
 
 
