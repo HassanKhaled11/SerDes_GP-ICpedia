@@ -1,12 +1,13 @@
 module line_coding_8_10 //#(parameter DATAWIDTH = 8)
 						(							// inut wire pclk,
-							// input wire rst,
+						        input wire enable,
 							input wire[7:0] data,
 							output reg[9:0] encoded_data_pos,
 							output reg[9:0] encoded_data_neg
 						);
 
-always @(*) begin		
+always @(*) begin	
+	if(enable) begin
 		case(data)			//////////// D0.0 --> D31.0
 			8'b0000_0000 : begin
 				encoded_data_neg = 10'b100111_0100;
@@ -1050,6 +1051,10 @@ always @(*) begin
 				encoded_data_pos = 10'b010100_1110;
 			end
 		endcase
-	end
+	end else begin
+		encoded_data_neg = 10'b000000_0000;
+		encoded_data_pos = 10'b000000_0000;
+	end  
+	
 end
 endmodule 
