@@ -17,6 +17,7 @@ line_coding_8_10 u0(
 
 
 FSM_RD u1(
+	        .enable(enable),
 			.Bit_Rate_10(Bit_Rate_10),
 			.Rst(Rst),
 			.data_neg(encoded_neg_data),
