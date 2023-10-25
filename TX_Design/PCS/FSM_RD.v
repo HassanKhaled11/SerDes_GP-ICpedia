@@ -10,12 +10,12 @@ module FSM_RD(
 
 localparam RD_neg = 1'b0,
 		   RD_pos = 1'b1;
-		   
+
 reg current_state , next_state , pos_flag;
 
 always @(posedge Bit_Rate_10 , negedge Rst) begin
 
-	if(!Rst || enable) begin 
+	if(!Rst || !enable) begin 
 
 		if(pos_flag)
 			current_state <= RD_pos; 
