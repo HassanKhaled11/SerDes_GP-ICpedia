@@ -1,6 +1,7 @@
 module line_coding_8_10 //#(parameter DATAWIDTH = 8)
 						(							// inut wire pclk,
 						    input wire enable,
+						    input wire TXDataK ,
 							input wire[7:0] data,
 							output reg[9:0] encoded_data_pos,
 							output reg[9:0] encoded_data_neg
@@ -19,7 +20,7 @@ always @(*) begin
 			end
 			8'b0000_0010 : begin
 				encoded_data_neg = 10'b101101_0100;
-				encoded_data_pos = 10'b010010 1011;
+				encoded_data_pos = 10'b010010_1011;
 			end
 			8'b0000_0011 : begin
 				encoded_data_neg = 10'b110001_1011;
@@ -542,7 +543,7 @@ always @(*) begin
 			end
 			8'b1000_0010 : begin
 				encoded_data_neg = 10'b101101_0010;
-				encoded_data_pos = 10'b010010 1101;
+				encoded_data_pos = 10'b010010_1101;
 			end
 			8'b1000_0011 : begin
 				encoded_data_neg = 10'b110001_1101;

@@ -1,5 +1,6 @@
 module FSM_RD(
 	            input wire enable,
+				input wire TXDataK ,	            
 				input wire[9:0] data_neg,
 				input wire[9:0] data_pos,
 				input Bit_Rate_10,
