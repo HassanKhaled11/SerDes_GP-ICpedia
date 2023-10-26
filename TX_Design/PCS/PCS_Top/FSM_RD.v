@@ -1,6 +1,6 @@
 module FSM_RD(
 	            input wire enable,
-				input wire TXDataK ,	            
+				input wire [3:0] TXDataK ,	            
 				input wire[9:0] data_neg,
 				input wire[9:0] data_pos,
 				input Bit_Rate_10,
@@ -16,13 +16,24 @@ reg current_state , next_state , pos_flag;
 
 always @(posedge Bit_Rate_10 , negedge Rst) begin
 
-	if(!Rst || !enable) begin 
+	if(!Rst) begin 
 
 		if(pos_flag)
 			current_state <= RD_pos; 
 		else 
 			current_state <= RD_neg;
 	end 
+
+
+	else if (!enable) begin
+
+		if(pos_flag)
+			current_state <= RD_pos; 
+		
+		else 
+			current_state <= RD_neg;		
+		
+	end
 	
 	else 
 		current_state <= next_state;

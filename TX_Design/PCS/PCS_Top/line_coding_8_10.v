@@ -1,7 +1,7 @@
 module line_coding_8_10 //#(parameter DATAWIDTH = 8)
 						(							// inut wire pclk,
 						    input wire enable,
-						    input wire TXDataK ,
+						    input wire [3:0] TXDataK ,
 							input wire[7:0] data,
 							output reg[9:0] encoded_data_pos,
 							output reg[9:0] encoded_data_neg

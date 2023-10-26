@@ -2,10 +2,9 @@ module Optional_Block #(parameter DataBusWidth = 'd32)
 (
   input                                      PCLK                   ,
   input                                      Reset_n                ,
-  input         [31 : 0 ]                    MAC_TX_Data            ,
+  input         [31 : 0 ]                    MAC_TX_Data            ,        
   input                                      MAC_Data_En            ,  
   output  reg   [7  : 0 ]                    TxData                 ,
-  output  reg                                TxDataK                ,
   output  reg                                Encoder_en             
 
 );
@@ -33,19 +32,16 @@ begin
 
 	if(!Reset_n) begin
     TxData       <= 0              ;
-    TxDataK      <= 0              ;
     Encoder_en   <= 0              ; 
 	end 
 
     else if (MAC_Data_En & Counter < (DataBusWidth/8)) begin
-     TxDataK      <= 0             ;
      TxData       <= Temp_Data     ; 
      Encoder_en   <= 1             ; 
     end
       
 
     else begin
-     TxDataK      <= 0             ;
      TxData       <= 0             ;
      Encoder_en   <= 0             ;      
     end 

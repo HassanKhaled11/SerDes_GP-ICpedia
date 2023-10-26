@@ -3,10 +3,14 @@ module Encoding(
 				input wire enable,
 				input wire Bit_Rate_10,
 				input wire Rst,
-				input wire TXDataK ,
+				input wire [3:0] TXDataK ,
+                // input TxElecIdle          ,
+                // input TxDetectRx_Loopback ,
+                // input Tx_Compilance       ,				
 				output enable_PMA,
 				output wire[9:0] data_out
 				);
+
 
 wire[9:0] encoded_pos_data , encoded_neg_data;
 
