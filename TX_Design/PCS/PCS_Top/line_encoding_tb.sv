@@ -1,3 +1,11 @@
+/*Test plan:
+-testing each element in the array the positive and negative encoding
+-testing the disparity 
+-checking the disparity toggles with each transmission
+-check the reset doesn't affect the toggling
+-enable_pma is high in the next clock cycle after the enable is high
+*/
+
 `timescale 1ps / 1ps
 module line_encoding_tb ();
   import line_encoding_pkg::*;
@@ -51,6 +59,16 @@ module line_encoding_tb ();
       .data_out(data_out)
   );
 
+  bind Encoding assertion_encoding assertion_inst (
+      Bit_Rate_10,
+      Rst,
+      enable_PMA,
+      data_out,
+      enable,
+      data,
+      TXDataK
+  );
+
   initial begin
     Bit_Rate_10 = 0;
     forever #1000 Bit_Rate_10 = ~Bit_Rate_10;
@@ -67,15 +85,15 @@ module line_encoding_tb ();
     for (int i = 0; i < TESTS; i++) begin
       assert (line_tr.randomize());
       //change the disparity after writting
-      if (Rst && enable) begin
-        curr_disparity = (curr_disparity == negative) ? positive : negative;
-      end
       assign_signals();
-      #5;
+      @(negedge Bit_Rate_10);
       line_tr.cvr_line.sample();
       //check on the output with the golden model
       check_val();
       check_disparity();
+      if (Rst && enable) begin
+        curr_disparity = (curr_disparity == negative) ? positive : negative;
+      end
     end
     #1000;
     $display("correct count : ", correct_count, ", error count : ", error_count);
@@ -136,20 +154,22 @@ module line_encoding_tb ();
     end else begin
       error_disparity_count++;
       $display(
-          "not in both!! disparity: %s, neg_encoding[%0b]: %0d, pos_encoding[%0b]: %0d,data_ref: (%0d)%0b",
-          curr_disparity, data_out, neg_encoding[data_out], data_out, pos_encoding[data_out],
-          data_out_ref, data_out_ref);
+          "%0t,not in both!! disparity: %s, neg_encoding[%0b]: %0d, pos_encoding[%0b]: %0d,data_ref: (%0d)%0b",
+          $time, curr_disparity, data_out, neg_encoding[data_out], data_out,
+          pos_encoding[data_out], data_out_ref, data_out_ref);
     end
 
   endtask  //
 
   // task reset_task();
   //   Rst = 0;
+  //   assign_signals();
+  //   line_tr.cvr_line.sample();
+  //   if (Rst && enable) begin
+  //     curr_disparity = (curr_disparity == negative) ? positive : negative;
+  //   end
   //   @(negedge Bit_Rate_10);
   //   Rst = 1;
-  //   @(negedge Bit_Rate_10);
-  //   check_val();
-  //   Rst = 0;
   //   @(negedge Bit_Rate_10);
   // endtask  //
 
