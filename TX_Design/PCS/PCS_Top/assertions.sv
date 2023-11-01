@@ -17,6 +17,10 @@ module assertion_encoding (
   property enable_pma_value;
     @(posedge Bit_Rate_10) disable iff (!Rst) (enable && Rst) |=> enable_PMA;
   endproperty
+
+  property disable_enable_pma_value;
+    @(posedge Bit_Rate_10) disable iff (!Rst) (!enable) |=> !enable_PMA;
+  endproperty
   // property enable_deasserted;
   //   @(posedge Bit_Rate_10) disable iff (!Rst) (!enable && Rst) |=> data_out == $past(
   //       data_out
@@ -25,9 +29,12 @@ module assertion_encoding (
 
   assert property (enable_pma_value)
   else $error("pma_assertion failed");
+  assert property (disable_enable_pma_value)
+  else $error("dissable pma_assertion failed");
   // assert property (enable_deasserted)
   // else $error("enable_deasserted assertion failed");
 
   cover property (enable_pma_value);
+  cover property (disable_enable_pma_value);
   // cover property (enable_deasserted);
 endmodule

@@ -74,13 +74,17 @@ module line_encoding_tb ();
     forever #1000 Bit_Rate_10 = ~Bit_Rate_10;
   end
 
+  bit flag;
+  bit [7:0] assoc_out;
   initial begin
+    assoc_out               = 0;
     correct_count           = 0;
     error_count             = 0;
     correct_disparity_count = 0;
     error_disparity_count   = 0;
     curr_disparity          = negative;
     line_tr                 = new();
+    flag                    = 0;
     golden_model();
     for (int i = 0; i < TESTS; i++) begin
       assert (line_tr.randomize());
@@ -89,11 +93,13 @@ module line_encoding_tb ();
       @(negedge Bit_Rate_10);
       line_tr.cvr_line.sample();
       //check on the output with the golden model
+      @(posedge Bit_Rate_10);
+
       check_val();
       check_disparity();
-      if (Rst && enable) begin
-        curr_disparity = (curr_disparity == negative) ? positive : negative;
-      end
+      // if ((Rst && enable) || (!Rst) || (!enable)) begin
+      curr_disparity = (curr_disparity == negative) ? positive : negative;
+      // end
     end
     #1000;
     $display("correct count : ", correct_count, ", error count : ", error_count);
@@ -144,19 +150,34 @@ module line_encoding_tb ();
         error_disparity_count++;
         $display("neg_encoding[%0b]: %0d,data_ref: %0b", data_out, neg_encoding[data_out],
                  data_out_ref);
-      end else correct_disparity_count++;
+      end else begin
+        assoc_out = neg_encoding[data_out];
+        correct_disparity_count++;
+      end
     end else if (curr_disparity == positive && pos_encoding.exists(data_out)) begin
       if (pos_encoding[data_out] !== data_out_ref) begin
         error_disparity_count++;
         $display("pos_encoding[%0b]: %0d,data_ref: %0b", data_out, pos_encoding[data_out],
                  data_out_ref);
-      end else correct_disparity_count++;
+      end else begin
+        assoc_out = pos_encoding[data_out];
+        correct_disparity_count++;
+      end
     end else begin
-      error_disparity_count++;
-      $display(
-          "%0t,not in both!! disparity: %s, neg_encoding[%0b]: %0d, pos_encoding[%0b]: %0d,data_ref: (%0d)%0b",
-          $time, curr_disparity, data_out, neg_encoding[data_out], data_out,
-          pos_encoding[data_out], data_out_ref, data_out_ref);
+      fork
+        begin
+          error_disparity_count++;
+          $display(
+              "%0t,not in both!! disparity: %s, neg_encoding[%0b]: %0d, pos_encoding[%0b]: %0d,data_ref: (%0d)%0b",
+              $time, curr_disparity, data_out, neg_encoding[data_out], data_out,
+              pos_encoding[data_out], data_out_ref, data_out_ref);
+        end
+        begin
+          flag = 1;
+          #500;
+          flag = 0;
+        end
+      join_any
     end
 
   endtask  //
