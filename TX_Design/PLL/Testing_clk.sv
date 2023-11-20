@@ -8,9 +8,12 @@ module clk_test ();
   logic Bit_Rate_10;
   logic PCLK;
 
-  int   my_time;
-  int   on_time;
-  int   off_time;
+  int   Bit_Rate_rising_time;
+  int   Old_Bit_Rate_rising_time;
+  int   Bit_Rate_falling_time;
+  int   Bit_Rate_10_rising_time;
+  int   Old_Bit_Rate_10_rising_time;
+  int   Bit_Rate_10_falling_time;
 
   int correct_count, error_count;
   PLL testing_pll (
@@ -21,85 +24,69 @@ module clk_test ();
       // .div_ratio(div_ratio),
       .PCLK       (PCLK)
   );
-
   initial begin
     Ref_Clk = 0;
     repeat (50) #5000 Ref_Clk = ~Ref_Clk;
   end
 
-  // always @(posedge Ref_Clk) begin
-  //   test_Freq(Bit_Rate);
-  //   test_duty(Bit_Rate);
-  //   $display("t ref_clk: %d", my_time);
-  // end
+  // rising time  
+  always @(posedge Bit_Rate) begin
+    Old_Bit_Rate_rising_time = Bit_Rate_rising_time;
+    Bit_Rate_rising_time = $time;
+
+  end
+  // falling time  
+  always @(negedge Bit_Rate) begin
+    Bit_Rate_falling_time = $time;
+    if (2 * (Bit_Rate_falling_time - Bit_Rate_rising_time) != 200) begin
+      $display("%0t:period bit_rate = %0dps", $time,
+               2 * (Bit_Rate_falling_time - Bit_Rate_rising_time));
+      error_count++;
+    end
+    //duty
+    if ( ((Bit_Rate_falling_time - Bit_Rate_rising_time) * 100) / (Bit_Rate_rising_time - Old_Bit_Rate_rising_time) != 50) begin
+      $display(
+          "%0t:duty bit_rate = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
+          ((Bit_Rate_falling_time - Bit_Rate_rising_time) * 100) / (Bit_Rate_rising_time - Old_Bit_Rate_rising_time),
+          Bit_Rate_falling_time, Bit_Rate_rising_time, Old_Bit_Rate_rising_time);
+      error_count++;
+
+    end
+  end
+
+  // rising time  
+  always @(posedge Bit_Rate_10) begin
+    Old_Bit_Rate_10_rising_time = Bit_Rate_10_rising_time;
+    Bit_Rate_10_rising_time = $time;
+  end
+  // falling time  
+  always @(negedge Bit_Rate_10) begin
+    Bit_Rate_10_falling_time = $time;
+    if (2 * (Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) != 2000) begin
+      $display("%0t:period bit_rate_10 = %0dps", $time,
+               2 * (Bit_Rate_10_falling_time - Bit_Rate_10_rising_time));
+      error_count++;
+    end
+    //check duty cycle
+    if ( ((Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) * 100) / (Bit_Rate_10_rising_time - Old_Bit_Rate_10_rising_time) != 50) begin
+      $display(
+          "%0t:duty bit_rate_10 = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
+          ((Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) * 100) / (Bit_Rate_10_rising_time - Old_Bit_Rate_10_rising_time),
+          Bit_Rate_10_falling_time, Bit_Rate_10_rising_time, Old_Bit_Rate_10_rising_time);
+      error_count++;
+    end
+  end
+
 
   initial begin
     correct_count = 0;
-    error_count = 0;
-    my_time = 0;
+    error_count   = 0;
     reset();
-    // test_Freq(Bit_Rate);
-    // test_duty(Bit_Rate);
-    fork
-      begin
-        test_Freq(Bit_Rate_10);
-      end
 
-      begin
-        test_duty(Bit_Rate_10);
-      end
-
-      begin
-        test_Freq(Bit_Rate);
-      end
-
-      begin
-        test_duty(Bit_Rate);
-      end
-    join
-    $display("t ref_clk: %d", my_time);
-    #10000;
-
-    // test_Freq(Bit_Rate_10);
-    // test_duty(Bit_Rate_10);
-    $display("t ref_clk: %d", my_time);
-    // fork
-    // forever begin
-    //   // @(posedge Ref_Clk) 
-    //   begin
-    //     test_Freq(Ref_Clk);
-    //     test_duty(Ref_Clk);
-    //     $display("t ref_clk: %d", my_time);
-    //   end
-    // end
-    // join_none
-    #50000;
+    #100000;
     $display("correct count : ", correct_count, ", error count : ", error_count);
     $stop;
   end
-
-  task test_Freq(input bit clk);
-    int t1, t2;
-    @(posedge clk);
-    t1 = $time;
-    @(posedge clk);
-    t2 = $time;
-    my_time = t2 - t1;
-    $display("in task t ref_clk: %d", my_time);
-  endtask  //
-
-  task test_duty(input bit clk);
-    int t1, t2, t3;
-    @(posedge clk);
-    t1 = $time;
-    @(negedge clk);
-    t2 = $time;
-    on_time = t2 - t1;
-    @(posedge clk);
-    t3 = $time;
-    off_time = t2 - t3;
-    $display("duty: %d", (on_time / (on_time + off_time)));
-  endtask  //
 
   task reset();
     Rst = 1;
