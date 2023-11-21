@@ -1,12 +1,11 @@
 module FSM_RD(
 	            input wire enable,
-				input wire [3:0] TXDataK ,	            
+				input wire TXDataK ,	            
 				input wire[9:0] data_neg,
 				input wire[9:0] data_pos,
 				input Bit_Rate_10,
 				input Rst,
-				output reg[9:0] Data_10,
-				output reg enable_PMA
+				output reg[9:0] Data_10
 				);
 
 localparam RD_neg = 1'b0,
@@ -51,7 +50,6 @@ end
 
 
 always @(*) begin
-	enable_PMA = 1'b1;
 
 	case (current_state)
 		RD_neg : begin 
