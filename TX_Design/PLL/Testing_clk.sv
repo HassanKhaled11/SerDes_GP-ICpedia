@@ -11,9 +11,20 @@ module clk_test ();
   int   Bit_Rate_rising_time;
   int   Old_Bit_Rate_rising_time;
   int   Bit_Rate_falling_time;
+  bit   bit_rate_failed_flag;
+  int   bit_rate_period;
+
   int   Bit_Rate_10_rising_time;
   int   Old_Bit_Rate_10_rising_time;
   int   Bit_Rate_10_falling_time;
+  bit   bit_rate_10_failed_flag;
+  int   bit_rate_10_period;
+
+  int   Pclk_rising_time;
+  int   Old_Pclk_rising_time;
+  int   Pclk_falling_time;
+  bit   pclk_failed_flag;
+  int   pclk_period;
 
   int correct_count, error_count;
   PLL testing_pll (
@@ -29,6 +40,37 @@ module clk_test ();
     repeat (50) #5000 Ref_Clk = ~Ref_Clk;
   end
 
+  /////////////////PCLK////////////////////////
+  // rising time  
+  always @(posedge PCLK) begin
+    Old_Pclk_rising_time = Pclk_rising_time;
+    Pclk_rising_time = $time;
+  end
+  // falling time  
+  always @(negedge PCLK) begin
+    if (Rst) begin
+      Pclk_falling_time = $time;
+      pclk_period       = (Pclk_rising_time - Old_Pclk_rising_time);
+
+      if (Old_Pclk_rising_time != 0 && pclk_period != 4000) begin
+        pclk_failed_flag = 1;
+        $display("%0t:period bit_rate_10 = %0dps", $time, pclk_period);
+        error_count++;
+      end else correct_count++;
+
+      //check duty cycle
+      if ( Old_Pclk_rising_time!=0 && ((Pclk_falling_time - Pclk_rising_time) * 100) / pclk_period != 50) begin
+        pclk_failed_flag = 1;
+        $display("%0t:duty bit_rate_10 = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
+                 ((Pclk_falling_time - Pclk_rising_time) * 100) / pclk_period, Pclk_falling_time,
+                 Pclk_rising_time, Old_Pclk_rising_time);
+        error_count++;
+      end else correct_count++;
+    end
+  end
+
+  /////////////////Bit_Rate////////////////////////
+
   // rising time  
   always @(posedge Bit_Rate) begin
     Old_Bit_Rate_rising_time = Bit_Rate_rising_time;
@@ -37,23 +79,29 @@ module clk_test ();
   end
   // falling time  
   always @(negedge Bit_Rate) begin
-    Bit_Rate_falling_time = $time;
-    if (2 * (Bit_Rate_falling_time - Bit_Rate_rising_time) != 200) begin
-      $display("%0t:period bit_rate = %0dps", $time,
-               2 * (Bit_Rate_falling_time - Bit_Rate_rising_time));
-      error_count++;
-    end
-    //duty
-    if ( ((Bit_Rate_falling_time - Bit_Rate_rising_time) * 100) / (Bit_Rate_rising_time - Old_Bit_Rate_rising_time) != 50) begin
-      $display(
-          "%0t:duty bit_rate = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
-          ((Bit_Rate_falling_time - Bit_Rate_rising_time) * 100) / (Bit_Rate_rising_time - Old_Bit_Rate_rising_time),
-          Bit_Rate_falling_time, Bit_Rate_rising_time, Old_Bit_Rate_rising_time);
-      error_count++;
+    if (Rst) begin
+      Bit_Rate_falling_time = $time;
+      bit_rate_period       = (Bit_Rate_rising_time - Old_Bit_Rate_rising_time);
 
+      if (Old_Bit_Rate_rising_time != 0 && bit_rate_period != 200) begin
+        bit_rate_failed_flag = 1;
+        $display("%0t:period bit_rate = %0dps", $time,
+                 2 * (Bit_Rate_falling_time - Bit_Rate_rising_time));
+        error_count++;
+      end else correct_count++;
+
+      //duty
+      if ( Old_Bit_Rate_rising_time!=0 && ((Bit_Rate_falling_time - Bit_Rate_rising_time) * 100) / bit_rate_period != 50) begin
+        bit_rate_failed_flag = 1;
+        $display("%0t:duty bit_rate = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
+                 ((Bit_Rate_falling_time - Bit_Rate_rising_time) * 100) / bit_rate_period,
+                 Bit_Rate_falling_time, Bit_Rate_rising_time, Old_Bit_Rate_rising_time);
+        error_count++;
+
+      end else correct_count++;
     end
   end
-
+  /////////////////Bit_Rate_10////////////////////////
   // rising time  
   always @(posedge Bit_Rate_10) begin
     Old_Bit_Rate_10_rising_time = Bit_Rate_10_rising_time;
@@ -61,36 +109,55 @@ module clk_test ();
   end
   // falling time  
   always @(negedge Bit_Rate_10) begin
-    Bit_Rate_10_falling_time = $time;
-    if (2 * (Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) != 2000) begin
-      $display("%0t:period bit_rate_10 = %0dps", $time,
-               2 * (Bit_Rate_10_falling_time - Bit_Rate_10_rising_time));
-      error_count++;
-    end
-    //check duty cycle
-    if ( ((Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) * 100) / (Bit_Rate_10_rising_time - Old_Bit_Rate_10_rising_time) != 50) begin
-      $display(
-          "%0t:duty bit_rate_10 = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
-          ((Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) * 100) / (Bit_Rate_10_rising_time - Old_Bit_Rate_10_rising_time),
-          Bit_Rate_10_falling_time, Bit_Rate_10_rising_time, Old_Bit_Rate_10_rising_time);
-      error_count++;
+    if (Rst) begin
+
+      Bit_Rate_10_falling_time = $time;
+      bit_rate_10_period = (Bit_Rate_10_rising_time - Old_Bit_Rate_10_rising_time);
+
+      if (Old_Bit_Rate_10_rising_time != 0 && bit_rate_10_period != 2000) begin
+        bit_rate_10_failed_flag = 1;
+
+        $display("%0t:period bit_rate_10 = %0dps", $time,
+                 2 * (Bit_Rate_10_falling_time - Bit_Rate_10_rising_time));
+        error_count++;
+      end else correct_count++;
+
+      //check duty cycle
+      if ( Old_Bit_Rate_10_rising_time!=0 && ((Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) * 100) / bit_rate_10_period != 50) begin
+        bit_rate_10_failed_flag = 1;
+        $display("%0t:duty bit_rate_10 = %0dps, fall:%0d, rise:%0d, oldRise:%0d", $time,
+                 ((Bit_Rate_10_falling_time - Bit_Rate_10_rising_time) * 100) / bit_rate_10_period,
+                 Bit_Rate_10_falling_time, Bit_Rate_10_rising_time, Old_Bit_Rate_10_rising_time);
+        error_count++;
+      end else correct_count++;
     end
   end
 
 
   initial begin
-    correct_count = 0;
-    error_count   = 0;
+    correct_count           = 0;
+    error_count             = 0;
+    pclk_failed_flag        = 0;
+    bit_rate_failed_flag    = 0;
+    bit_rate_10_failed_flag = 0;
     reset();
 
     #100000;
+    if (pclk_failed_flag == 1'b0) begin
+      $display("PCLK period = %dps, PCLK duty Cycle = 50", pclk_period);
+    end
+    if (bit_rate_failed_flag == 1'b0) begin
+      $display("bit_rate period = %dps, bit_rate duty Cycle = 50", bit_rate_period);
+    end
+    if (bit_rate_10_failed_flag == 1'b0) begin
+      $display("bit_rate_10 period = %dps, bit_rate_10 duty Cycle = 50", bit_rate_10_period);
+    end
     $display("correct count : ", correct_count, ", error count : ", error_count);
+    #10000;
     $stop;
   end
 
   task reset();
-    Rst = 1;
-    @(negedge Ref_Clk);
     Rst = 0;
     // check_res();
     @(negedge Ref_Clk);
@@ -108,79 +175,3 @@ module clk_test ();
 endmodule
 
 
-
-
-// `timescale 1ps / 1ps
-
-// module clk_test ();
-//   logic Ref_Clk;
-//   logic Rst;
-//   // logic [7:0] div_ratio;
-//   logic Bit_Rate;
-//   logic Bit_Rate_10;
-//   logic PCLK;
-
-//   int my_time;
-//   int on_time;
-//   int off_time;
-
-//   PLL testing_pll (
-//       .Ref_Clk    (Ref_Clk),
-//       .Rst        (Rst),
-//       .Bit_Rate   (Bit_Rate),
-//       .Bit_Rate_10(Bit_Rate_10),
-//       // .div_ratio(div_ratio),
-//       .PCLK       (PCLK)
-//   );
-
-//   initial begin
-//     Ref_Clk = 0;
-//     forever #5000 Ref_Clk = ~Ref_Clk;
-//   end
-
-//   initial begin
-//     reset();
-//     my_time = 0;
-//     $display("t ref_clk: %d", my_time);
-
-//     // Wait for a while before testing Bit_Rate
-//     #20000;
-//     test_Freq(Bit_Rate);
-//     test_duty(Bit_Rate);
-//     $display("t Bit_Rate: %d", my_time);
-
-//     // Wait for a while before testing Bit_Rate_10
-//     #20000;
-//     test_Freq(Bit_Rate_10);
-//     test_duty(Bit_Rate_10);
-//     $display("t Bit_Rate_10: %d", my_time);
-
-//     // End simulation
-//     #100000;
-//     $stop;
-//   end
-
-//   task test_Freq(input bit clk);
-//     real t1, t2;
-//     @(posedge clk); t1 = $realtime;
-//     @(posedge clk); t2 = $realtime;
-//     my_time = t2 - t1;
-//     $display("in task t ref_clk: %d", my_time);
-//   endtask
-
-//   task test_duty(input bit clk);
-//     real t1, t2, t3;
-//     @(posedge clk); t1 = $realtime;
-//     @(negedge clk); t2 = $realtime;
-//     on_time = (t2 - t1);
-//     @(posedge clk); t3 = $realtime;
-//     off_time = int(t2 - t3);
-//     $display("duty: %d", int(100 * on_time / (on_time + off_time)));
-//   endtask
-
-//   task reset();
-//     Rst = 1;
-//     @(negedge Ref_Clk) Rst = 0;
-//     @(negedge Ref_Clk) Rst = 1;
-//   endtask
-// endmodule
