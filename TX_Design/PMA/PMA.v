@@ -1,14 +1,13 @@
-
 module PMA #(parameter DATA_WIDTH = 'd10)
   (
-     input                    Bit_Rate        ,
+     input                    Bit_Rate_Clk    ,
      input                    Rst_n           ,
      input [DATA_WIDTH - 1:0] Data_in         , 
-     input                    Tx_Data_Enable  , 
-     // input                    Loopback_Path   ,
-     output reg               TX_Out          ,
-     output reg               TX_Done      
+     input                    MAC_Data_En     , 
+     output reg               TX_Out_P        ,
+     output                   TX_Out_N            
   );
+
 
   reg [$clog2(DATA_WIDTH)  : 0] counter       ;
 
@@ -20,7 +19,11 @@ module PMA #(parameter DATA_WIDTH = 'd10)
   localparam WAIT_STATE     = 2'b00 ;
   localparam TRANSMIT_STATE = 2'b01 ;
 
-  always@(posedge Bit_Rate or negedge Rst_n) begin
+
+ assign TX_Out_N = ~TX_Out_P;
+
+       
+  always@(posedge Bit_Rate_Clk or negedge Rst_n) begin
   
   if(!Rst_n)
     current_state <= WAIT_STATE ; 
@@ -35,14 +38,23 @@ module PMA #(parameter DATA_WIDTH = 'd10)
      case (current_state)
        
        WAIT_STATE     : begin
-                          if(Tx_Data_Enable) next_state = TRANSMIT_STATE                  ;
-                          else               next_state = WAIT_STATE                      ;
+                          if(MAC_Data_En) next_state = TRANSMIT_STATE          ;
+                          else            next_state = WAIT_STATE              ;
                         end
       
 
        TRANSMIT_STATE : begin
-                          if(counter == DATA_WIDTH - 1)   next_state = WAIT_STATE         ;
-                          else                            next_state = TRANSMIT_STATE     ;
+                          if(counter == DATA_WIDTH - 1)  begin
+                                if(MAC_Data_En)
+                                 next_state = TRANSMIT_STATE                   ;
+                                else   
+                                 next_state = WAIT_STATE                       ;
+
+                          end 
+
+                
+                          else  next_state = TRANSMIT_STATE                               ;
+          
                         end
 
        default        : begin 
@@ -60,29 +72,26 @@ module PMA #(parameter DATA_WIDTH = 'd10)
      case (current_state)
        
        WAIT_STATE     : begin
-                           TX_Out    = 1'b0    ;
+                           TX_Out_P    = 1'b0    ;
                            Temp_Reg  = Data_in ; 
-                           TX_Done = 0;
                         end
       
 
        TRANSMIT_STATE : begin
+                          Temp_Reg = Data_in   ;
                           if(counter != DATA_WIDTH) begin 
-                             TX_Out = Temp_Reg[counter];
-                             TX_Done = 1               ;
+                             TX_Out_P = Temp_Reg[counter];
                            end
 
                           else begin
-                            TX_Out  = 0 ;
-                            TX_Done = 0 ; 
+                            TX_Out_P  = 0 ;
                           end 
                         end   
 
 
        default        : begin 
-                         Temp_Reg      = 0 ;
-                         TX_Out        = 0 ;
-                         TX_Done = 0       ;
+                            Temp_Reg      = 0 ;
+                            TX_Out_P        = 0 ;
                         end
       endcase
    end
@@ -90,13 +99,13 @@ module PMA #(parameter DATA_WIDTH = 'd10)
 
 
 
-always @(posedge Bit_Rate or negedge Rst_n) begin
+always @(posedge Bit_Rate_Clk or negedge Rst_n) begin
   if(!Rst_n) begin
      counter    <= 0             ;
   end
 
   else begin
-     if(counter != DATA_WIDTH && current_state == TRANSMIT_STATE)
+     if(counter != DATA_WIDTH-1 && current_state == TRANSMIT_STATE)
        counter <= counter + 1    ;
      else 
        counter <= 0              ; 
@@ -116,57 +125,52 @@ endmodule
 //////////////////////////////// TESTBENCH /////////////////////////////////////////////
 
 
-// module sr_tb;
+module sr_tb;
 
-//   parameter DATA_WIDTH = 'd10             ;
-//   reg                     Bit_Rate     ;
-//   reg                     Rst_n           ;
-//   reg  [DATA_WIDTH - 1:0] Data_in         ; 
-//   reg                     Tx_Data_Enable  ; 
-//   wire                    TX_Out          ;
+  parameter DATA_WIDTH = 'd10             ;
+  reg                     Bit_Rate_Clk    ;
+  reg                     Rst_n           ;
+  reg  [DATA_WIDTH - 1:0] Data_in         ; 
+  reg                     MAC_Data_En     ; 
+  wire                    TX_Out_P        ;
+  wire                    TX_Out_N        ;   
+
+  PMA  dut(.*) ;
+
+  always #2 Bit_Rate_Clk = ~ Bit_Rate_Clk ;
 
 
-//   PMA  dut(.*) ;
+  initial begin
+    Bit_Rate_Clk = 0 ;
+    MAC_Data_En = 0;
+    Rst_n = 0 ; 
+    #5;
+    Rst_n = 1 ;
 
-//   always #2 Bit_Rate = ~ Bit_Rate ;
 
+  
 
-//   initial begin
-//     Bit_Rate = 0 ;
-//     Tx_Data_Enable = 0;
-//     Rst_n = 0 ; 
-//     #5;
-//     Rst_n = 1 ;
+  SEND_DATA(100);
+  SEND_DATA(200);
+  SEND_DATA(30) ;
 
-//     Data_in = 'd50 ; 
-//     Tx_Data_Enable = 1;
-//     @(negedge Bit_Rate);
-//     repeat(10) @(posedge   Bit_Rate);
+  repeat(20) @(posedge   Bit_Rate_Clk);
     
-//     Data_in = 'd20    ; 
-//     Tx_Data_Enable = 1;
-//    @(negedge Bit_Rate);
-//     repeat(10) @(posedge   Bit_Rate);
+  $stop;
+
+  end
+
+
+task SEND_DATA(input [9:0] data_in);
+  begin
     
+  @(negedge Bit_Rate_Clk);
+  MAC_Data_En = 1 ;
+  Data_in = data_in ;
+  #(10*4);
+ 
+  end
+endtask 
 
-//     Data_in = 'd5    ; 
-//     Tx_Data_Enable = 1;
-//    @(negedge Bit_Rate);
-//     repeat(5) @(posedge   Bit_Rate);
 
-
-//     Data_in = 'd50 ; 
-//     Tx_Data_Enable = 0;
-//    @(negedge Bit_Rate);
-//     repeat(20) @(posedge   Bit_Rate);
-//    @(negedge Bit_Rate);
-//     Data_in =    'd10 ; 
-//     Tx_Data_Enable = 1;
-
-//     repeat(20) @(posedge   Bit_Rate);
-    
-//     $stop;
-
-//   end
-
-// endmodule  
+endmodule  
