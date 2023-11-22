@@ -133,29 +133,35 @@ module clk_test ();
     end
   end
 
-
   initial begin
-    correct_count           = 0;
-    error_count             = 0;
-    pclk_failed_flag        = 0;
-    bit_rate_failed_flag    = 0;
+    correct_count = 0;
+    error_count = 0;
+    pclk_failed_flag = 0;
+    bit_rate_failed_flag = 0;
     bit_rate_10_failed_flag = 0;
     reset();
+  end
+  initial begin
+    #100000;  // Wait for the simulation to run
 
-    #100000;
-    if (pclk_failed_flag == 1'b0) begin
-      $display("PCLK period = %dps, PCLK duty Cycle = 50", pclk_period);
+    if (!pclk_failed_flag) begin
+      $display("PCLK period = %0dps,\t PCLK duty Cycle = 50", pclk_period);
     end
-    if (bit_rate_failed_flag == 1'b0) begin
-      $display("bit_rate period = %dps, bit_rate duty Cycle = 50", bit_rate_period);
+
+    if (!bit_rate_failed_flag) begin
+      $display("bit_rate period = %0dps,\t bit_rate duty Cycle = 50", bit_rate_period);
     end
-    if (bit_rate_10_failed_flag == 1'b0) begin
-      $display("bit_rate_10 period = %dps, bit_rate_10 duty Cycle = 50", bit_rate_10_period);
+
+    if (!bit_rate_10_failed_flag) begin
+      $display("bit_rate_10 period = %0dps,\t bit_rate_10 duty Cycle = 50", bit_rate_10_period);
     end
-    $display("correct count : ", correct_count, ", error count : ", error_count);
-    #10000;
+
+    $display("correct count : %0d, error count : %0d", correct_count, error_count);
+    #10000;  // Allow some time for potential display output
     $stop;
   end
+
+
 
   task reset();
     Rst = 0;
