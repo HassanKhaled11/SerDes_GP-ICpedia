@@ -129,3 +129,61 @@ end
 
 endmodule
 
+
+
+
+
+
+
+//////////////////////////////// TESTBENCH /////////////////////////////////////////////
+
+
+module PMA_TX_tb;
+
+  parameter DATA_WIDTH = 'd10             ;
+  reg                     Bit_Rate_Clk    ;
+  reg                     Rst_n           ;
+  reg  [DATA_WIDTH - 1:0] Data_in         ; 
+  reg                     MAC_Data_En     ; 
+  wire                    TX_Out_P        ;
+  wire                    TX_Out_N        ;   
+
+  PMA  dut(.*) ;
+
+  always #2 Bit_Rate_Clk = ~ Bit_Rate_Clk ;
+
+
+  initial begin
+    Bit_Rate_Clk = 0 ;
+    MAC_Data_En = 0;
+    Rst_n = 0 ; 
+    #5;
+    Rst_n = 1 ;
+
+
+  
+
+  SEND_DATA(100);
+  SEND_DATA(200);
+  SEND_DATA(30) ;
+
+  repeat(20) @(posedge   Bit_Rate_Clk);
+    
+  $stop;
+
+  end
+
+
+task SEND_DATA(input [9:0] data_in);
+  begin
+    
+  @(negedge Bit_Rate_Clk);
+  MAC_Data_En = 1 ;
+  Data_in = data_in ;
+  #(10*4);
+ 
+  end
+endtask 
+
+
+endmodule  
