@@ -6,7 +6,7 @@ module Encoding(
 				input wire TXDataK ,
                 // input TxElecIdle          ,
                 // input TxDetectRx_Loopback ,
-                // input Tx_Compilance       ,				
+                // input Tx_Compilance       ,			
 				output wire[9:0] data_out
 				);
 
@@ -16,7 +16,7 @@ wire[9:0] encoded_pos_data , encoded_neg_data;
 
 line_coding_8_10 u0(
 	        .TXDataK(TXDataK),
-			.enable(MAC_Data_En ),
+			.enable(MAC_Data_En),
 			.data(data),
 			.encoded_data_pos(encoded_pos_data),
 			.encoded_data_neg(encoded_neg_data)

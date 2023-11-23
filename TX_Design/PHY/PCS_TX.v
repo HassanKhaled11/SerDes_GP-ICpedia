@@ -48,7 +48,7 @@ Encoding Encoding_U
  .Bit_Rate_10 (Bit_Rate_Clk_10)                ,
  .Rst         (RST_n)                          ,
  .TXDataK     (TXDataK)                        ,
- .data_out    (Data_In_PMA)            
+ .data_out    (Data_In_PMA)                    
 );
 
 

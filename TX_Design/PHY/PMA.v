@@ -6,7 +6,7 @@ module PMA
      input                    MAC_Data_En     ,
 
 
-     output reg               TX_Out_P        ,
+     output                   TX_Out_P        ,
      output                   TX_Out_N   	  
 );
 
