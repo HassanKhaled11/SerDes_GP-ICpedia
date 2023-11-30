@@ -41,7 +41,7 @@ virtual task run_phase(uvm_phase phase);
 	super.run_phase(phase);
 	//rsp_seq_item = my_sequence_item:: type_id :: create("rsp_seq_item");
 	forever begin
-	  @(posedge clk_vif.Bit_Rate_Clk);
+		@(negedge clk_vif.Bit_Rate_Clk);
       rsp_seq_item = my_sequence_item:: type_id :: create("rsp_seq_item");                        		   
    	  rsp_seq_item.MAC_Data_En = bfm_vif.MAC_Data_En;
    	  // rsp_seq_item.Reset_n		  = bfm_vif.Reset_n;
