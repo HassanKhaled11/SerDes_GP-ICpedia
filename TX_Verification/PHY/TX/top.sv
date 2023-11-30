@@ -103,10 +103,11 @@ uvm_config_db#(virtual TX_if)::set(null   , "*", "tx_if",dut_if) ;
 //uvm_config_db#(virtual golden_if)::set(null,"*" ,"gm_if"   ,g_if)  ;
 run_test("my_test");	
 end
-
+/*
 initial begin
-	#2000;
+	#100000;
+
 	$stop();
 end
-
+*/
 endmodule

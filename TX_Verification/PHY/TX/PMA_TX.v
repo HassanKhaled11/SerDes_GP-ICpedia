@@ -115,7 +115,7 @@ end
 
 always @(posedge Bit_Rate_Clk or negedge Rst_n) begin
   if(!Rst_n) begin
-     Temp_Reg_    <= 0             ;
+     Temp_Reg_    <= 0      ;
   end
 
   else begin

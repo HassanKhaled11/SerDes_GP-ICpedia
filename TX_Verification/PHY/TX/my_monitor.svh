@@ -40,8 +40,12 @@ endfunction
 virtual task run_phase(uvm_phase phase);
 	super.run_phase(phase);
 	//rsp_seq_item = my_sequence_item:: type_id :: create("rsp_seq_item");
+	//@(posedge  clk_vif.Bit_Rate_CLK_10);
+	//@(negedge clk_vif.Bit_Rate_Clk);
 	forever begin
-		@(negedge clk_vif.Bit_Rate_Clk);
+	  //repeat(10) begin
+	  	@(negedge clk_vif.Bit_Rate_Clk);
+
       rsp_seq_item = my_sequence_item:: type_id :: create("rsp_seq_item");                        		   
    	  rsp_seq_item.MAC_Data_En = bfm_vif.MAC_Data_En;
    	  // rsp_seq_item.Reset_n		  = bfm_vif.Reset_n;
@@ -50,7 +54,10 @@ virtual task run_phase(uvm_phase phase);
       rsp_seq_item.DataBusWidth	  = bfm_vif.DataBusWidth;
       rsp_seq_item.TX_Out_P 	  = bfm_vif.TX_Out_P;
       rsp_seq_item.TX_Out_N		  = bfm_vif.TX_Out_N;
-	  mon_port.write(rsp_seq_item);     
+	  //////
+	  `uvm_info("MONITOR" , "DATA SENT TO SCOREBOARD HERE" , UVM_MEDIUM);
+	  mon_port.write(rsp_seq_item);  
+	   
 	end 
 endtask
 endclass	

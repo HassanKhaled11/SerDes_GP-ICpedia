@@ -1,5 +1,5 @@
 //package my_scoreboard_pkg;
-
+`timescale 1ns/10ps
 import uvm_pkg::*;
 import my_config_db_pkg::*;
 `include "uvm_macros.svh"
@@ -11,229 +11,333 @@ import PARAMETERS_pkg::*;
 
 class my_scoreboard extends uvm_scoreboard;
 
-`uvm_component_utils(my_scoreboard);
+  `uvm_component_utils(my_scoreboard);
 
-uvm_analysis_export   #(my_sequence_item) sb_export ;
-// uvm_analysis_imp      #(my_sequence_item , my_scoreboard) sb_export ;
-uvm_tlm_analysis_fifo #(my_sequence_item) sb_fifo   ;
+  uvm_analysis_export #(my_sequence_item)         sb_export;
+  // uvm_analysis_imp      #(my_sequence_item , my_scoreboard) sb_export ;
+  uvm_tlm_analysis_fifo #(my_sequence_item)       sb_fifo;
 
-//virtual golden_if    dut_vif;
-virtual TX_if dut_vif;
-my_sequence_item     data_to_check                 ;
-my_sequence_item     data_to_check_prev            ;
+  //virtual golden_if    dut_vif;
+  virtual TX_if   dut_vif ;
+  virtual CLK_if  clk_vif ;
+  my_sequence_item                                data_to_check;
+  my_sequence_item                                data_to_check_prev;
 
-logic [7:0] pos_encoding [9:0];
-logic [7:0] neg_encoding [9:0];
+  logic                                     [7:0] pos_encoding[logic  [9:0]];
+  logic                                     [7:0] neg_encoding[logic  [9:0]];
 
-logic [9:0] data_collect ;
-int collect_counter ;
-int correct_count   ;
-int error_count     ;
-//int clk_correct_count   ;
-//int clk_error_count     ;
-int counter;
+  logic                                     [9:0] data_collect;
+  logic [7:0]                                      temp,temp8,temp16,temp24,temp32;
+  int                                             collect_counter;
+  int                                             correct_count;
+  int                                             error_count;
+  bit                                             flag;
+ // bit f,f1,f2;
+ int i;
+  real clk_period_5G ;
 
-function new(string name = "my_scoreboard" , uvm_component parent = null);
-	super.new(name,parent);
-	collect_counter   = 0 ;
-	correct_count     = 0 ;
-	error_count       = 0 ;
-    data_collect      = 0 ;
-    //clk_correct_count = 0 ;
-   // clk_error_count   = 0 ;
-endfunction
+  int clk_ref_correct_count   ;
+  int clk_ref_error_count     ;
+
+  int clk_10_correct_count   ;
+  int clk_10_error_count     ;
+
+  int clk_5G_correct_count   ;
+  int clk_5G_error_count     ;
+
+  int pclk_correct_count   ;
+  int pclk_error_count     ;
+  int                                             counter                     = 0;
+
+  function new(string name = "my_scoreboard", uvm_component parent = null);
+    super.new(name, parent);
+    collect_counter = 0;
+    correct_count   = 0;
+    error_count     = 0;
+    data_collect    = 0;
+    clk_10_correct_count = 0 ;
+    clk_10_error_count   = 0 ;
+    clk_5G_correct_count = 0 ;
+    clk_5G_error_count   = 0 ;
+    pclk_correct_count = 0 ;
+    pclk_error_count   = 0 ;
+    clk_ref_correct_count=0;
+clk_ref_error_count=0;
+clk_period_5G = 0.2 ;
+// f1 = 0;
+// f2 = 0;
+// f = 0;
+i = 0;
+  endfunction
 
 
-function void build_phase(uvm_phase phase);
-	super.build_phase(phase);
-	sb_export = new("sb_export" , this);
-	sb_fifo   = new("sb_fifo"   , this);
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    sb_export = new("sb_export" , this);
+    sb_fifo   = new("sb_fifo"   , this);
     data_to_check = new ("data_to_check");
     data_to_check_prev = new ("data_to_check_prev");
 
-	if(!uvm_config_db#(virtual TX_if)::get(this, "", "tx_if",dut_vif))
-		`uvm_fatal("MY_SCOREBOARD" , "FAILED GETTING tx_if_db");
+    if(!uvm_config_db#(virtual TX_if)::get(this, "", "tx_if", dut_vif))
+      `uvm_fatal("","doesn't read stimulus through scoreboard")
+    if(!uvm_config_db#(virtual CLK_if)::get(this , "" , "CLK_if" , clk_vif))
+      `uvm_fatal("","doesn't read clocks through scoreboard")
 
-	`uvm_info("MY_SCOREBOARD","BUILD_PHASE",UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD", "BUILD_PHASE", UVM_MEDIUM);
 
-endfunction 
-
-
-function void connect_phase(uvm_phase phase);
-	super.connect_phase(phase);
- sb_export.connect(sb_fifo.analysis_export);	
-endfunction
+  endfunction
 
 
-
-// function void write(my_sequence_item  pkt);
-// 	data_to_check = pkt ;
-// endfunction
-
-// 8 8 8 8 -> 10 10 10 10
-
-
-task run_phase(uvm_phase phase);
-	super.run_phase(phase);
-
-//fork
-	begin
-     /////////////////////////////////////////////////////////////////////////
-    ////////////////////// CHECKING TX_Out_P  /////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////        
-        golden_model();
-        forever begin	
-
-          sb_fifo.get(data_to_check);
-          data_to_check_prev = data_to_check ;
-          
-          data_collect[counter] = data_to_check.TX_Out_P;
-          counter++ ;
-          
-          //`uvm_info("MY_SCOREBOARD-- TX_Out_P" , $sformatf(" TX_Out_P = %b", data_to_check.TX_Out_P ) , UVM_MEDIUM);
-
-          if(counter == 10) begin
-              counter = 0;
-
-            ///////////////////
-          `uvm_info("MY_SCOREBOARD--" , $sformatf(" Data_in = 0x%h  , tx_data_en = %d , TX_Out_P = %d", data_collect  , data_to_check_prev.MAC_Data_En , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-          
-          if(data_to_check_prev.MAC_TX_Data[7:0] == neg_encoding[data_collect] || data_to_check_prev.MAC_TX_Data[7:0] == pos_encoding[data_collect])  begin
-             `uvm_info("SUCEEDED TEST" , $sformatf("SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              correct_count ++ ;
-          end
-          else begin
-          `uvm_info("FAILED TEST" , $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              error_count++ ;
-          end
-            ///////////////////  
-          end
+  function void connect_phase(uvm_phase phase);
+    super.connect_phase(phase);
+    sb_export.connect(sb_fifo.analysis_export);
+  endfunction
 
 
 
-          ///////////////////////////////////  
-          if(data_to_check_prev.DataBusWidth == 6'd16 || data_to_check_prev.DataBusWidth == 6'd32) begin
-          sb_fifo.get(data_to_check);
-          data_to_check_prev = data_to_check ;
-          
-          data_collect[counter] = data_to_check.TX_Out_P;
-          counter++ ;
-          
-          //`uvm_info("MY_SCOREBOARD-- TX_Out_P" , $sformatf(" TX_Out_P = %b", data_to_check.TX_Out_P ) , UVM_MEDIUM);
+  // function void write(my_sequence_item  pkt);
+  // 	data_to_check = pkt ;
+  // endfunction
 
-          if(counter == 10) begin
-              counter = 0;
+  // 8 8 8 8 -> 10 10 10 10
 
-            ///////////////////
-          `uvm_info("MY_SCOREBOARD--" , $sformatf(" Data_in = 0x%h  , tx_data_en = %d , TX_Out_P = %d", data_collect  , data_to_check_prev.MAC_Data_En , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-          
-          if(data_to_check_prev.MAC_TX_Data[15:8] == neg_encoding[data_collect] || data_to_check_prev.MAC_TX_Data[15:8] == pos_encoding[data_collect])  begin
-             `uvm_info("SUCEEDED TEST" , $sformatf("SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              correct_count ++ ;
-          end
-          else begin
-          `uvm_info("FAILED TEST" , $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              error_count++ ;
-          end
-            ///////////////////  
-          end
-          end
-          /////////////////////////////
-          if(data_to_check_prev.DataBusWidth == 6'd32) begin
-          sb_fifo.get(data_to_check);
-          data_to_check_prev = data_to_check ;
-          
-          data_collect[counter] = data_to_check.TX_Out_P;
-          counter++ ;
-          
-          //`uvm_info("MY_SCOREBOARD-- TX_Out_P" , $sformatf(" TX_Out_P = %b", data_to_check.TX_Out_P ) , UVM_MEDIUM);
 
-          if(counter == 10) begin
-              counter = 0;
+  task run_phase(uvm_phase phase);
+    super.run_phase(phase);
 
-            ///////////////////
-          `uvm_info("MY_SCOREBOARD--" , $sformatf(" Data_in = 0x%h  , tx_data_en = %d , TX_Out_P = %d", data_collect  , data_to_check_prev.MAC_Data_En , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-          
-          if(data_to_check_prev.MAC_TX_Data[23:16] == neg_encoding[data_collect] || data_to_check_prev.MAC_TX_Data[23:16] == pos_encoding[data_collect])  begin
-             `uvm_info("SUCEEDED TEST" , $sformatf("SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              correct_count ++ ;
-          end
-          else begin
-          `uvm_info("FAILED TEST" , $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              error_count++ ;
-          end  
-          end
-
-          sb_fifo.get(data_to_check);
-          data_to_check_prev = data_to_check ;
-          
-          data_collect[counter] = data_to_check.TX_Out_P;
-          counter++ ;
-          
-          //`uvm_info("MY_SCOREBOARD-- TX_Out_P" , $sformatf(" TX_Out_P = %b", data_to_check.TX_Out_P ) , UVM_MEDIUM);
-
-          if(counter == 10) begin
-              counter = 0;
-
-            ///////////////////
-          `uvm_info("MY_SCOREBOARD--" , $sformatf(" Data_in = 0x%h  , tx_data_en = %d , TX_Out_P = %d", data_collect  , data_to_check_prev.MAC_Data_En , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-          
-          if(data_to_check_prev.MAC_TX_Data[31:24] == neg_encoding[data_collect] || data_to_check_prev.MAC_TX_Data[31:24] == pos_encoding[data_collect])  begin
-             `uvm_info("SUCEEDED TEST" , $sformatf("SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              correct_count ++ ;
-          end
-          else begin
-          `uvm_info("FAILED TEST" , $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",dut_vif.TX_Out_P , data_to_check_prev.TX_Out_P) , UVM_MEDIUM);
-              error_count++ ;
-          end
-            ///////////////////  
-          end
-          //////////
-          end
-          /////////////////////////////
+    fork
+    begin
+      /////////////////////////////////////////////////////////////////////////
+      ////////////////////// CHECKING TX_Out_P  /////////////////////////////////
+      /////////////////////////////////////////////////////////////////////////        
+      golden_model();
+      
+      forever begin 
+        sb_fifo.get(data_to_check);
+        `uvm_info("SCOREBOARD" , "DATA RECIEVER IN SCOREBOARD HERE" , UVM_HIGH);
+        data_to_check_prev = data_to_check;   
+        
+        
+       if (counter == 0) begin 
+         data_collect = 10'b0;
+          temp8 = data_to_check_prev.MAC_TX_Data[7:0];
+          temp16 = data_to_check_prev.MAC_TX_Data[15:8];
+          temp24 = data_to_check_prev.MAC_TX_Data[23:16];
+          temp32 = data_to_check_prev.MAC_TX_Data[31:24];
+       end
+        data_collect[counter] = data_to_check.TX_Out_P;
+        counter++;
+         
+        case (data_to_check_prev.DataBusWidth)
+          6'd8 : if(i == 1) i = 0;
+          6'd16 : if(i == 2) i = 0;
+          6'd32 : if(i == 4) i = 0;
+          default : i = 0;
+        endcase
+         if (counter == 10) begin
+              i++;
+             if((data_to_check_prev.DataBusWidth == 6'd8 || data_to_check_prev.DataBusWidth == 6'd16 || data_to_check_prev.DataBusWidth == 6'd32) && i == 1)       
+                      check_out(temp8, data_collect);   
+              else if((data_to_check_prev.DataBusWidth == 6'd16 || data_to_check_prev.DataBusWidth == 6'd32) && i == 2)
+                      check_out(temp8, data_collect);
+              else if((data_to_check_prev.DataBusWidth == 6'd32) && i == 3)
+                      check_out(temp24, data_collect);
+              else if((data_to_check_prev.DataBusWidth == 6'd32) && i == 4)
+                      check_out(temp32, data_collect);
+             counter = 0;
+            
         end
-    end
-
+        end   
+      end
+    
     /////////////////////////////////////////////////////////////////////////
     ///////////////// CHECKING CLOCK PERIDO /////////////////////////////////
     /////////////////////////////////////////////////////////////////////////
+    // process for clock 5G/10 check duty cycle
+    begin
+      forever begin
+    	time t1 ;
+    	time t2 ;
 
-    // begin
-    //   forever begin
-    // 	time t1 ;
-    // 	time t2 ;
-    
-    // 	@(posedge dut_vif.Bit_Rate_10) t1 = $realtime();
-    // 	@(posedge dut_vif.Bit_Rate_10) t2 = $realtime();
-    
-    // 	if((t2 - t1) == CLOCK_PERIOD) begin
-    // 		`uvm_info("SUCEEDED CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",t2 - t1) , UVM_MEDIUM);
-    // 		clk_correct_count++;
-    // 	end
-    
-    //     else begin
-    //     	`uvm_info("FAILED CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",t2 - t1) , UVM_MEDIUM);
-    //         clk_error_count++;
-    //     end                 
-    //   end
-    	
-    // end
-    
-//join
+    	@(posedge clk_vif.Bit_Rate_CLK_10) t1 = $realtime();
+    	@(posedge clk_vif.Bit_Rate_CLK_10) t2 = $realtime();
+
+    	if((t2 - t1) == CLOCK_PERIOD_10) begin
+    		`uvm_info("SUCEEDED (5G/10) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",t2 - t1) , UVM_MEDIUM);
+    		clk_10_correct_count++;
+    	end
+
+        else begin
+        	`uvm_info("FAILED (5G/10) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",t2 - t1) , UVM_MEDIUM);
+            clk_10_error_count++;
+        end                 
+      end
+
+    end
+    // process for clock 5G check duty cycle
+    begin
+      forever begin
+      realtime time1 ;
+      realtime time2 ;
+
+      @(posedge clk_vif.Bit_Rate_Clk) time1 = $realtime();
+      @(posedge clk_vif.Bit_Rate_Clk) time2 = $realtime();
+
+      if(int'((time2 - time1)*10) == int'((clk_period_5G)*10)) begin
+        `uvm_info("SUCEEDED (5G) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f,clk_period_5G = %f",time2 - time1,clk_period_5G) , UVM_MEDIUM);
+        clk_5G_correct_count++;
+      end
+
+        else begin
+          `uvm_info("FAILED (5G) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f,clk_period_5G = %f",time2 - time1,clk_period_5G) , UVM_MEDIUM);
+            clk_5G_error_count++;
+        end                 
+      end
+    end
+    // process for clock Ref check duty cycle
+    begin
+      forever begin
+      time time1 ;
+      time time2 ;
+
+      @(posedge dut_vif.Ref_CLK) time1 = $realtime();
+      @(posedge dut_vif.Ref_CLK) time2 = $realtime();
+
+      if((time2 - time1) == CLOCK_PERIOD_Ref) begin
+        `uvm_info("SUCEEDED (Ref) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+        clk_ref_correct_count++;
+      end
+
+        else begin
+          `uvm_info("FAILED (Ref) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+            clk_ref_error_count++;
+        end                 
+      end
+    end
+     // process for clock PCLK check duty cycle
+    begin
+      forever begin
+      time time1 ;
+      time time2 ;
+      int pclk_period;
+      @(posedge clk_vif.PCLK) time1 = $realtime();
+      @(posedge clk_vif.PCLK) time2 = $realtime();
+      
+      if(dut_vif.DataBusWidth == 6'd8)
+        pclk_period = 2;
+      else if(dut_vif.DataBusWidth == 6'd16)
+        pclk_period = 4;
+      else if(dut_vif.DataBusWidth == 6'd32)
+        pclk_period = 8;
 
 
-endtask
+      if((time2 - time1) == pclk_period) begin
+        `uvm_info("SUCEEDED (pclk) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+        pclk_correct_count++;
+      end
+
+        else begin
+          `uvm_info("FAILED (pclk) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+            pclk_error_count++;
+        end                 
+      end
+    end
+    join
 
 
-function void report_phase(uvm_phase phase);
-	super.report_phase(phase);
-	`uvm_info("MY_SCOREBOARD"      , $sformatf("CORRECT_COUNT = %d",correct_count)       , UVM_MEDIUM);
-	`uvm_info("MY_SCOREBOARD"      , $sformatf("ERROR_COUNT   = %d",error_count)         , UVM_MEDIUM);
-	//`uvm_info("MY_SCOREBOARD"      , $sformatf("CORRECT_COUNT = %d",clk_correct_count)   , UVM_MEDIUM);
-	//`uvm_info("MY_SCOREBOARD"      , $sformatf("ERROR_COUNT   = %d",clk_error_count)     , UVM_MEDIUM);
-endfunction
+  endtask
 
-/*
+
+  function void report_phase(uvm_phase phase);
+    super.report_phase(phase);
+    `uvm_info("MY_SCOREBOARD", $sformatf("CORRECT_COUNT = %d", correct_count), UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD", $sformatf("ERROR_COUNT   = %d", error_count), UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD 5G/10"      , $sformatf("CORRECT_COUNT = %d",clk_10_correct_count)   , UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD 5G/10"      , $sformatf("ERROR_COUNT   = %d",clk_10_error_count)     , UVM_MEDIUM);
+     `uvm_info("MY_SCOREBOARD 5G"      , $sformatf("CORRECT_COUNT = %d",clk_5G_correct_count)   , UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD 5G"      , $sformatf("ERROR_COUNT   = %d",clk_5G_error_count)     , UVM_MEDIUM);
+     `uvm_info("MY_SCOREBOARD Ref"      , $sformatf("CORRECT_COUNT = %d",clk_ref_correct_count)   , UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD Ref"      , $sformatf("ERROR_COUNT   = %d",clk_ref_error_count)     , UVM_MEDIUM);
+      `uvm_info("MY_SCOREBOARD pclk"      , $sformatf("CORRECT_COUNT = %d",pclk_correct_count)   , UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD pclk"      , $sformatf("ERROR_COUNT   = %d",pclk_error_count)     , UVM_MEDIUM);
+
+  endfunction
+
+  task check_out(input logic [7:0] data, logic [9:0] ref_data_collected_10);
+
+    `uvm_info("MY_SCOREBOARD--", $sformatf(" Data_collect = 0x%h , tx_data = %h",
+                                           ref_data_collected_10, data), UVM_MEDIUM);
+
+    if ((neg_encoding.exists(
+            ref_data_collected_10
+        ) && data == neg_encoding[ref_data_collected_10]) ||
+            (pos_encoding.exists(
+            ref_data_collected_10
+        ) && data == pos_encoding[ref_data_collected_10])) begin
+      `uvm_info("SUCEEDED TEST", $sformatf(
+                                     "SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",
+                                     dut_vif.TX_Out_P, data_to_check_prev.TX_Out_P), UVM_MEDIUM);
+      correct_count++;
+      flag = 1'b0;
+    end
+
+     else begin
+      `uvm_info("FAILED TEST", $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",
+                                         dut_vif.TX_Out_P, data_to_check_prev.TX_Out_P),
+                UVM_MEDIUM);
+      if (neg_encoding.exists(ref_data_collected_10))
+        `uvm_info("MY_SCOREBOARD--",
+                  $sformatf(" neg: neg_encoding[0x%h] = %b  , data = %b", ref_data_collected_10,
+                            neg_encoding[ref_data_collected_10], data), UVM_MEDIUM);
+      if (pos_encoding.exists(ref_data_collected_10))
+        `uvm_info("MY_SCOREBOARD--",
+                  $sformatf(" pos: pos_encoding[0x%h] = %b  , data = %b", ref_data_collected_10,
+                            pos_encoding[ref_data_collected_10], data), UVM_MEDIUM);
+
+      error_count++;
+      flag = 1'b1;
+    end
+
+  endtask  //
+
+
+  // task check_out(input logic [7:0] data, logic [9:0] ref_data_collected_10);
+
+  //   `uvm_info("MY_SCOREBOARD--", $sformatf(" Data_collect = 0x%h  , tx_data_en = %d", data_collect,
+  //                                          data_to_check_prev.MAC_Data_En), UVM_MEDIUM);
+
+  //   if ((neg_encoding.exists(
+  //           data_collect
+  //       ) && data_to_check_prev.MAC_TX_Data[7:0] == neg_encoding[data_collect]) ||
+  //           (pos_encoding.exists(
+  //           data_collect
+  //       ) && data_to_check_prev.MAC_TX_Data[7:0] == pos_encoding[data_collect])) begin
+  //     `uvm_info("SUCEEDED TEST", $sformatf(
+  //                                    "SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",
+  //                                    dut_vif.TX_Out_P, data_to_check_prev.TX_Out_P), UVM_MEDIUM);
+  //     correct_count++;
+  //     flag = 1'b0;
+  //   end else begin
+  //     `uvm_info("FAILED TEST", $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",
+  //                                        dut_vif.TX_Out_P, data_to_check_prev.TX_Out_P),
+  //               UVM_MEDIUM);
+  //     if (neg_encoding.exists(ref_data_collected_10))
+  //       `uvm_info("MY_SCOREBOARD--",
+  //                 $sformatf(" neg: neg_encoding[0x%h] = %b  , data = %b", ref_data_collected_10,
+  //                           neg_encoding[ref_data_collected_10], data), UVM_MEDIUM);
+  //     if (pos_encoding.exists(ref_data_collected_10))
+  //       `uvm_info("MY_SCOREBOARD--",
+  //                 $sformatf(" pos: pos_encoding[0x%h] = %b  , data = %b", ref_data_collected_10,
+  //                           pos_encoding[ref_data_collected_10], data), UVM_MEDIUM);
+
+  //     error_count++;
+  //     flag = 1'b1;
+  //   end
+
+  // endtask  //
+
+
+  /*
 task check_disparity();
     
     if (curr_disparity == negative && neg_encoding.exists(data_collect)) begin
@@ -241,7 +345,7 @@ task check_disparity();
 
             ) begin
         error_disparity_count++;
-        $display("neg_encoding[%0b]: %0d,data_ref: %0b", data_out, neg_encoding[data_out],
+        $display("neg_encoding[%0h]: %0d,data_ref: %0h", data_out, neg_encoding[data_out],
                  data_out_ref);
       end else begin
         assoc_out = neg_encoding[data_out];
@@ -250,7 +354,7 @@ task check_disparity();
     end else if (curr_disparity == positive && pos_encoding.exists(data_out)) begin
       if (pos_encoding[data_out] !== data_out_ref) begin
         error_disparity_count++;
-        $display("pos_encoding[%0b]: %0d,data_ref: %0b", data_out, pos_encoding[data_out],
+        $display("pos_encoding[%0h]: %0d,data_ref: %0h", data_out, pos_encoding[data_out],
                  data_out_ref);
       end else begin
         assoc_out = pos_encoding[data_out];
@@ -261,7 +365,7 @@ task check_disparity();
         begin
           error_disparity_count++;
           $display(
-              "%0t,not in both!! disparity: %s, neg_encoding[%0b]: %0d, pos_encoding[%0b]: %0d,data_ref: (%0d)%0b",
+              "%0t,not in both!! disparity: %s, neg_encoding[%0h]: %0d, pos_encoding[%0h]: %0d,data_ref: (%0d)%0h",
               $time, curr_disparity, data_out, neg_encoding[data_out], data_out,
               pos_encoding[data_out], data_out_ref, data_out_ref);
         end
@@ -275,8 +379,8 @@ task check_disparity();
 
   endtask  //
   */
-//////////////////////////////////////////
-task golden_model();
+  //////////////////////////////////////////
+  task golden_model();
     ///////////////////////////////////////////
     /////////////negative encoding/////////////
     ///////////////////////////////////////////
@@ -833,8 +937,8 @@ task golden_model();
     pos_encoding[10'b01_0001_0111] = 8'b1111_1101;
     pos_encoding[10'b10_0001_0111] = 8'b1111_1110;
   endtask  //
-////////////////////////////////////////////
+  ////////////////////////////////////////////
 
 
-endclass	
+endclass
 //endpackage	
