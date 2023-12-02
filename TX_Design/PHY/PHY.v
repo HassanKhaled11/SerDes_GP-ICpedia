@@ -25,8 +25,8 @@ PLL  PLL_U (
  .Bit_Rate_Clk    (Bit_Rate_Clk)       ,
  .Bit_Rate_CLK_10 (Bit_Rate_CLK_10)    ,
  .PCLK            (PCLK)               ,
- .Rst             (Reset_n)              
- // .DataBusWidth    (DataBusWidth)    ,
+ .Rst_n           (Reset_n)            ,  
+ .DataBusWidth    (DataBusWidth)       
 );
 
 
@@ -35,7 +35,7 @@ PCS  PCS_U
 (
 
  .PCLK                 (PCLK)                    , 
- .RST_n                (Reset_n)                   ,
+ .RST_n                (Reset_n)                 ,
  .Bit_Rate_Clk_10      (Bit_Rate_CLK_10)         ,
  .DataBusWidth         (DataBusWidth)            ,
  .MAC_TX_Data          (MAC_TX_Data)             ,
@@ -53,13 +53,14 @@ PCS  PCS_U
 
 PMA   PMA_U
 (
-  .Bit_Rate_Clk (Bit_Rate_Clk)    ,
-  .Rst_n        (Reset_n)           ,
-  .Data_in      (Data_In_PMA)     , 
+  .Bit_Rate_Clk_10(Bit_Rate_CLK_10),
+  .Bit_Rate_Clk (Bit_Rate_Clk)     ,
+  .Rst_n        (Reset_n)          ,
+  .Data_in      (Data_In_PMA)      , 
   .MAC_Data_En  (MAC_Data_En_)     ,
 
 
-  .TX_Out_P     (TX_Out_P)        ,
+  .TX_Out_P     (TX_Out_P)         ,
   .TX_Out_N   	(TX_Out_N)    
 );
 
