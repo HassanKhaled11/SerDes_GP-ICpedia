@@ -6,7 +6,7 @@ module elasticBuffer (
     overflow,
     skp_added_removed,
     data_out,
-    loopback_tx,
+    // loopback_tx,
     rst_n
 );
   parameter DATA_WIDTH = 10;
@@ -14,28 +14,31 @@ module elasticBuffer (
   input clk_write;
   input clk_read;
   input rst_n;
-  input buffer_mode;
+  input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
   input [DATA_WIDTH-1:0] data_in;
-  output loopback_tx;
+  // output loopback_tx;
   output reg overflow;
   output skp_added_removed;
   output  reg [DATA_WIDTH-1:0] data_out;
 
   localparam max_buffer_addr = $clog2(BUFFER_DEPTH);
-  reg                    [     DATA_WIDTH-1:0] buffer        [0:BUFFER_DEPTH-1];
-  reg                    [max_buffer_addr-1:0] read_pointer;
-  reg                    [max_buffer_addr-1:0] write_pointer;
-  reg                    [max_buffer_addr-1:0] count;
+  reg [     DATA_WIDTH-1:0] buffer        [0:BUFFER_DEPTH-1];
+  reg [max_buffer_addr-1:0] read_pointer;
+  reg [max_buffer_addr-1:0] write_pointer;
+  reg [max_buffer_addr-1:0] count;
 
-  wire buffer_limit = 8;
+  localparam buffer_limit = (BUFFER_DEPTH) / 2;
+
 
   //writing
   always @(posedge clk_write) begin
     if (!rst_n) begin
       write_pointer <= 0;
-    end else begin
+    end else if (buffer_mode == 0) begin
       buffer[write_pointer] <= data_in;
       write_pointer <= write_pointer + 1;
+
+
     end
 
   end
@@ -51,7 +54,7 @@ module elasticBuffer (
   end
 
   //making a counter
-  always @(posedge clk_read or posedge clk_write) begin
+  always @(*) begin
     if (!rst_n) begin
       count <= 0;
       overflow <= 0;
