@@ -1,7 +1,6 @@
 `timescale 1ps / 1ps
 module freq_mul (
     input Ref_Clk,
-    input RST,
     output reg CLK
 );
 

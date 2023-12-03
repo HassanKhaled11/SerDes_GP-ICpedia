@@ -1,8 +1,8 @@
 `timescale 1ps/1ps
 module PLL_TB();
 reg Ref_Clk , rst ;
-reg[7:0] ratio;
-wire clk5G, divided_clk;
+
+wire clk5G, divided_clk, Bit_Rate_CLK_10;
 
 
 initial begin
@@ -12,10 +12,9 @@ end
 
 initial begin
 rst = 1;
-ratio = 8'b0001_0100;
-@(negedge Ref_Clk)
+#2;
 rst = 0;
-@(negedge Ref_Clk)
+#2;
 rst = 1;
 end
 initial begin
@@ -24,9 +23,9 @@ initial begin
 end
 PLL DUT(
 		.Ref_Clk  (Ref_Clk),
-		.rst      (rst),
-		.CLK      (clk5G),
-		.div_ratio(ratio),
+		.Rst      (rst),
+		.Bit_Rate_Clk      (clk5G),
+		.Bit_Rate_CLK_10(Bit_Rate_CLK_10),
 		.PCLK     (divided_clk)
 		);
 endmodule 
