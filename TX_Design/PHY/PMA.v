@@ -1,12 +1,13 @@
 module PMA
 (
+     input                    Bit_Rate_Clk_10 ,
      input                    Bit_Rate_Clk    ,
      input                    Rst_n           ,
      input [9:0]              Data_in         , 
      input                    MAC_Data_En     ,
 
 
-     output reg               TX_Out_P        ,
+     output                   TX_Out_P        ,
      output                   TX_Out_N   	  
 );
 

@@ -1,6 +1,6 @@
 module PLL (
     input  Ref_Clk,  // 100 MG 
-    input  RST_n,
+    input  Rst_n,
     input  [5:0] DataBusWidth ,
     
     output Bit_Rate_Clk,
@@ -20,7 +20,7 @@ reg [7:0] ratio ;
 
   Clock_Div clock_divider (
       .Ref_Clk(Bit_Rate_Clk),  // 5G/10
-      .RST_n(RST_n),
+      .rst(Rst_n),
       .div_ratio(8'b0000_1010),
       .divided_clk(Bit_Rate_CLK_10)
   );
@@ -28,7 +28,7 @@ reg [7:0] ratio ;
 
   Clock_Div clock_divider1 (
       .Ref_Clk(Bit_Rate_Clk),  //PCLK
-      .RST_n(RST_n),
+      .rst(Rst_n),
       .div_ratio(ratio),
       .divided_clk(PCLK)
   );
