@@ -14,8 +14,8 @@ module elasticBuffer_tb ();
 
   // Instantiate the DUT
   elasticBuffer #(DATA_WIDTH, BUFFER_DEPTH) DUT (
-      .clk_write(clk_write),
-      .clk_read(clk_read),
+      .write_clk(clk_write),
+      .read_clk(clk_read),
       .rst_n(rst_n),
       .buffer_mode(buffer_mode),
       .data_in(data_in),

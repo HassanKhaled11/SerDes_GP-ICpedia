@@ -1,8 +1,8 @@
 module elasticBuffer (
     data_in,
     buffer_mode,
-    clk_write,
-    clk_read,
+    write_clk,
+    read_clk,
     overflow,
     underflow,
     skp_added,
@@ -15,8 +15,8 @@ module elasticBuffer (
   parameter BUFFER_DEPTH = 16;
 
   //inputs
-  input clk_write;
-  input clk_read;
+  input write_clk;
+  input read_clk;
   output skp_added;
   output skp_removed;
   input rst_n;
