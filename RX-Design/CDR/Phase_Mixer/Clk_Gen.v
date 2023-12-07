@@ -3,13 +3,14 @@
 module Clk_Gen(
 
 input [8:0] code,
+input       clk_in,
 
 output reg  pmix_clk,pmix_clk_90,
 output pmix_clk_n,pmix_clk_90_n
 );
 
 
-reg  clk , clk_in            ;
+reg  clk                     ;
 reg  rst_n                   ;   
 reg  [360:1] clk_            ;
 
@@ -25,10 +26,7 @@ forever #0.00055 clk = ~clk ;
 end
 
 
-initial begin
-clk_in = 0;
-forever #0.2 clk_in = ~clk_in ;
-end
+
 
 initial begin              //Reset Generation
  rst_n = 0;

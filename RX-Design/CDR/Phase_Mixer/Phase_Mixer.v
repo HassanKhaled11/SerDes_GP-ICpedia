@@ -1,6 +1,7 @@
 module Phase_Mixer
 (
- input  [9:0]   Code           ,	
+ input  [9:0]   Code           ,
+ input  clk_in                 ,	
 
  output         D_CLK          , 
  output         D_CLK_n        ,
@@ -17,12 +18,15 @@ module Phase_Mixer
 Clk_Gen Clk_Gen_U(
 
 .code          (Interpol_Code) ,
+.clk_in        (clk_in)        ,
 
 .pmix_clk      (D_CLK)         ,
 .pmix_clk_90   (PhCLK)         ,
 .pmix_clk_n    (D_CLK_n)       ,
 .pmix_clk_90_n (PhCLK_n) 
 );
+
+
 
 
 ////////////////////////////////////////////////
@@ -76,6 +80,7 @@ endmodule
 module Phase_Mixer_tb ;
 
  reg  [9:0]    Code           ;
+ reg           clk_in         ;
  
  wire          D_CLK          ; 
  wire          D_CLK_n        ;
@@ -84,7 +89,14 @@ module Phase_Mixer_tb ;
  
  integer i                    ;
 
- Phase_Mixer DUT(.Code(Code) , .D_CLK(D_CLK) , .D_CLK_n(D_CLK_n) ,.PhCLK(PhCLK) , .PhCLK_n(PhCLK_n));
+
+initial begin
+clk_in = 0;
+forever #0.2 clk_in = ~clk_in ;
+end
+
+
+ Phase_Mixer DUT(.Code(Code) , .clk_in(clk_in) ,.D_CLK(D_CLK) , .D_CLK_n(D_CLK_n) ,.PhCLK(PhCLK) , .PhCLK_n(PhCLK_n));
 
 
  initial begin
