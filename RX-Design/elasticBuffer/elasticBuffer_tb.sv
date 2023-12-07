@@ -6,21 +6,23 @@ module elasticBuffer_tb ();
   reg rst_n;
   reg buffer_mode;
   reg [DATA_WIDTH-1:0] data_in;
-  wire loopback_tx;
   wire overflow;
-  wire skp_added_removed;
+  wire underflow;
+  wire skp_added;
+  wire skp_removed;
   wire [DATA_WIDTH-1:0] data_out;
 
   // Instantiate the DUT
-  elasticBuffer uut (
+  elasticBuffer #(DATA_WIDTH, BUFFER_DEPTH) DUT (
       .clk_write(clk_write),
       .clk_read(clk_read),
       .rst_n(rst_n),
       .buffer_mode(buffer_mode),
       .data_in(data_in),
-      .loopback_tx(loopback_tx),
       .overflow(overflow),
-      .skp_added_removed(skp_added_removed),
+      .underflow(underflow),
+      .skp_removed(skp_removed),
+      .skp_added(skp_added),
       .data_out(data_out)
   );
 
@@ -59,6 +61,32 @@ module elasticBuffer_tb ();
     @(negedge clk_write);
     data_in = 10'h092;
     @(negedge clk_write);
+    data_in = 10'hAA;
+    @(negedge clk_write);
+    data_in = 10'h2BB;
+    @(negedge clk_write);
+    data_in = 10'h1CC;
+    @(negedge clk_write);
+    data_in = 10'h3AA;
+    @(negedge clk_write);
+    data_in = 10'h111;
+    @(negedge clk_write);
+    @(negedge clk_write);
+    data_in = 10'h092;
+    @(negedge clk_write);
+    data_in = 10'hAA;
+    @(negedge clk_write);
+    data_in = 10'h2BB;
+    @(negedge clk_write);
+    data_in = 10'h1CC;
+    @(negedge clk_write);
+    data_in = 10'h3AA;
+    @(negedge clk_write);
+    data_in = 10'h111;
+    @(negedge clk_write);
+    @(negedge clk_write);
+    data_in = 10'h092;
+    @(negedge clk_write);
     // // Read data from the buffer
     // buffer_mode = 1; // Set to read mode
     // #10;
@@ -67,6 +95,7 @@ module elasticBuffer_tb ();
 
 
     // End simulation
+    repeat (8) @(negedge clk_read);
     $stop;
   end
 endmodule
