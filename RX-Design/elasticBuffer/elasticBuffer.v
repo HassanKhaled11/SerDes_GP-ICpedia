@@ -1,69 +1,87 @@
 module elasticBuffer (
     data_in,
     buffer_mode,
-    clk_write,
-    clk_read,
+    write_clk,
+    read_clk,
     overflow,
-    skp_added_removed,
+    underflow,
+    skp_added,
+    skp_removed,
     data_out,
     // loopback_tx,
     rst_n
 );
   parameter DATA_WIDTH = 10;
   parameter BUFFER_DEPTH = 16;
-  input clk_write;
-  input clk_read;
+
+  //inputs
+  input write_clk;
+  input read_clk;
+  output skp_added;
+  output skp_removed;
   input rst_n;
   input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
   input [DATA_WIDTH-1:0] data_in;
+
+  //outputs
   // output loopback_tx;
-  output reg overflow;
-  output skp_added_removed;
-  output  reg [DATA_WIDTH-1:0] data_out;
+  output overflow, underflow;
+  output [DATA_WIDTH-1:0] data_out;
 
   localparam max_buffer_addr = $clog2(BUFFER_DEPTH);
-  reg [     DATA_WIDTH-1:0] buffer        [0:BUFFER_DEPTH-1];
-  reg [max_buffer_addr-1:0] read_pointer;
-  reg [max_buffer_addr-1:0] write_pointer;
-  reg [max_buffer_addr-1:0] count;
+  wire [max_buffer_addr:0] gray_write_pointer;
+  wire [max_buffer_addr:0] gray_read_pointer;
+  wire [max_buffer_addr:0] write_address;
+  wire [max_buffer_addr:0] read_address;
 
-  localparam buffer_limit = (BUFFER_DEPTH) / 2;
+  wire [max_buffer_addr:0] sync_gray_read_out;
+  wire [max_buffer_addr:0] sync_gray_write_out;
+  // Instantiate write_pointer_control module
+  write_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) write_inst (
+      //   .data_in(data_in),
+      .gray_read_pointer(sync_gray_read_out),
+      .write_clk(write_clk),
+      .buffer_mode(buffer_mode),
+      .rst_n(rst_n),
+      .overflow(overflow),
+      .skp_added(skp_added),
+      .skp_removed(skp_removed),
+      .data_out(data_out),
+      .write_address(write_address),
+      .gray_write_pointer(gray_write_pointer)
+  );
 
-
-  //writing
-  always @(posedge clk_write) begin
-    if (!rst_n) begin
-      write_pointer <= 0;
-    end else if (buffer_mode == 0) begin
-      buffer[write_pointer] <= data_in;
-      write_pointer <= write_pointer + 1;
-
-
-    end
-
-  end
-
-  //reading
-  always @(posedge clk_read) begin
-    if (!rst_n) begin
-      read_pointer <= 0;
-    end else begin
-      data_out <= buffer[read_pointer];
-      read_pointer <= read_pointer + 1;
-    end
-  end
-
-  //making a counter
-  always @(*) begin
-    if (!rst_n) begin
-      count <= 0;
-      overflow <= 0;
-    end else begin
-      count <= (write_pointer>read_pointer)? (write_pointer - read_pointer):(read_pointer - write_pointer);
-      if (count > buffer_limit) begin
-        overflow = 1'b1;
-      end else overflow = 1'b0;
-    end
-  end
-
+  // Instantiate read_pointer_control module
+  read_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) read_inst (
+      .gray_write_pointer(sync_gray_write_out),
+      .buffer_mode(buffer_mode),
+      .read_clk(read_clk),
+      .rst_n(rst_n),
+      .empty(underflow),
+      .skp_added(skp_added),
+      .skp_removed(skp_removed),
+      .data_out(data_out),
+      .read_address(read_address),
+      .gray_read_pointer(gray_read_pointer)
+  );
+  elastic_memory #(DATA_WIDTH, BUFFER_DEPTH) elastic_mem_inst (
+      .data_in(data_in),
+      .write_clk(write_clk),
+      .read_clk(read_clk),
+      .read_pointer(read_address[max_buffer_addr-1:0]),
+      .write_pointer(write_address[max_buffer_addr-1:0]),
+      .data_out(data_out),
+      .rd_en(rd_en),
+      .full(overflow),
+      .empty(underflow),
+      .wr_en(wr_en)
+  );
+  synchronous_unit #(max_buffer_addr) sync_unit_inst (
+      .read_to_write_clk(write_clk),
+      .gray_counter_read(gray_read_pointer),
+      .gray_counter_read_out(sync_gray_read_out),
+      .write_to_read_clk(write_clk),
+      .gray_counter_write(gray_write_pointer),
+      .gray_counter_write_out(sync_gray_write_out)
+  );
 endmodule
