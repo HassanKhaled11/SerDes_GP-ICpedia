@@ -17,14 +17,14 @@ module elasticBuffer (
   //inputs
   input write_clk;
   input read_clk;
-  output skp_added;
-  output skp_removed;
   input rst_n;
   input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
   input [DATA_WIDTH-1:0] data_in;
 
   //outputs
   // output loopback_tx;
+  output skp_added;
+  output skp_removed;
   output overflow, underflow;
   output [DATA_WIDTH-1:0] data_out;
 
@@ -71,10 +71,10 @@ module elasticBuffer (
       .read_pointer(read_address[max_buffer_addr-1:0]),
       .write_pointer(write_address[max_buffer_addr-1:0]),
       .data_out(data_out),
-      .rd_en(rd_en),
+      .rd_en(!underflow),
       .full(overflow),
       .empty(underflow),
-      .wr_en(wr_en)
+      .wr_en(!overflow)
   );
   synchronous_unit #(max_buffer_addr) sync_unit_inst (
       .read_to_write_clk(write_clk),

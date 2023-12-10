@@ -35,31 +35,35 @@ module write_pointer_control (
   output [max_buffer_addr:0] gray_write_pointer;
 
 
-  wire delete;
-  //has pointers had additional bit to indicate if full or empty
-  reg [max_buffer_addr:0] write_pointer;
+  reg  delete;
+  // //has pointers had additional bit to indicate if full or empty
+  // reg [max_buffer_addr:0] write_pointer;
   wire full_val;
 
   binToGray #(max_buffer_addr + 1) bin_gray_write (
       write_address,
-      gray_read_pointer
+      gray_write_pointer
   );
 
   always @(posedge write_clk or negedge rst_n) begin
-    if (!rst_n) write_address <= 0;
-    else if (!delete && !overflow) begin
+    if (!rst_n) begin
+      write_address <= 0;
+      // gray_write_pointer <= 0;
+      delete <= 0;
+    end else if (!delete && !overflow) begin
       write_address = (write_address == {max_buffer_addr - 1{1'b1}}) ? 4'b0 : write_address + 1;
     end
   end
-  //   assign full_val = ((gray_read_pointer[max_buffer_addr] !=gray_read_pointer[max_buffer_addr] ) &&
-  // (gray_read_pointer[max_buffer_addr-1] !=gray_read_pointer[max_buffer_addr-1]) &&
-  // (gray_read_pointer[max_buffer_addr-2:0]==gray_read_pointer[max_buffer_addr-2:0]));
+  assign full_val = ((gray_read_pointer[max_buffer_addr] !=gray_write_pointer[max_buffer_addr] ) &&
+  (gray_read_pointer[max_buffer_addr-1] !=gray_write_pointer[max_buffer_addr-1]) &&
+  (gray_read_pointer[max_buffer_addr-2:0]==gray_write_pointer[max_buffer_addr-2:0]));
 
-  assign full_val = (gray_write_pointer=={~gray_read_pointer[max_buffer_addr:max_buffer_addr-1],
-gray_read_pointer[max_buffer_addr-2:0]});
+  // assign full_val = (gray_write_pointer=={~gray_read_pointer[max_buffer_addr:max_buffer_addr-1],
+  // gray_read_pointer[max_buffer_addr-2:0]});
   always @(posedge write_clk or negedge rst_n) begin
     if (!rst_n) overflow <= 1'b0;
     else overflow <= full_val;
+    $display("%b", gray_read_pointer);
   end
 
 endmodule

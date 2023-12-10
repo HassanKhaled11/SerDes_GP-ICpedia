@@ -20,7 +20,7 @@ module read_pointer_control (
 
   localparam max_buffer_addr = $clog2(BUFFER_DEPTH);
 
-  wire delete;  ////////
+  reg delete;  ////////
   // input [DATA_WIDTH-1:0] data_in;
   input read_clk;
   input buffer_mode;
@@ -35,9 +35,8 @@ module read_pointer_control (
 
   wire empty_val;
 
-  //has pointers had additional bit to indicate if full or empty
-  reg [max_buffer_addr:0] read_pointer;
-  wire full_val;
+  // //has pointers had additional bit to indicate if full or empty
+  // reg [max_buffer_addr:0] read_pointer;
 
   binToGray #(max_buffer_addr + 1) bin_gray_read (
       read_address,
@@ -45,8 +44,10 @@ module read_pointer_control (
   );
 
   always @(posedge read_clk or negedge rst_n) begin
-    if (!rst_n) read_address <= 0;
-    else if (!delete && !empty) read_address <= read_address + 1;
+    if (!rst_n) begin
+      read_address <= 0;
+      delete <= 0;
+    end else if (!delete && !empty) read_address <= read_address + 1;
   end
 
   assign empty_val = (gray_read_pointer == gray_write_pointer);
