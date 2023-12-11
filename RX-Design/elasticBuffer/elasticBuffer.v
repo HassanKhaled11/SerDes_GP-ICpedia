@@ -8,6 +8,8 @@ module elasticBuffer (
     skp_added,
     skp_removed,
     data_out,
+    write_enable,
+    read_enable,
     // loopback_tx,
     rst_n
 );
@@ -17,6 +19,8 @@ module elasticBuffer (
   //inputs
   input write_clk;
   input read_clk;
+  input read_enable;
+  input write_enable;
   input rst_n;
   input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
   input [DATA_WIDTH-1:0] data_in;
@@ -46,7 +50,9 @@ module elasticBuffer (
       .overflow(overflow),
       .skp_added(skp_added),
       .skp_removed(skp_removed),
-      .data_out(data_out),
+      .write_enable(write_enable),
+      .read_enable(read_enable),
+      //   .data_out(data_out),
       .write_address(write_address),
       .gray_write_pointer(gray_write_pointer)
   );
@@ -60,7 +66,8 @@ module elasticBuffer (
       .empty(underflow),
       .skp_added(skp_added),
       .skp_removed(skp_removed),
-      .data_out(data_out),
+      .read_enable(read_enable),
+      //   .data_out(data_out),
       .read_address(read_address),
       .gray_read_pointer(gray_read_pointer)
   );
@@ -71,16 +78,17 @@ module elasticBuffer (
       .read_pointer(read_address[max_buffer_addr-1:0]),
       .write_pointer(write_address[max_buffer_addr-1:0]),
       .data_out(data_out),
-      .rd_en(!underflow),
+      .rd_en(read_enable),
       .full(overflow),
       .empty(underflow),
-      .wr_en(!overflow)
+      .wr_en(write_enable)
   );
   synchronous_unit #(max_buffer_addr) sync_unit_inst (
+      .rst_n(rst_n),
       .read_to_write_clk(write_clk),
       .gray_counter_read(gray_read_pointer),
       .gray_counter_read_out(sync_gray_read_out),
-      .write_to_read_clk(write_clk),
+      .write_to_read_clk(read_clk),
       .gray_counter_write(gray_write_pointer),
       .gray_counter_write_out(sync_gray_write_out)
   );

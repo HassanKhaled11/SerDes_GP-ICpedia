@@ -9,7 +9,8 @@ module read_pointer_control (
     // underflow,
     skp_added,
     skp_removed,
-    data_out,
+    read_enable,
+    // data_out,
     // loopback_tx,
     read_address,
     gray_read_pointer
@@ -23,13 +24,14 @@ module read_pointer_control (
   reg delete;  ////////
   // input [DATA_WIDTH-1:0] data_in;
   input read_clk;
+  input read_enable;
   input buffer_mode;
   input rst_n;
   input [max_buffer_addr:0] gray_write_pointer;
 
   output reg empty;
   output skp_added, skp_removed;
-  output [DATA_WIDTH-1:0] data_out;
+  // output [DATA_WIDTH-1:0] data_out;
   output reg [max_buffer_addr:0] read_address;
   output [max_buffer_addr:0] gray_read_pointer;
 
@@ -47,13 +49,13 @@ module read_pointer_control (
     if (!rst_n) begin
       read_address <= 0;
       delete <= 0;
-    end else if (!delete && !empty) read_address <= read_address + 1;
+    end else if (!delete && read_enable && !empty) read_address <= read_address + 1;
   end
 
-  assign empty_val = (gray_read_pointer == gray_write_pointer);
+  assign empty_val = (gray_read_pointer === gray_write_pointer);
   always @(posedge read_clk or negedge rst_n) begin
-    if (!rst_n) empty <= 1'b0;
-    else empty <= empty_val;
+    if (!rst_n) empty <= 1'b1;
+    else empty <= (gray_read_pointer === gray_write_pointer);
   end
 
 endmodule

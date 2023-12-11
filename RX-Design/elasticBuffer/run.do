@@ -8,6 +8,7 @@ add wave *
 add wave -divider -height 30 "synchhronous unit:"
 add wave -position insertpoint  \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/n \
+sim:/elasticBuffer_tb/DUT/sync_unit_inst/rst_n \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/read_to_write_clk \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/write_to_read_clk \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_read \
@@ -47,7 +48,8 @@ sim:/elasticBuffer_tb/DUT/write_inst/rst_n \
 sim:/elasticBuffer_tb/DUT/write_inst/overflow \
 sim:/elasticBuffer_tb/DUT/write_inst/skp_added \
 sim:/elasticBuffer_tb/DUT/write_inst/skp_removed \
-sim:/elasticBuffer_tb/DUT/write_inst/data_out \
+sim:/elasticBuffer_tb/DUT/write_inst/read_enable \
+sim:/elasticBuffer_tb/DUT/write_inst/write_enable \
 sim:/elasticBuffer_tb/DUT/write_inst/write_address \
 sim:/elasticBuffer_tb/DUT/write_inst/gray_read_pointer \
 sim:/elasticBuffer_tb/DUT/write_inst/gray_write_pointer \
@@ -66,7 +68,7 @@ sim:/elasticBuffer_tb/DUT/read_inst/rst_n \
 sim:/elasticBuffer_tb/DUT/read_inst/empty \
 sim:/elasticBuffer_tb/DUT/read_inst/skp_added \
 sim:/elasticBuffer_tb/DUT/read_inst/skp_removed \
-sim:/elasticBuffer_tb/DUT/read_inst/data_out \
+sim:/elasticBuffer_tb/DUT/read_inst/read_enable \
 sim:/elasticBuffer_tb/DUT/read_inst/read_address \
 sim:/elasticBuffer_tb/DUT/read_inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/read_inst/gray_read_pointer \
