@@ -13,9 +13,9 @@ class my_scoreboard extends uvm_scoreboard;
 
   `uvm_component_utils(my_scoreboard);
 
-  uvm_analysis_export #(my_sequence_item)         sb_export;
-  // uvm_analysis_imp      #(my_sequence_item , my_scoreboard) sb_export ;
-  uvm_tlm_analysis_fifo #(my_sequence_item)       sb_fifo;
+  //uvm_analysis_export #(my_sequence_item)         sb_export;
+  uvm_analysis_imp      #(my_sequence_item , my_scoreboard) sb_export ;
+  //uvm_tlm_analysis_fifo #(my_sequence_item)       sb_fifo;
 
   //virtual golden_if    dut_vif;
   virtual TX_if   dut_vif ;
@@ -25,15 +25,14 @@ class my_scoreboard extends uvm_scoreboard;
 
   logic                                     [7:0] pos_encoding[logic  [9:0]];
   logic                                     [7:0] neg_encoding[logic  [9:0]];
-
+  logic                                     [7:0] data_in[$];
   logic                                     [9:0] data_collect;
-  logic [7:0]                                      temp,temp8,temp16,temp24,temp32;
+  logic [7:0]                                      temp;
   int                                             collect_counter;
   int                                             correct_count;
   int                                             error_count;
   bit                                             flag;
  // bit f,f1,f2;
- int i;
   real clk_period_5G ;
 
   int clk_ref_correct_count   ;
@@ -64,17 +63,15 @@ class my_scoreboard extends uvm_scoreboard;
     clk_ref_correct_count=0;
 clk_ref_error_count=0;
 clk_period_5G = 0.2 ;
-// f1 = 0;
-// f2 = 0;
-// f = 0;
-i = 0;
+
+
   endfunction
 
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     sb_export = new("sb_export" , this);
-    sb_fifo   = new("sb_fifo"   , this);
+    //sb_fifo   = new("sb_fifo"   , this);
     data_to_check = new ("data_to_check");
     data_to_check_prev = new ("data_to_check_prev");
 
@@ -90,65 +87,65 @@ i = 0;
 
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
-    sb_export.connect(sb_fifo.analysis_export);
+    //sb_export.connect(sb_fifo.analysis_export);
   endfunction
 
 
 
-  // function void write(my_sequence_item  pkt);
-  // 	data_to_check = pkt ;
-  // endfunction
+  function void write(my_sequence_item  pkt);
+  	data_to_check = pkt ;
+  endfunction
 
-  // 8 8 8 8 -> 10 10 10 10
-
-
+  
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
 
     fork
+    
     begin
       /////////////////////////////////////////////////////////////////////////
       ////////////////////// CHECKING TX_Out_P  /////////////////////////////////
       /////////////////////////////////////////////////////////////////////////        
       golden_model();
-      
       forever begin 
-        sb_fifo.get(data_to_check);
-        `uvm_info("SCOREBOARD" , "DATA RECIEVER IN SCOREBOARD HERE" , UVM_HIGH);
-        data_to_check_prev = data_to_check;   
-        
-        
-       if (counter == 0) begin 
-         data_collect = 10'b0;
-          temp8 = data_to_check_prev.MAC_TX_Data[7:0];
-          temp16 = data_to_check_prev.MAC_TX_Data[15:8];
-          temp24 = data_to_check_prev.MAC_TX_Data[23:16];
-          temp32 = data_to_check_prev.MAC_TX_Data[31:24];
-       end
-        data_collect[counter] = data_to_check.TX_Out_P;
-        counter++;
-         
-        case (data_to_check_prev.DataBusWidth)
-          6'd8 : if(i == 1) i = 0;
-          6'd16 : if(i == 2) i = 0;
-          6'd32 : if(i == 4) i = 0;
-          default : i = 0;
-        endcase
-         if (counter == 10) begin
-              i++;
-             if((data_to_check_prev.DataBusWidth == 6'd8 || data_to_check_prev.DataBusWidth == 6'd16 || data_to_check_prev.DataBusWidth == 6'd32) && i == 1)       
-                      check_out(temp8, data_collect);   
-              else if((data_to_check_prev.DataBusWidth == 6'd16 || data_to_check_prev.DataBusWidth == 6'd32) && i == 2)
-                      check_out(temp8, data_collect);
-              else if((data_to_check_prev.DataBusWidth == 6'd32) && i == 3)
-                      check_out(temp24, data_collect);
-              else if((data_to_check_prev.DataBusWidth == 6'd32) && i == 4)
-                      check_out(temp32, data_collect);
-             counter = 0;
+            @(posedge data_to_check.MAC_Data_En)
+            @(posedge clk_vif.PCLK);
+            repeat(2) @(posedge clk_vif.Bit_Rate_CLK_10);
             
-        end
+            data_collect = 0;
+            repeat(2) @(posedge clk_vif.Bit_Rate_Clk);
+            while(data_to_check.MAC_Data_En != 0) begin
+              temp = data_in.pop_front();
+            for(counter=0;counter<10;counter++) begin
+                @(posedge clk_vif.Bit_Rate_Clk);
+                data_collect[counter] = data_to_check.TX_Out_P;             
+            end 
+               check_out(temp,data_collect);
+               `uvm_info("CHECK_", $sformatf("data_collect = %h , temp = %h",data_collect , temp),UVM_HIGH);
+            end           
         end   
-      end
+        end 
+        begin
+          forever begin
+              
+              @(posedge clk_vif.PCLK);
+
+              if(data_to_check.DataBusWidth == 8) begin
+                data_in.push_back(data_to_check.MAC_TX_Data[7:0]);
+              end else if(data_to_check.DataBusWidth == 16)  begin
+                data_in.push_back(data_to_check.MAC_TX_Data[7:0]);
+                data_in.push_back(data_to_check.MAC_TX_Data[15:8]);
+              end else if(data_to_check.DataBusWidth == 32)  begin 
+                data_in.push_back(data_to_check.MAC_TX_Data[7:0]);
+                data_in.push_back(data_to_check.MAC_TX_Data[15:8]);
+                data_in.push_back(data_to_check.MAC_TX_Data[23:16]);
+                data_in.push_back(data_to_check.MAC_TX_Data[31:24]);
+              end            
+              if(!data_to_check.MAC_Data_En)
+                data_in.delete();
+        end 
+        end
+    //////////
     
     /////////////////////////////////////////////////////////////////////////
     ///////////////// CHECKING CLOCK PERIDO /////////////////////////////////
@@ -163,12 +160,12 @@ i = 0;
     	@(posedge clk_vif.Bit_Rate_CLK_10) t2 = $realtime();
 
     	if((t2 - t1) == CLOCK_PERIOD_10) begin
-    		`uvm_info("SUCEEDED (5G/10) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",t2 - t1) , UVM_MEDIUM);
+    		`uvm_info("SUCEEDED (5G/10) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",t2 - t1) , UVM_HIGH);
     		clk_10_correct_count++;
     	end
 
         else begin
-        	`uvm_info("FAILED (5G/10) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",t2 - t1) , UVM_MEDIUM);
+        	`uvm_info("FAILED (5G/10) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",t2 - t1) , UVM_HIGH);
             clk_10_error_count++;
         end                 
       end
@@ -184,12 +181,12 @@ i = 0;
       @(posedge clk_vif.Bit_Rate_Clk) time2 = $realtime();
 
       if(int'((time2 - time1)*10) == int'((clk_period_5G)*10)) begin
-        `uvm_info("SUCEEDED (5G) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f,clk_period_5G = %f",time2 - time1,clk_period_5G) , UVM_MEDIUM);
+        `uvm_info("SUCEEDED (5G) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f,clk_period_5G = %f",time2 - time1,clk_period_5G) , UVM_HIGH);
         clk_5G_correct_count++;
       end
 
         else begin
-          `uvm_info("FAILED (5G) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f,clk_period_5G = %f",time2 - time1,clk_period_5G) , UVM_MEDIUM);
+          `uvm_info("FAILED (5G) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f,clk_period_5G = %f",time2 - time1,clk_period_5G) , UVM_HIGH);
             clk_5G_error_count++;
         end                 
       end
@@ -204,12 +201,12 @@ i = 0;
       @(posedge dut_vif.Ref_CLK) time2 = $realtime();
 
       if((time2 - time1) == CLOCK_PERIOD_Ref) begin
-        `uvm_info("SUCEEDED (Ref) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+        `uvm_info("SUCEEDED (Ref) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",time2 - time1) , UVM_HIGH);
         clk_ref_correct_count++;
       end
 
         else begin
-          `uvm_info("FAILED (Ref) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+          `uvm_info("FAILED (Ref) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",time2 - time1) , UVM_HIGH);
             clk_ref_error_count++;
         end                 
       end
@@ -232,12 +229,12 @@ i = 0;
 
 
       if((time2 - time1) == pclk_period) begin
-        `uvm_info("SUCEEDED (pclk) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+        `uvm_info("SUCEEDED (pclk) CLK_PEDIOD", $sformatf("CLOCK PERIOD CHECKING , RIGHT PERIOD = %f",time2 - time1) , UVM_HIGH);
         pclk_correct_count++;
       end
 
         else begin
-          `uvm_info("FAILED (pclk) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",time2 - time1) , UVM_MEDIUM);
+          `uvm_info("FAILED (pclk) CLK_PEDIOD"  , $sformatf("CLOCK PERIOD CHECKING , WRONG PERIOD = %f",time2 - time1) , UVM_HIGH);
             pclk_error_count++;
         end                 
       end
@@ -300,6 +297,7 @@ i = 0;
 
   endtask  //
 
+  
 
   // task check_out(input logic [7:0] data, logic [9:0] ref_data_collected_10);
 

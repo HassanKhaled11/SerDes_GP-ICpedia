@@ -56,7 +56,7 @@ task drive();
 	//@(negedge clk_vif.PCLK);
 `uvm_info("MY_DRIVER" , "here_data start", UVM_MEDIUM);
 	  tx_vif.MAC_Data_En 	  = req.MAC_Data_En;
-   	  // tx_vif.Reset_n		  = req.Reset_n;
+   	  //tx_vif.Reset_n		  = req.Reset_n;
    	  tx_vif.MAC_TX_DataK     = req.MAC_TX_DataK;
       tx_vif.MAC_TX_Data 	  = req.MAC_TX_Data;
       tx_vif.DataBusWidth	  = req.DataBusWidth;

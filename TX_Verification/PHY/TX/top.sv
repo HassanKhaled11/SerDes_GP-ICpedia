@@ -29,55 +29,6 @@ PHY DUT(
 
 
 
-//golden_model #(.DATA_WIDTH(g_if.DATA_WIDTH)) g_dut (dut_if.Bit_Rate_10 , //dut_if.Rst_n , dut_if.Data_in , dut_if.Tx_Data_Enable , g_if.TX_Out)   ;
-
-
-//assign g_if.Bit_Rate_10 = dut_if.Bit_Rate_10 ; 
-
-
-// ClkDiv__  ClkDiv___U0 
-// (
-//    .i_ref_clk  (dut_if.Bit_Rate_Clk) ,
-//    .i_rst_n    (1'b1) ,
-//    .i_div_ratio(8'd10) ,
-//    .o_div_clk  (dut_if.Bit_Rate_CLK_10)
-// );
-
-
-
-// ClkDiv__  ClkDiv___U1
-// (
-//    .i_ref_clk  (dut_if.Bit_Rate_Clk) ,
-//    .i_rst_n    (1'b1) ,
-//    .i_div_ratio(8'd20) ,
-//    .o_div_clk  (dut_if.PCLK)
-// );
-
-
-// initial begin
-// dut_if.Bit_Rate_CLK_10 = 0 ; 
-// forever begin
-// #(CLOCK_PERIOD_10/2) dut_if.Bit_Rate_CLK_10 = ~dut_if.Bit_Rate_CLK_10 ;		
-// end
-// end
-
-// initial begin
-// dut_if.Bit_Rate_Clk = 0 ;
-// forever begin
-// #(CLOCK_PERIOD_TX/2) dut_if.Bit_Rate_Clk = ~dut_if.Bit_Rate_Clk ;		
-// end
-// end
-
-// initial begin
-// dut_if.PCLK = 0 ;
-// forever begin
-// #(CLOCK_PERIOD_PCLK/2) dut_if.PCLK = ~dut_if.PCLK ;		
-// end
-// end
-// initial begin
-
-// end
-
 assign clk_if.Bit_Rate_Clk    = DUT.Bit_Rate_Clk;      
 assign clk_if.Bit_Rate_CLK_10 = DUT.Bit_Rate_CLK_10;
 assign clk_if.PCLK            = DUT.PCLK  ;
@@ -86,14 +37,17 @@ always #(CLOCK_PERIOD_Ref/2) dut_if.Ref_CLK = ~dut_if.Ref_CLK;
 
 
 initial begin
-	dut_if.Ref_CLK = 0;
+	
+	dut_if.Reset_n = 1;
+	@(negedge clk_if.Bit_Rate_Clk);
 	dut_if.Reset_n = 0 ;
-	#(CLOCK_PERIOD_PCLK);
+	@(negedge clk_if.Bit_Rate_Clk);
 	dut_if.Reset_n = 1;
 end
 
 
 initial begin
+	dut_if.Ref_CLK = 0;
 uvm_config_db#(virtual CLK_if)::set(null   , "*", "CLK_if",clk_if) ;
 end
 

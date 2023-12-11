@@ -8,7 +8,7 @@ module line_coding_8_10  //#(parameter DATAWIDTH = 8)
 );
 
   always @(*) begin
-    if (enable) begin
+    if (enable && !TXDataK) begin
       case (data)  //////////// D0.0 --> D31.0
         8'b0000_0000: begin
           encoded_data_neg = 10'b100111_0100;
@@ -1052,6 +1052,57 @@ module line_coding_8_10  //#(parameter DATAWIDTH = 8)
           encoded_data_pos = 10'b010100_1110;
         end
       endcase
+    end else if (enable && TXDataK) begin // send command k28.0 --> k30.7
+        case(data)
+        8'b0001_1100: begin
+          encoded_data_neg = 10'b001111_0100;
+          encoded_data_pos = 10'b110000_1011;
+        end
+        8'b0011_1100: begin
+          encoded_data_neg = 10'b001111_1001;
+          encoded_data_pos = 10'b110000_0110;
+        end
+        8'b0101_1100: begin
+          encoded_data_neg = 10'b001111_0101;
+          encoded_data_pos = 10'b110000_1010;
+        end
+        8'b0111_1100: begin
+          encoded_data_neg = 10'b001111_0011;
+          encoded_data_pos = 10'b110000_1100;
+        end
+        8'b1001_1100: begin
+          encoded_data_neg = 10'b001111_0010;
+          encoded_data_pos = 10'b110000_1101;
+        end
+        8'b1011_1100: begin
+          encoded_data_neg = 10'b001111_1010;
+          encoded_data_pos = 10'b110000_0101;
+        end
+        8'b1101_1100: begin
+          encoded_data_neg = 10'b001111_0110;
+          encoded_data_pos = 10'b110000_1001;
+        end
+        8'b1111_1100: begin
+          encoded_data_neg = 10'b001111_1000;
+          encoded_data_pos = 10'b110000_0111;
+        end
+        8'b1111_0111: begin
+          encoded_data_neg = 10'b111010_1000;
+          encoded_data_pos = 10'b000101_0111;
+        end
+        8'b1111_1011: begin
+          encoded_data_neg = 10'b110110_1000;
+          encoded_data_pos = 10'b001001_0111;
+        end
+        8'b1111_1101: begin
+          encoded_data_neg = 10'b101110_1000;
+          encoded_data_pos = 10'b010001_0111;
+        end
+        8'b1111_1110: begin
+          encoded_data_neg = 10'b011110_1000;
+          encoded_data_pos = 10'b100001_0111;
+        end
+        endcase
     end else begin
       encoded_data_neg = 10'b100111_0100;
       encoded_data_pos = 10'b011000_1011;
