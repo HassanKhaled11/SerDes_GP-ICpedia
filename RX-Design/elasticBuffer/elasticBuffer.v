@@ -32,6 +32,8 @@ module elasticBuffer (
   output overflow, underflow;
   output [DATA_WIDTH-1:0] data_out;
 
+
+
   localparam max_buffer_addr = $clog2(BUFFER_DEPTH);
   wire [max_buffer_addr:0] gray_write_pointer;
   wire [max_buffer_addr:0] gray_read_pointer;
@@ -40,18 +42,20 @@ module elasticBuffer (
 
   wire [max_buffer_addr:0] sync_gray_read_out;
   wire [max_buffer_addr:0] sync_gray_write_out;
+  wire delete_req;
+  wire add_req;
   // Instantiate write_pointer_control module
   write_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) write_inst (
-      //   .data_in(data_in),
+      .data_in(data_in),
       .gray_read_pointer(sync_gray_read_out),
       .write_clk(write_clk),
       .buffer_mode(buffer_mode),
       .rst_n(rst_n),
       .overflow(overflow),
-      .skp_added(skp_added),
-      .skp_removed(skp_removed),
+      .Skp_Removed(Skp_Removed),
       .write_enable(write_enable),
       .read_enable(read_enable),
+      .delete_req(delete_req),
       //   .data_out(data_out),
       .write_address(write_address),
       .gray_write_pointer(gray_write_pointer)
@@ -63,9 +67,11 @@ module elasticBuffer (
       .buffer_mode(buffer_mode),
       .read_clk(read_clk),
       .rst_n(rst_n),
+      .data_out(data_out),
+      .add_req(add_req),
       .empty(underflow),
+      .insert(insert),
       .skp_added(skp_added),
-      .skp_removed(skp_removed),
       .read_enable(read_enable),
       //   .data_out(data_out),
       .read_address(read_address),
@@ -91,5 +97,12 @@ module elasticBuffer (
       .write_to_read_clk(read_clk),
       .gray_counter_write(gray_write_pointer),
       .gray_counter_write_out(sync_gray_write_out)
+  );
+
+  thresholdMonitor #(BUFFER_DEPTH) Threshold_Monitor_Inst (
+      .gray_read_pointer(sync_gray_read_out),
+      .gray_write_pointer(sync_gray_write_out),
+      .delete_req(delete_req),
+      .add_req(add_req)
   );
 endmodule

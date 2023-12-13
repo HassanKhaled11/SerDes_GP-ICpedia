@@ -4,16 +4,17 @@ module read_pointer_control (
     buffer_mode,
     read_clk,
     rst_n,
+    data_out,
+    add_req,
+
     ////outputs/////
     empty,
-    // underflow,
+    insert,
     skp_added,
-    skp_removed,
     read_enable,
-    // data_out,
-    // loopback_tx,
     read_address,
     gray_read_pointer
+    // loopback_tx,
 );
 
   parameter DATA_WIDTH = 10;
@@ -21,24 +22,24 @@ module read_pointer_control (
 
   localparam max_buffer_addr = $clog2(BUFFER_DEPTH);
 
-  reg delete;  ////////
   // input [DATA_WIDTH-1:0] data_in;
   input read_clk;
   input read_enable;
   input buffer_mode;
+  input add_req;  //////////////
   input rst_n;
   input [max_buffer_addr:0] gray_write_pointer;
+  input [DATA_WIDTH-1:0] data_out;  ////////////
 
   output reg empty;
-  output skp_added, skp_removed;
-  // output [DATA_WIDTH-1:0] data_out;
+  output reg insert;
+  output reg skp_added;
   output reg [max_buffer_addr:0] read_address;
   output [max_buffer_addr:0] gray_read_pointer;
 
   wire empty_val;
 
   // //has pointers had additional bit to indicate if full or empty
-  // reg [max_buffer_addr:0] read_pointer;
 
   binToGray #(max_buffer_addr + 1) bin_gray_read (
       read_address,
@@ -48,11 +49,29 @@ module read_pointer_control (
   always @(posedge read_clk or negedge rst_n) begin
     if (!rst_n) begin
       read_address <= 0;
-      delete <= 0;
-    end else if (!delete && read_enable && !empty) read_address <= read_address + 1;
+      insert <= 0;
+      skp_added <= 0;
+    end else if (read_enable && !empty) begin
+      if (!(add_req && (data_out == 10'b001111_1001 || data_out == 10'b110000_0110))) begin  //skp
+        read_address <= read_address + 1;
+        insert <= 0;
+        skp_added <= 0;
+      end else begin
+        insert <= 1;
+        skp_added <= 1;
+      end
+    end
   end
+  // always @(posedge read_clk or negedge rst_n) begin
+  //   if (!rst_n) begin
+  //     read_address <= 0;
+  //   end else if ( read_enable && !empty)begin
+  //     read_address <= read_address + 1;
+  //   end 
+  // end
 
   assign empty_val = (gray_read_pointer === gray_write_pointer);
+
   always @(posedge read_clk or negedge rst_n) begin
     if (!rst_n) empty <= 1'b1;
     else empty <= (gray_read_pointer === gray_write_pointer);

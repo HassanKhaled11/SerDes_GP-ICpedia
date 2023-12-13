@@ -111,9 +111,9 @@ module elasticBuffer_tb ();
     #3 write_enable = ~write_enable;
 
     #2 read_enable = ~read_enable;
-    write_enable = ~write_enable;
+    // write_enable = ~write_enable;
     #5 read_enable = ~read_enable;
-    write_enable = ~write_enable;
+    // write_enable = ~write_enable;
     #1 read_enable = ~read_enable;
     #3 read_enable = ~read_enable;
     #7 read_enable = ~read_enable;
@@ -208,7 +208,7 @@ module elasticBuffer_tb ();
 
 
     // End simulation
-    repeat (8) @(negedge clk_read);
+    #200;
     $stop;
   end
 endmodule
