@@ -53,6 +53,7 @@ PCS  PCS_U
 
 PMA   PMA_U
 (
+  .Bit_Rate_Clk_10(Bit_Rate_CLK_10),
   .Bit_Rate_Clk (Bit_Rate_Clk)    ,
   .Rst_n        (Reset_n)         ,
   .Data_in      (Data_In_PMA)     , 

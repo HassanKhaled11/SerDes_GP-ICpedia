@@ -47,6 +47,10 @@ class my_scoreboard extends uvm_scoreboard;
   int pclk_correct_count   ;
   int pclk_error_count     ;
   int                                             counter                     = 0;
+int error_disparity_count, correct_disparity_count;
+disparity curr_disparity;
+ logic [7:0] data_out_ref;
+  bit [7:0] assoc_out;
 
   function new(string name = "my_scoreboard", uvm_component parent = null);
     super.new(name, parent);
@@ -63,8 +67,10 @@ class my_scoreboard extends uvm_scoreboard;
     clk_ref_correct_count=0;
 clk_ref_error_count=0;
 clk_period_5G = 0.2 ;
-
-
+curr_disparity          = negative;
+correct_disparity_count = 0;
+error_disparity_count   = 0;
+ assoc_out               = 0;
   endfunction
 
 
@@ -121,6 +127,8 @@ clk_period_5G = 0.2 ;
                 data_collect[counter] = data_to_check.TX_Out_P;             
             end 
                check_out(temp,data_collect);
+               check_disparity(temp);
+               curr_disparity = (curr_disparity == negative) ? positive : negative;
                `uvm_info("CHECK_", $sformatf("data_collect = %h , temp = %h",data_collect , temp),UVM_HIGH);
             end           
         end   
@@ -249,6 +257,8 @@ clk_period_5G = 0.2 ;
     super.report_phase(phase);
     `uvm_info("MY_SCOREBOARD", $sformatf("CORRECT_COUNT = %d", correct_count), UVM_MEDIUM);
     `uvm_info("MY_SCOREBOARD", $sformatf("ERROR_COUNT   = %d", error_count), UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD Disparity", $sformatf("CORRECT_COUNT = %d", correct_disparity_count), UVM_MEDIUM);
+    `uvm_info("MY_SCOREBOARD Disparity", $sformatf("ERROR_COUNT   = %d", error_disparity_count), UVM_MEDIUM);
     `uvm_info("MY_SCOREBOARD 5G/10"      , $sformatf("CORRECT_COUNT = %d",clk_10_correct_count)   , UVM_MEDIUM);
     `uvm_info("MY_SCOREBOARD 5G/10"      , $sformatf("ERROR_COUNT   = %d",clk_10_error_count)     , UVM_MEDIUM);
      `uvm_info("MY_SCOREBOARD 5G"      , $sformatf("CORRECT_COUNT = %d",clk_5G_correct_count)   , UVM_MEDIUM);
@@ -296,7 +306,41 @@ clk_period_5G = 0.2 ;
     end
 
   endtask  //
+  task check_disparity(input logic [7:0] temp_d);
+    if (data_to_check.MAC_Data_En == 0) begin
+      data_out_ref = 8'b0;
+    end else begin
+      data_out_ref = temp_d;
+    end
+    if (curr_disparity == negative && neg_encoding.exists(data_collect)) begin
+      if (neg_encoding[data_collect] !== data_out_ref) begin
+        error_disparity_count++;
+        `uvm_info("Checking Disparity" , $sformatf("neg_encoding[%0b]: %0d,data_ref: %0b", data_collect, neg_encoding[data_collect],
+                 data_out_ref),UVM_MEDIUM);
+      end else begin
+        assoc_out = neg_encoding[data_collect];
+        correct_disparity_count++;
+      end
+    end else if (curr_disparity == positive && pos_encoding.exists(data_collect)) begin
+      if (pos_encoding[data_collect] !== data_out_ref) begin
+        error_disparity_count++;
+        `uvm_info("Checking Disparity" , $sformatf("pos_encoding[%0b]: %0d,data_ref: %0b", data_collect, pos_encoding[data_collect],
+                 data_out_ref),UVM_MEDIUM);
+      end else begin
+        assoc_out = pos_encoding[data_collect];
+        correct_disparity_count++;
+      end
+    end else begin     
+        begin
+          error_disparity_count++;
+          `uvm_info("Checking Disparity" , $sformatf(
+              "%0t,not in both!! disparity: %s, neg_encoding[%0b]: %0d, pos_encoding[%0b]: %0d,data_ref: (%0d)%0b",
+              $time, curr_disparity, data_collect, neg_encoding[data_collect], data_collect,
+              pos_encoding[data_collect], data_out_ref, data_out_ref),UVM_MEDIUM);
+        end             
+    end
 
+  endtask  
   
 
   // task check_out(input logic [7:0] data, logic [9:0] ref_data_collected_10);

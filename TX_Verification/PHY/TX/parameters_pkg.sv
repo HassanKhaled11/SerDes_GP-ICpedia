@@ -7,4 +7,9 @@ parameter CLOCK_PERIOD_TX = 0.2 ;
 parameter CLOCK_PERIOD_PCLK = 8 ;
 parameter CLOCK_PERIOD_Ref = 10 ;
 
+
+typedef enum bit {
+    negative,
+    positive
+  } disparity;
 endpackage
