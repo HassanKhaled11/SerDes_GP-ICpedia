@@ -14,7 +14,6 @@ reg [7:0] ratio ;
 
   PLL frquency_multiplier (
       .Ref_Clk(Ref_Clk),
-      .RST(Rst),
       .CLK(Bit_Rate_Clk)  // 5G
   );
 
@@ -28,9 +27,7 @@ reg [7:0] ratio ;
   Clock_Div clock_divider1 (
       .Ref_Clk(Bit_Rate_Clk),  //PCLK
       .rst(Rst),
-      //.div_ratio(8'b0000_1010),
-      .div_ratio(8'b0001_0100),
-      //.div_ratio(8'b0010_1000),
+      .div_ratio(ratio),
       .divided_clk(PCLK)
   );
 
