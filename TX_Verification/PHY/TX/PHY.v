@@ -19,7 +19,7 @@ reg MAC_Data_En_;
 
 
 
-PLL  PLL_U (
+Common_Block  PLL_U (
 
  .Ref_Clk         (Ref_CLK)            ,  // 100 MG 
  .Bit_Rate_Clk    (Bit_Rate_Clk)       ,
