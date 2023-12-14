@@ -21,7 +21,7 @@ initial begin
 	#200000;
 	$stop();
 end
-Common_Block DUT(
+PLL DUT(
 		.Ref_Clk  (Ref_Clk),
 		.Rst      (rst),
 		.Bit_Rate_Clk      (clk5G),

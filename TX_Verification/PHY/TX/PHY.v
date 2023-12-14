@@ -15,17 +15,16 @@ wire [9:0] Data_In_PMA;
 wire Bit_Rate_Clk;
 wire Bit_Rate_CLK_10;
 wire PCLK ;
-reg MAC_Data_En_;
 
 
 
-Common_Block  PLL_U (
+PLL  PLL_U (
 
  .Ref_Clk         (Ref_CLK)            ,  // 100 MG 
  .Bit_Rate_Clk    (Bit_Rate_Clk)       ,
  .Bit_Rate_CLK_10 (Bit_Rate_CLK_10)    ,
  .PCLK            (PCLK)               ,
- .Rst             (Reset_n)            ,  
+ .Rst_n           (Reset_n)            ,  
  .DataBusWidth    (DataBusWidth)       
 );
 
@@ -54,24 +53,91 @@ PCS  PCS_U
 PMA   PMA_U
 (
   .Bit_Rate_Clk_10(Bit_Rate_CLK_10),
-  .Bit_Rate_Clk (Bit_Rate_Clk)    ,
-  .Rst_n        (Reset_n)         ,
-  .Data_in      (Data_In_PMA)     , 
-  .MAC_Data_En  (MAC_Data_En_)    ,
+  .Bit_Rate_Clk (Bit_Rate_Clk)     ,
+  .Rst_n        (Reset_n)          ,
+  .Data_in      (Data_In_PMA)      , 
+  .MAC_Data_En  (MAC_Data_En)      ,
 
 
-  .TX_Out_P     (TX_Out_P)        ,
+  .TX_Out_P     (TX_Out_P)         ,
   .TX_Out_N   	(TX_Out_N)    
 );
 
 
-always @(posedge PCLK or negedge Reset_n) begin
-  if(~Reset_n) begin
-    MAC_Data_En_ <= 0;
-  end else begin
-    MAC_Data_En_ <= MAC_Data_En ;
-  end
-end
+endmodule
 
+
+////////////////////////////////////////////////////////////////////////
+
+`timescale  1ns/1ns
+
+
+module PHY_tb;
+
+  reg                                      Ref_CLK                ;
+  reg                                      Reset_n                ;
+  reg         [5  : 0 ]                    DataBusWidth           ;
+  reg         [31 : 0 ]                    MAC_TX_Data            ;
+  reg         [3  : 0 ]                    MAC_TX_DataK           ;
+  reg                                      MAC_Data_En            ; 
+  
+  wire                                     TX_Out_P               ;
+  wire                                     TX_Out_N               ;
+
+
+  PHY Dut(.*);
+
+
+ always #5 Ref_CLK = ~Ref_CLK ;
+
+ initial begin
+   Ref_CLK      = 0 ;
+   DataBusWidth = 32;
+
+   Reset_n = 0 ;
+   #10;
+   Reset_n = 1 ;
+
+   MAC_Data_En = 1   ;
+
+   SEND_DATA(150,2)  ;
+   SEND_DATA(200,4)  ;
+   SEND_DATA(1000,3)  ;
+   SEND_DATA(50 ,1)  ;
+
+  Reset_n = 0;
+  #10;
+  Reset_n = 1;  
+  DataBusWidth = 16  ;
+
+   SEND_DATA(150,2)  ;
+   SEND_DATA(200,4)  ;
+   SEND_DATA(1000,3)  ;
+   #500
+   SEND_DATA(50 ,1)  ;
+
+  
+  Reset_n = 0;
+  #10;
+  Reset_n = 1;
+  DataBusWidth = 8   ;
+
+   SEND_DATA(150,2)  ;
+   SEND_DATA(200,4)  ;
+   SEND_DATA(100,3)  ;
+   SEND_DATA(50 ,1)  ;
+
+   repeat(10) @(negedge Dut.PCLK);
+   $stop;
+ end
+
+ 
+ task SEND_DATA(input [31:0] data_in , input [3:0] dataK_in);
+  begin
+   @(negedge Dut.PCLK);
+   MAC_TX_Data  = data_in  ;
+   MAC_TX_DataK = dataK_in ;
+  end
+ endtask
 
 endmodule

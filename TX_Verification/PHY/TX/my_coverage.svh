@@ -10,17 +10,24 @@ class my_coverage extends uvm_component;
 
 `uvm_component_utils(my_coverage);
 
+virtual TX_if   dut_vif ;
+
 uvm_analysis_export   #(my_sequence_item) cov_export;
 uvm_tlm_analysis_fifo #(my_sequence_item) cov_fifo  ;  
 my_sequence_item      data_to_cover                 ;
+
+
+
 int count;
 logic[9:0] data_to_collect;
 logic[7:0] data_pos , data_neg;
-logic                                     [7:0] pos_encoding[logic  [9:0]];
-logic                                     [7:0] neg_encoding[logic  [9:0]];
+logic[7:0] pos_encoding[logic  [9:0]];
+logic[7:0] neg_encoding[logic  [9:0]];
+
 covergroup cg_collect;
 	option.auto_bin_max = 256;
-Data_in_cp: coverpoint data_pos;
+
+pos_data: coverpoint data_pos;
          // {
          // 	bins All_zeros_n = {10'b100111_0100}; // positive collected encoded data for 8'b0000000
          // 	bins All_zeros_p = {10'b011000_1011}; // negative collected encoded data for 8'b0000000
@@ -32,24 +39,28 @@ Data_in_cp: coverpoint data_pos;
          // {
          // 	bins data_collect[] = {[0:256]};	
          // }
+
 neg_data : coverpoint data_neg;
 endgroup
+
 
 covergroup cg;
 En : coverpoint data_to_cover.MAC_Data_En
 {
 	bins EN_one       = {1'b1  } ;
-    bins EN_zero      = {1'b0  } ;
+    bins EN_zero     = {1'b0  } ;
 	bins EN_one_zero  = (1 => 0) ;
 	bins EN_zero_one  = (0 => 1) ;	
 }
 endgroup
+
+
 covergroup cg_rst;
 RST_cp  : coverpoint data_to_cover.Reset_n
 {
 	bins rst_one       = {1'b1  } ;
-    bins rst_zero      = {1'b0  } ;
-	bins rst_one_zero  = (1 => 0) ;
+   bins rst_zero      = {1'b0  } ;
+//	bins rst_one_zero  = (1 => 0) ;
 	bins rst_zero_one  = (0 => 1) ;	
 }  	
 endgroup 
@@ -61,7 +72,12 @@ function void build_phase(uvm_phase phase);
 	cov_export    = new("cov_export" , this);
 	cov_fifo      = new("cov_fifo"   , this);
 	data_to_cover = new("data_to_cover");
-	`uvm_info("MY_COVERAGE","BUILD_PHASE",UVM_MEDIUM);
+//	`uvm_info("MY_COVERAGE","BUILD_PHASE",UVM_MEDIUM);
+
+   if(!uvm_config_db#(virtual TX_if)::get(this, "", "tx_if", dut_vif))
+      `uvm_fatal("COVERAGE","Doesn't read stimulus through COVERAGE")
+ 
+
 endfunction 
 
 
@@ -73,7 +89,7 @@ endfunction
 
 function new(string name = "my_coverage" , uvm_component parent = null);
 	super.new(name,parent);
-	cg 		        = new();
+	cg 		       = new();
 	cg_collect      = new();
 	cg_rst 		    = new();
 endfunction
@@ -84,15 +100,16 @@ task run_phase(uvm_phase phase);
 	super.run_phase(phase);
 	golden_model();
     forever begin
-    	cov_fifo.get(data_to_cover)        ;
+    	data_neg = neg_encoding[dut_vif.data_In_PMA]; 
+    	data_pos = pos_encoding[dut_vif.data_In_PMA];
+    	
+      cov_fifo.get(data_to_cover)        ;
    		if(count == 0) begin
    			data_to_collect = 10'b0;
    		end
     	data_to_collect[count] = data_to_cover.TX_Out_P;
     	count++;
     	if(count == 10) begin
-    		data_pos = pos_encoding[data_to_collect];
-    		data_neg = neg_encoding[data_to_collect]; 
     		if(data_to_cover.Reset_n) cg_collect.sample();
     		count = 0;
     	end

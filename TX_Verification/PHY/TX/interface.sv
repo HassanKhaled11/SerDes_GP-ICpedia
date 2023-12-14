@@ -11,6 +11,9 @@ logic MAC_Data_En;
 logic TX_Out_P;
 logic TX_Out_N;
 
+
+logic [9:0] data_In_PMA ;
+
 endinterface
 
 

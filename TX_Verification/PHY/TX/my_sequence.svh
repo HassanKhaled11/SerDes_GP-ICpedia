@@ -47,7 +47,7 @@ task body();
 
 	 stim_seq_item = my_sequence_item :: type_id :: create("stim_seq_item");
 
-	  // `uvm_info("MY_SEQUENCE","BEFORE START ITEM_1",UVM_MEDIUM);	      
+	// `uvm_info("MY_SEQUENCE","BEFORE START ITEM_1",UVM_MEDIUM);	      
     //   start_item(stim_seq_item);
     //   `uvm_info("MY_SEQUENCE","AFTER START ITEM_1",UVM_MEDIUM);        
     //     stim_seq_item.Rst_n           = 1'b1 ;
@@ -59,17 +59,24 @@ task body();
 
     //   `uvm_info("MY_SEQUENCE","AFTER FINISH ITEM_1",UVM_MEDIUM);
   stim_seq_item = my_sequence_item :: type_id :: create("stim_seq_item");
+  stim_seq_item.data_detect.constraint_mode(0);
+
 	repeat(10000) begin
 
 	  `uvm_info("MY_SEQUENCE","BEFORE START ITEM",UVM_MEDIUM);	
       start_item(stim_seq_item);
+
       `uvm_info("MY_SEQUENCE","AFTER START ITEM",UVM_MEDIUM);
+
       assert(stim_seq_item.randomize());
+
       finish_item(stim_seq_item);
 
       get_response(stim_seq_item);
       `uvm_info("MY_SEQUENCE","AFTER FINISH ITEM",UVM_MEDIUM);
 	end
+     
+
 endtask
 
 

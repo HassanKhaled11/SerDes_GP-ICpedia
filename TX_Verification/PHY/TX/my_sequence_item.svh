@@ -36,9 +36,13 @@ constraint Tx_Data_Enable_cv {
 constraint buswidth {
 	DataBusWidth == 6'd32; //inside {6'd8 , 6'd16 , 6'd32}; 
 }
-// constraint data_in_ {
-// 	MAC_TX_Data == 32'hc8;//inside {32'h26c4, 32'hdd81 , 32'h5a02 , 32'h719c}; // , 32'hdd81 , 32'h5a02 , 32'h719c
-// }
+
+
+constraint data_detect{
+	MAC_TX_Data == 32'd158;//inside {32'h26c4, 32'hdd81 , 32'h5a02 , 32'h719c}; // , 32'hdd81 , 32'h5a02 , 32'h719c
+}
+
+
 constraint data_k {
 	MAC_TX_DataK == 4'b0000; //inside {4'ha , 4'hf , 4'h0 , 4'h5};
 }

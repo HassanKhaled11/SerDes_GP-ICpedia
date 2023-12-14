@@ -1,5 +1,5 @@
 #vlib work
-vlog -f src_files.txt
+
 vsim -voptargs=+acc work.top 
 #coverage save  tx.ucdb -onexit 
 add wave -position insertpoint sim:/top/DUT/*

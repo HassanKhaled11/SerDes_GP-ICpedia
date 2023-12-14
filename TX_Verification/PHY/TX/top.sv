@@ -27,7 +27,7 @@ PHY DUT(
 		);
 
 
-
+assign dut_if.data_In_PMA = DUT.Data_In_PMA ;
 
 assign clk_if.Bit_Rate_Clk    = DUT.Bit_Rate_Clk;      
 assign clk_if.Bit_Rate_CLK_10 = DUT.Bit_Rate_CLK_10;
