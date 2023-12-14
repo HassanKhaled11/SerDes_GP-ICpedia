@@ -1,8 +1,8 @@
 module read_pointer_control (
     // data_in,
+    read_clk,
     gray_write_pointer,
     buffer_mode,
-    read_clk,
     rst_n,
     data_out,
     add_req,
@@ -70,11 +70,11 @@ module read_pointer_control (
   //   end 
   // end
 
-  assign empty_val = (gray_read_pointer === gray_write_pointer);
+  assign empty_val = (gray_read_pointer == gray_write_pointer);
 
   always @(posedge read_clk or negedge rst_n) begin
     if (!rst_n) empty <= 1'b1;
-    else empty <= (gray_read_pointer === gray_write_pointer);
+    else empty <= (gray_read_pointer == gray_write_pointer);
   end
 
 endmodule

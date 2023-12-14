@@ -16,9 +16,7 @@ sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_read_out \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_out \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_read_reg1 \
-sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_read_reg2 \
-sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_reg1 \
-sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_reg2
+sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_reg1 
 
 add wave -divider -height 30 "memory:"
 add wave -position insertpoint  \
@@ -93,7 +91,6 @@ sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_read_pointer \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/delete_req \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/add_req \
-sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/threshold_flag
 
 
 #coverage save  encoding.ucdb -onexit 

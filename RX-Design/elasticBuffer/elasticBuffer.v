@@ -1,17 +1,18 @@
 module elasticBuffer (
-    data_in,
-    buffer_mode,
     write_clk,
     read_clk,
+    data_in,
+    buffer_mode,
+    write_enable,
+    read_enable,
+    rst_n,
+    ////////////////////
     overflow,
     underflow,
     skp_added,
-    skp_removed,
-    data_out,
-    write_enable,
-    read_enable,
+    Skp_Removed,
+    data_out
     // loopback_tx,
-    rst_n
 );
   parameter DATA_WIDTH = 10;
   parameter BUFFER_DEPTH = 16;
@@ -19,16 +20,16 @@ module elasticBuffer (
   //inputs
   input write_clk;
   input read_clk;
-  input read_enable;
-  input write_enable;
-  input rst_n;
-  input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
   input [DATA_WIDTH-1:0] data_in;
+  input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
+  input write_enable;
+  input read_enable;
+  input rst_n;
 
   //outputs
   // output loopback_tx;
   output skp_added;
-  output skp_removed;
+  output Skp_Removed;
   output overflow, underflow;
   output [DATA_WIDTH-1:0] data_out;
 
@@ -42,30 +43,29 @@ module elasticBuffer (
 
   wire [max_buffer_addr:0] sync_gray_read_out;
   wire [max_buffer_addr:0] sync_gray_write_out;
-  wire delete_req;
+  wire delete_req, insert;
   wire add_req;
   // Instantiate write_pointer_control module
   write_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) write_inst (
+      .write_clk(write_clk),
       .data_in(data_in),
       .gray_read_pointer(sync_gray_read_out),
-      .write_clk(write_clk),
       .buffer_mode(buffer_mode),
       .rst_n(rst_n),
-      .overflow(overflow),
-      .Skp_Removed(Skp_Removed),
       .write_enable(write_enable),
       .read_enable(read_enable),
       .delete_req(delete_req),
-      //   .data_out(data_out),
+      .overflow(overflow),
+      .Skp_Removed(Skp_Removed),
       .write_address(write_address),
       .gray_write_pointer(gray_write_pointer)
   );
 
   // Instantiate read_pointer_control module
   read_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) read_inst (
+      .read_clk(read_clk),
       .gray_write_pointer(sync_gray_write_out),
       .buffer_mode(buffer_mode),
-      .read_clk(read_clk),
       .rst_n(rst_n),
       .data_out(data_out),
       .add_req(add_req),
@@ -87,6 +87,7 @@ module elasticBuffer (
       .rd_en(read_enable),
       .full(overflow),
       .empty(underflow),
+      .insert(insert),
       .wr_en(write_enable)
   );
   synchronous_unit #(max_buffer_addr) sync_unit_inst (

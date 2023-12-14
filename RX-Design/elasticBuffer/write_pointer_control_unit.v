@@ -1,15 +1,15 @@
 module write_pointer_control (
+    write_clk,
     data_in,
     gray_read_pointer,
     buffer_mode,
-    write_clk,
     rst_n,
-    ////outputs/////
-    overflow,
-    Skp_Removed,
     write_enable,
     read_enable,
     delete_req,
+    ////outputs/////
+    overflow,
+    Skp_Removed,
     write_address,
     gray_write_pointer
     // loopback_tx,
@@ -54,7 +54,7 @@ module write_pointer_control (
 
     end else if (write_enable && !full_val) begin  //check not skp
       if (!(delete_req && (data_in == 10'b001111_1001 || data_in == 10'b110000_0110)))
-        write_address = write_address + 1;
+        write_address <= write_address + 1;
       Skp_Removed <= 0;
     end else begin
       Skp_Removed <= 1;
@@ -63,7 +63,7 @@ module write_pointer_control (
 
   assign full_val = ((gray_read_pointer[max_buffer_addr] !=gray_write_pointer[max_buffer_addr] ) &&
   (gray_read_pointer[max_buffer_addr-1] !=gray_write_pointer[max_buffer_addr-1]) &&
-  (gray_read_pointer[max_buffer_addr-2:0]===gray_write_pointer[max_buffer_addr-2:0]));
+  (gray_read_pointer[max_buffer_addr-2:0]==gray_write_pointer[max_buffer_addr-2:0]));
 
   // assign full_val = (gray_write_pointer=={~gray_read_pointer[max_buffer_addr:max_buffer_addr-1],
   // gray_read_pointer[max_buffer_addr-2:0]});

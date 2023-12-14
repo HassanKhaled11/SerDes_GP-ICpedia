@@ -13,12 +13,13 @@ module thresholdMonitor (
   output reg add_req;
 
 
-  wire threshold_flag;
+  // wire threshold_flag;
+
   always @(*) begin
-    if (gray_read_pointer[max_buffer_addr] === gray_write_pointer[max_buffer_addr]) begin
+    if (gray_read_pointer[max_buffer_addr] == gray_write_pointer[max_buffer_addr]) begin
       add_req = 1;
       delete_req = 0;
-    end else if (gray_read_pointer[max_buffer_addr] !== gray_write_pointer[max_buffer_addr]) begin
+    end else if (gray_read_pointer[max_buffer_addr] != gray_write_pointer[max_buffer_addr]) begin
       add_req = 0;
       delete_req = 1;
     end else begin
@@ -27,12 +28,8 @@ module thresholdMonitor (
 
     end
   end
-  assign threshold_flag = (gray_read_pointer[max_buffer_addr-1:max_buffer_addr-2] == ~gray_write_pointer[max_buffer_addr-1:max_buffer_addr-2] 
-  && gray_read_pointer[max_buffer_addr-3:0] === gray_write_pointer[max_buffer_addr-3:0]);
-
-  // assign threshold_flag = (gray_read_pointer[max_buffer_addr-1:max_buffer_addr-2] ==~ gray_write_pointer[max_buffer_addr-1:max_buffer_addr-2]
-  //                     && gray_read_pointer[max_buffer_addr-3:0] === gray_write_pointer[max_buffer_addr-1:max_buffer_addr-2]
-  //                     && gray_read_pointer[max_buffer_addr-3:0]);
+  // assign threshold_flag = (gray_read_pointer[max_buffer_addr-1:max_buffer_addr-2] == ~gray_write_pointer[max_buffer_addr-1:max_buffer_addr-2] 
+  // && gray_read_pointer[max_buffer_addr-3:0] == gray_write_pointer[max_buffer_addr-3:0]);
 
 
 endmodule
