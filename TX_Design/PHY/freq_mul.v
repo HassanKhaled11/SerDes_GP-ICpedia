@@ -1,5 +1,5 @@
 `timescale 1ps / 1ps
-module freq_mul (
+module PLL (
     input Ref_Clk,
     output reg CLK
 );

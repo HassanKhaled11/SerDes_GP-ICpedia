@@ -13,7 +13,7 @@ module PMA
 
 
 
-PMA_TX #(.DATA_WIDTH(10))  PM_TX_U 
+PMA_TX #(.DATA_WIDTH(10))  PMA_TX_U 
   (
     .Bit_Rate_Clk_10 (Bit_Rate_Clk_10) , 
     .Bit_Rate_Clk    (Bit_Rate_Clk)    ,
