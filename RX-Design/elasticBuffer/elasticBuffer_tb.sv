@@ -11,7 +11,7 @@ module elasticBuffer_tb ();
   wire overflow;
   wire underflow;
   wire skp_added;
-  wire skp_removed;
+  wire Skp_Removed;
   wire [DATA_WIDTH-1:0] data_out;
 
   // Instantiate the DUT
@@ -25,7 +25,7 @@ module elasticBuffer_tb ();
       .read_enable(read_enable),
       .overflow(overflow),
       .underflow(underflow),
-      .skp_removed(skp_removed),
+      .Skp_Removed(Skp_Removed),
       .skp_added(skp_added),
       .data_out(data_out)
   );
@@ -111,9 +111,9 @@ module elasticBuffer_tb ();
     #3 write_enable = ~write_enable;
 
     #2 read_enable = ~read_enable;
-    write_enable = ~write_enable;
+    // write_enable = ~write_enable;
     #5 read_enable = ~read_enable;
-    write_enable = ~write_enable;
+    // write_enable = ~write_enable;
     #1 read_enable = ~read_enable;
     #3 read_enable = ~read_enable;
     #7 read_enable = ~read_enable;
@@ -208,7 +208,7 @@ module elasticBuffer_tb ();
 
 
     // End simulation
-    repeat (8) @(negedge clk_read);
+    #200;
     $stop;
   end
 endmodule
