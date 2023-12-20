@@ -21,7 +21,7 @@ end
 
 initial begin
 	 Rst_n = 1'b1;
-	 width = 6'd32;
+	 width = 6'd8;
     @(negedge clk_to_get);
     Rst_n = 1'b0;
     @(negedge clk_to_get);

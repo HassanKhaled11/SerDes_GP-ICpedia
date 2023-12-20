@@ -9,15 +9,15 @@ module GasKet(
 
 reg[7:0] temp;
 reg[31:0] data_out;
-reg[2:0] count;
+reg[1:0] count;
 
 always @(posedge clk_to_get or negedge Rst_n) begin
 	if(!Rst_n) begin 
 		//temp <= 8'b0;
-		count <= 3'b00;
+		count <= 3'b01;
 	end 
 	else if((width == 6'd8 && count == 2'b00) || (width == 6'd16 && count == 2'b01) || (width == 6'd32 && count == 2'b11)) begin
-		count <= 3'b00;
+		count <= 2'b00;
 	end
 	else begin 
 		//temp <= Data_in;
