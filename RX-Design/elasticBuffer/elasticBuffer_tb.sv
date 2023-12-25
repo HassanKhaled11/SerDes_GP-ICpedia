@@ -2,12 +2,14 @@ module elasticBuffer_tb ();
   parameter DATA_WIDTH = 10;
   parameter BUFFER_DEPTH = 16;
   reg write_clk;
-  reg clk_read;
-  reg rst_n;
+  reg read_clk;
+  reg [DATA_WIDTH-1:0] data_in;
+  reg buffer_mode;
   reg write_enable;
   reg read_enable;
-  reg buffer_mode;
-  reg [DATA_WIDTH-1:0] data_in;
+  // reg RxElecIdle;
+  reg rst_n;
+  //////////////////////////
   wire overflow;
   wire underflow;
   wire skp_added;
@@ -17,12 +19,13 @@ module elasticBuffer_tb ();
   // Instantiate the DUT
   elasticBuffer #(DATA_WIDTH, BUFFER_DEPTH) DUT (
       .write_clk(write_clk),
-      .read_clk(clk_read),
-      .rst_n(rst_n),
-      .buffer_mode(buffer_mode),
+      .read_clk(read_clk),
       .data_in(data_in),
+      .buffer_mode(buffer_mode),
       .write_enable(write_enable),
       .read_enable(read_enable),
+      .rst_n(rst_n),
+      // .RxElecIdle(RxElecIdle),
       .overflow(overflow),
       .underflow(underflow),
       .Skp_Removed(Skp_Removed),
@@ -36,8 +39,8 @@ module elasticBuffer_tb ();
   end
 
   initial begin
-    clk_read = 0;
-    forever #3 clk_read = ~clk_read;
+    read_clk = 0;
+    forever #3 read_clk = ~read_clk;
   end
   initial begin
     write_enable = 0;
@@ -132,6 +135,7 @@ module elasticBuffer_tb ();
 
   initial begin
     // Initialize signals
+    // RxElecIdle = 1;
     rst_n = 0;
     buffer_mode = 0;
     data_in = 0;
@@ -148,7 +152,9 @@ module elasticBuffer_tb ();
     @(negedge write_clk);
     data_in = 10'h1CC;
     @(negedge write_clk);
-    data_in = 10'h3AA;
+    read_enable = 1;
+    // RxElecIdle = 0;
+    data_in = 10'h0F9;  ///////skp
     @(negedge write_clk);
     data_in = 10'h111;
     @(negedge write_clk);
@@ -163,7 +169,7 @@ module elasticBuffer_tb ();
     @(negedge write_clk);
     data_in = 10'h3AA;
     @(negedge write_clk);
-    data_in = 10'h111;
+    data_in = 10'h306;  ///////skp
     @(negedge write_clk);
     data_in = 10'h092;
     @(negedge write_clk);

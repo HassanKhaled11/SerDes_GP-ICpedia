@@ -71,15 +71,13 @@ module write_pointer_control (
 
   always @(*) begin
     if (!rst_n) overflow = 1'b0;
-    else if (read_enable) overflow = 1'b0;
-    else if (write_enable) overflow = full_val;
-    else $display("%b", gray_read_pointer);
+    else overflow = full_val;
   end
-  // always @(posedge write_clk or negedge rst_n) begin
-  //   if (!rst_n) overflow <= 1'b0;
-  //   else if (read_enable) overflow <= 1'b0;
-  //   else if (write_enable) overflow <= full_val;
-  //   else $display("%b", gray_read_pointer);
-  // end
+  // always @(*) begin
+  //     if (!rst_n) overflow = 1'b0;
+  //     else if (read_enable) overflow = 1'b0;
+  //     else if (write_enable) overflow = full_val;
+  //     else $display("%b", gray_read_pointer);
+  //   end
 
 endmodule

@@ -32,7 +32,6 @@ sim:/elasticBuffer_tb/DUT/elastic_mem_inst/read_pointer \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/write_pointer \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/rd_en \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/wr_en \
-sim:/elasticBuffer_tb/DUT/elastic_mem_inst/insert \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/data_out \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/buffer
 
@@ -68,7 +67,6 @@ sim:/elasticBuffer_tb/DUT/read_inst/rst_n \
 sim:/elasticBuffer_tb/DUT/read_inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/read_inst/data_out \
 sim:/elasticBuffer_tb/DUT/read_inst/empty \
-sim:/elasticBuffer_tb/DUT/read_inst/insert \
 sim:/elasticBuffer_tb/DUT/read_inst/skp_added \
 sim:/elasticBuffer_tb/DUT/read_inst/read_address \
 sim:/elasticBuffer_tb/DUT/read_inst/gray_read_pointer \
@@ -90,7 +88,7 @@ sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/max_buffer_addr \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_read_pointer \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/delete_req \
-sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/add_req \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/add_req
 
 
 #coverage save  encoding.ucdb -onexit 
