@@ -1,13 +1,13 @@
 module Comma_Detection #(
-    parameter PARALLEL_DATA_WIDTH = 8
+    parameter PARALLEL_DATA_WIDTH = 10
 ) (
     input [PARALLEL_DATA_WIDTH-1:0] Data_in,
-    input TXDataK,
+    // input TXDataK,
     output reg RxValid,
     output reg Comma_pulse
 );
   always @(*) begin
-    if (TXDataK == 1 && Data_in == 8'hBC) begin
+    if (Data_in == 10'b001111_1010 || Data_in == 10'b110000_0101) begin
       RxValid = 1;
       Comma_pulse = 1;
     end else begin
