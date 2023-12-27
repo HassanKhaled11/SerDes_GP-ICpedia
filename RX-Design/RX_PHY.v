@@ -1,4 +1,4 @@
-module RX_PHY #(parameter BUFFER_WIDTH = 8 , BUFFER_DEPTH = 16)( 
+module RX_PHY #(parameter BUFFER_WIDTH = 10 , BUFFER_DEPTH = 16)( 
 				input 				RX_POS,
 				input 				RX_NEG,
 				input 				PCLK, 				// to gasket
@@ -9,14 +9,14 @@ module RX_PHY #(parameter BUFFER_WIDTH = 8 , BUFFER_DEPTH = 16)(
 				input 				buffer_mode, 		// to elastic buffer
 				input 	[5:0]	 	DataBusWidth,
 
-				output 		  		RxStatus,
+				output 	[2:0]	  	RxStatus,
 				output 		  		RxDataK,
 				output 		  		RxValid,
 				output  [31:0] 		Data_out 			// 32 || 16 || 8
 				);
 ////////////////////////////////// internal signals
 wire [9:0] data_to_buffer , data_to_decoder;
-wire Comma_pulse , overflow , underflow , skp_added , Skp_Removed;
+wire Comma_pulse , Overflow , Underflow , skp_added , Skp_Removed;
 wire [7:0] data_to_gasket;
 wire DecodeError , Disparity_Error;
 
@@ -34,34 +34,34 @@ Serial_to_Parallel u1(
 						.Rst_n            		(Rst_n),
 						.Recovered_Bit_Clk		(Recovered_Bit_Clk),	//from CRC block
 						.Ser_in           		(Ser_in), 				// from DRC block
-						.K285             		(K285), 				// to k28.5 block
+						//.K285             		(K285), 				// to k28.5 block
 						.Data_to_Decoder  		(data_to_buffer) 		// to elastic buffer
 						);
 
 /////////////////////////  k28.5 Block
-Comma_Detection #(PARALLEL_DATA_WIDTH) 
+Comma_Detection #(.PARALLEL_DATA_WIDTH(BUFFER_WIDTH)) 
 										u2 (
 											.RxValid    	(RxValid), 		//out port
-											.Data_in    	(Data_in),		// from ---------
-											.TXDataK    	(TXDataK), 		// in port
+											.Data_in    	(data_to_buffer),		// from ---------
+											//.TXDataK    	(TXDataK), 		// in port
 											.Comma_pulse	(Comma_pulse)	// to elastic buffer
 											);
 
 /////////////////////////  Elastic buffer Block
-elasticBuffer #(.DATA_WIDTH(BUFFER_WIDTH), , .BUFFER_DEPTH(BUFFER_DEPTH)) 
+elasticBuffer #(.DATA_WIDTH(BUFFER_WIDTH) , .BUFFER_DEPTH(BUFFER_DEPTH)) 
 											u3(
 												.rst_n       		(Rst_n),				// inport
 												.data_in     		(data_to_buffer), 		// from serial to parallel
 												.read_clk    		(CLK_250MHz), 			// in port
-												.write_clk   		(), 					// from -----
+												.write_clk   		(CLK_5G), 				// from -----
 												.buffer_mode 		(buffer_mode), 			// in port
 												.read_enable 		(read_enable), 			// -------
 												.write_enable		(Comma_pulse), 			// pulse from comma detection
 												.data_out    		(data_to_decoder),  	// to decoder
-												.overflow    		(overflow),	    		// to rx status
+												.overflow    		(Overflow),	    		// to rx status
 												.skp_added   		(skp_added),			// to rx status
 												.Skp_Removed 		(Skp_Removed), 			// to rx status
-												.underflow   		(underflow)				// to rx status
+												.underflow   		(Underflow)				// to rx status
 												);
 /////////////////////////  Decoder Block
 decoder u4(
