@@ -3,7 +3,7 @@
 module PMIX #(parameter THRESHOLD = 25 , parameter WIDTH = 9 )
 (
   input [9:0] Code          ,	
-  input       CLK 	    ,
+  input       CLK 	        ,
   input       CLK_90	    ,
   input       CLK_180       ,
   input       CLK_270       ,
@@ -18,7 +18,7 @@ wire sign_sin2;
 
 reg [WIDTH - 1:0] sine [0:359] ;
 reg [WIDTH - 1:0] sin_sum      ;
-integer PHASE_SHIFT           ;
+integer PHASE_SHIFT            ;
 
 realtime t1             ;
 realtime t2             ;
@@ -96,11 +96,11 @@ end
 
 
 initial clk_bit_p1 = 0;
-always #(0.138) clk_bit_p1= ~clk_bit_p1;
+always #(0.0005/2) clk_bit_p1= ~clk_bit_p1;
   
 
 initial clk_bit_p2 = 0 ;
-always #(0.138) clk_bit_p2 = ~clk_bit_p2 ; 
+always #(0.0005/2) clk_bit_p2 = ~clk_bit_p2 ; 
 
 
 
@@ -112,7 +112,7 @@ end
 
 
 initial begin
-    #(20);
+    #(0.05);
     forever begin
      @(posedge clk_bit_p2);      
       sin2  = sine[j];
@@ -253,34 +253,48 @@ module PMIX_Tb;
 
 PMIX PMIX_DUT (.*)       ;
 
-always #50 CLK  = ~CLK   ;
+always #0.1 CLK  = ~CLK   ;
 assign CLK_180  = ~CLK   ;
 assign CLK_270  = ~CLK_90; 
 
 initial begin
   CLK_90  = 0;
-  #(25)      ;
-  forever #50 CLK_90 = ~CLK_90;
+  #(0.05)      ;
+  forever #0.1 CLK_90 = ~CLK_90;
 end
 
 
 
 initial begin
+
   CLK     = 0;
 
   Code = 10'b00_1000_0000;
-  #(1000);
+  #(0.2*2);
   Code = 10'b00_1111_1111;
-  #(1000);
+  #(0.2*2);
   Code = 10'b01_0000_0000;
-  #(1000);
+  #(0.2*2);
   Code = 10'b01_1111_1111;
-  #(1000);
+  #(0.2*2);
+  Code = 10'b10_0000_0000;
+  #(0.2*2);
+  Code = 10'b10_1111_1111;
+  #(0.2*2);
+  Code = 10'b11_0000_0000;
+  #(0.2*2);
+  Code = 10'b11_1111_1111;
+  #(0.2*2);
 
-  for ( i = 0; i < 255; i = i + 1) begin
+
+
+#5;
+
+  for ( i = 0; i < 100000; i = i + 1) begin
    Code = i ;
-   #(1);
+   #(0.000005);
   end
+
 
 end
 
