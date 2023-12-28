@@ -49,13 +49,13 @@ package decoder_sequence_pkg;
 
       // stim_seq_item.data_detect.constraint_mode(0);
 
-      repeat (100) begin
+      repeat (1000) begin
 
         `uvm_info("DECODER_SEQUENCE", "BEFORE START ITEM", UVM_HIGH);
         start_item(stim_seq_item);
 
         `uvm_info("DECODER_SEQUENCE", "AFTER START ITEM", UVM_HIGH);
-
+        // @(negedge stim_seq_item.CLK);
         assert (stim_seq_item.randomize());
 
         finish_item(stim_seq_item);

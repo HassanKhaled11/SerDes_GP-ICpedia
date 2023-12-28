@@ -35,7 +35,7 @@ package decoder_scoreboard_pkg;
 
 
     // logic [7:0] data_out_ref;
-    // bit [7:0] assoc_out;
+    bit [7:0] assoc_out;
 
     function new(string name = "my_scoreboard", uvm_component parent = null);
       super.new(name, parent);
@@ -48,7 +48,7 @@ package decoder_scoreboard_pkg;
       curr_disparity          = negative;
       correct_disparity_count = 0;
       error_disparity_count   = 0;
-      // assoc_out               = 0;
+      assoc_out               = 0;
     endfunction
 
 
@@ -84,12 +84,16 @@ package decoder_scoreboard_pkg;
           `uvm_error("scoreboard_reset", $sformatf("reset failed, Transaction: %s",
                                                    decoder_seq_item.convert2string()));
           error_count++;
-        end else if (decoder_seq_item.Rst_n == 1'b1) begin
+        end else if (decoder_seq_item.Rst_n == 1'b0) begin
           `uvm_info("scoreboard_reset", $sformatf("reset success, Transaction: %s",
                                                   decoder_seq_item.convert2string()), UVM_HIGH);
           correct_count++;
         end else begin
+          `uvm_info("before checking encoding", $sformatf("%0t", $time), UVM_HIGH);
+          // @(negedge decoder_seq_item.CLK);
+
           check_encoding();
+          `uvm_info("after checking encoding", $sformatf("%0t", $time), UVM_HIGH);
         end
         // if (decoder_seq_item.Data_in != 0 && decoder_seq_item.DisparityError != negative && decoder_seq_item.DecodeError != 0 && decoder_seq_item.RxDataK != 0) begin
         //   `uvm_error(
@@ -141,18 +145,20 @@ package decoder_scoreboard_pkg;
           error_count++;
           error_code_count++;
           `uvm_error("encoding_scoreboard",
-                     $sformatf("pos_encoding[%0b]: %0d , pos_encoding[%0b]: %0d , data_out: %0b",
-                               decoder_seq_item.Data_in, pos_encoding[decoder_seq_item.Data_in],
-                               decoder_seq_item.Data_in, neg_encoding[decoder_seq_item.Data_in],
-                               decoder_seq_item.Data_out));
+                     $sformatf(
+                         "pos_encoding[%8b]: %0d , pos_encoding[%8b]: %0d , data_out: %0b(%0d)",
+                         decoder_seq_item.Data_in, pos_encoding[decoder_seq_item.Data_in],
+                         decoder_seq_item.Data_in, neg_encoding[decoder_seq_item.Data_in],
+                         decoder_seq_item.Data_out, decoder_seq_item.Data_out));
         end else begin
           correct_count++;
           correct_code_count++;
           `uvm_info("encoding_scoreboard",
-                    $sformatf("pos_encoding[%0b]: %0d , pos_encoding[%0b]: %0d , data_out: %0b",
-                              decoder_seq_item.Data_in, pos_encoding[decoder_seq_item.Data_in],
-                              decoder_seq_item.Data_in, neg_encoding[decoder_seq_item.Data_in],
-                              decoder_seq_item.Data_out), UVM_HIGH);
+                    $sformatf(
+                        "pos_encoding[%8b]: %0d , pos_encoding[%8b]: %0d , data_out: %0b(%0d)",
+                        decoder_seq_item.Data_in, pos_encoding[decoder_seq_item.Data_in],
+                        decoder_seq_item.Data_in, neg_encoding[decoder_seq_item.Data_in],
+                        decoder_seq_item.Data_out, decoder_seq_item.Data_out), UVM_HIGH);
         end
         //// encoding not found
       end else begin
@@ -164,6 +170,85 @@ package decoder_scoreboard_pkg;
 
       end
     endtask
+    // task check_out(input logic [7:0] data, logic [9:0] ref_data_collected_10);
+
+    //   `uvm_info("MY_SCOREBOARD--", $sformatf(" Data_collect = 0x%h , tx_data = %h",
+    //                                          ref_data_collected_10, data), UVM_MEDIUM);
+
+    //   if ((neg_encoding.exists(
+    //           ref_data_collected_10
+    //       ) && data == neg_encoding[ref_data_collected_10]) || (pos_encoding.exists(
+    //           ref_data_collected_10
+    //       ) && data == pos_encoding[ref_data_collected_10])) begin
+    //     `uvm_info("SUCEEDED TEST", $sformatf(
+    //                                    "SUCCEDDED TEST , Expected_OUT = %d ,Data_collected = %d",
+    //                                    dut_vif.TX_Out_P, data_to_check_prev.TX_Out_P), UVM_MEDIUM);
+    //     correct_count++;
+    //     flag = 1'b0;
+    //   end else begin
+    //     `uvm_info("FAILED TEST", $sformatf("FAILED TEST , Expected_OUT = %d ,Data_collected = %d",
+    //                                        dut_vif.TX_Out_P, data_to_check_prev.TX_Out_P),
+    //               UVM_MEDIUM);
+    //     if (neg_encoding.exists(ref_data_collected_10))
+    //       `uvm_info("MY_SCOREBOARD--",
+    //                 $sformatf(" neg: neg_encoding[0x%h] = %b  , data = %b", ref_data_collected_10,
+    //                           neg_encoding[ref_data_collected_10], data), UVM_MEDIUM);
+    //     if (pos_encoding.exists(ref_data_collected_10))
+    //       `uvm_info("MY_SCOREBOARD--",
+    //                 $sformatf(" pos: pos_encoding[0x%h] = %b  , data = %b", ref_data_collected_10,
+    //                           pos_encoding[ref_data_collected_10], data), UVM_MEDIUM);
+
+    //     error_count++;
+    //     flag = 1'b1;
+    //   end
+
+    // endtask  //
+    task check_disparity(input logic [7:0] temp_d);
+      // if (data_to_check.MAC_Data_En == 0) begin
+      //   data_out_ref = 8'b0;
+      // end else begin
+      //   data_out_ref = temp_d;
+      // end
+      if (curr_disparity == negative && neg_encoding.exists(decoder_seq_item.Data_in)) begin
+        if (neg_encoding[decoder_seq_item.Data_in] !== decoder_seq_item.Data_out) begin
+          error_disparity_count++;
+          `uvm_info("Checking Disparity", $sformatf("neg_encoding[%8b]: %0d,data_ref: %0b",
+                                                    decoder_seq_item.Data_in,
+                                                    neg_encoding[decoder_seq_item.Data_in],
+                                                    decoder_seq_item.Data_out), UVM_MEDIUM);
+        end else begin
+          assoc_out = neg_encoding[decoder_seq_item.Data_in];
+          correct_disparity_count++;
+        end
+      end else if (curr_disparity == positive && pos_encoding.exists(
+              decoder_seq_item.Data_in
+          )) begin
+        if (pos_encoding[decoder_seq_item.Data_in] !== decoder_seq_item.Data_out) begin
+          error_disparity_count++;
+          `uvm_info("Checking Disparity", $sformatf("pos_encoding[%8b]: %0d,data_ref: %0b",
+                                                    decoder_seq_item.Data_in,
+                                                    pos_encoding[decoder_seq_item.Data_in],
+                                                    decoder_seq_item.Data_out), UVM_MEDIUM);
+        end else begin
+          assoc_out = pos_encoding[decoder_seq_item.Data_in];
+          correct_disparity_count++;
+        end
+      end else begin
+        begin
+          error_disparity_count++;
+          `uvm_info(
+              "Checking Disparity",
+              $sformatf(
+                  "%0t,not in both!! disparity: %s, neg_encoding[%8b]: %0d, pos_encoding[%8b]: %0d,data_ref: (%0d)%0b",
+                  $time, curr_disparity, decoder_seq_item.Data_in,
+                  neg_encoding[decoder_seq_item.Data_in], decoder_seq_item.Data_in,
+                  pos_encoding[decoder_seq_item.Data_in], decoder_seq_item.Data_out,
+                  decoder_seq_item.Data_out), UVM_MEDIUM);
+        end
+      end
+
+    endtask
+
 
 
 
