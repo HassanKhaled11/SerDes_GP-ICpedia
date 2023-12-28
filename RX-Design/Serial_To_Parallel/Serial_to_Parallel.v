@@ -8,7 +8,7 @@ module Serial_to_Parallel(
 
 							input RxPolarity,
 
-							output K285,
+							//output K285,
 
 							output reg[9:0] Data_to_Decoder
 
@@ -51,6 +51,7 @@ always @(posedge Recovered_Bit_Clk or negedge Rst_n) begin
 	else if(count == 4'b1010) begin
 
 		Data_to_Decoder <= collect_register;
+		count <= 4'b0;
 
 	end
 
@@ -68,6 +69,6 @@ end
 
 //assign Data_to_Decoder = (count == 3'b111) ? collect_register : 10'b0;
 
-assign K285 = (collect_register == 10'b00_1111_1010 || collect_register == 10'b11_0000_0101) ? 1'b1 : 1'b0;
+//assign K285 = (collect_register == 10'b00_1111_1010 || collect_register == 10'b11_0000_0101) ? 1'b1 : 1'b0;
 
 endmodule 
