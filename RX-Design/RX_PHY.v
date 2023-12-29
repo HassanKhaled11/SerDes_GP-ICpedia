@@ -2,7 +2,7 @@ module RX_PHY #(parameter BUFFER_WIDTH = 10 , BUFFER_DEPTH = 16)(
 				input 				RX_POS,
 				input 				RX_NEG,
 				input 				PCLK, 				// to gasket
-				input 				CLK_250MHz, 		// to elastic buffer , decoder , gasket
+				input 				Word_Clk, 		// to elastic buffer , decoder , gasket
 				input 				CLK_5G, 			// to CDR block
 				input 				Rst_n,
 				input 				RxPolarity, 		// serial to parallel &  --> clk
@@ -52,7 +52,7 @@ elasticBuffer #(.DATA_WIDTH(BUFFER_WIDTH) , .BUFFER_DEPTH(BUFFER_DEPTH))
 											u3(
 												.rst_n       		(Rst_n),				// inport
 												.data_in     		(data_to_buffer), 		// from serial to parallel
-												.read_clk    		(CLK_250MHz), 			// in port
+												.read_clk    		(Word_Clk), 			// in port
 												.write_clk   		(CLK_5G), 				// from -----
 												.buffer_mode 		(buffer_mode), 			// in port
 												.read_enable 		(read_enable), 			// -------
@@ -67,7 +67,7 @@ elasticBuffer #(.DATA_WIDTH(BUFFER_WIDTH) , .BUFFER_DEPTH(BUFFER_DEPTH))
 decoder u4(
 			.Rst_n         		(Rst_n),				// in port
 			.Data_in       		(data_to_decoder), 		// from elastic buffer
-			.CLK           		(CLK_250MHz), 			// clk 250 or 125 MHz 
+			.CLK           		(Word_Clk), 			// clk 250 or 125 MHz 
 			.RxDataK       		(RxDataK), 				// out port
 			.Data_out      		(data_to_gasket), 		// to gasket
 			.DecodeError   		(DecodeError),			// to rx status
@@ -90,7 +90,7 @@ GasKet u6(
 			.Rst_n     			(Rst_n),				// in port
 			.Data_in   			(data_to_gasket),		// from decoder
 			.PCLK      			(PCLK), 				// in port
-			.clk_to_get			(CLK_250MHz), 			// in port
+			.clk_to_get			(Word_Clk), 			// in port
 			.width     			(DataBusWidth),  		// in port
 			.Data_out  			(Data_out) 				// final out port
 			);
