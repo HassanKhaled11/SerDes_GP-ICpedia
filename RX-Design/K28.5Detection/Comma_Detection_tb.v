@@ -1,22 +1,32 @@
 module Comma_pulse_tb ();
   parameter PARALLEL_DATA_WIDTH = 10;
 
-  reg [PARALLEL_DATA_WIDTH-1:0] Data_in;
+  reg Data_in;
   // reg TXDataK;
   wire RxValid;
   wire Comma_pulse;
-
+  reg clk;
+  reg rst_n;
   reg [1:0] rand_comma;
   integer i;
-  Comma_Detection #(PARALLEL_DATA_WIDTH) Comma_Detection_Inst (
+  Comma_Detection Comma_Detection_Inst (
+      clk,
+      rst_n,
       Data_in,
       // TXDataK,
       RxValid,
       Comma_pulse
   );
-
+  initial begin
+    clk = 0;
+    forever #1 clk = ~clk;
+  end
 
   initial begin
+    rst_n = 0;
+    #5;
+    rst_n = 1;
+    #1;
     for (i = 0; i < 100; i = i + 1) begin
       Data_in = $random;
       // TXDataK = $random;
