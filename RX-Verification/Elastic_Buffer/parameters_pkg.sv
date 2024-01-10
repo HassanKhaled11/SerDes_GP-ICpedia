@@ -1,6 +1,0 @@
-
-package PARAMETERS_PKG ;
-
-typedef enum logic [9:0] {FIRST = 10'h001, SECOND = 10'h200, THIRD = 10'h100, FOURTH = 10'h080,FIFTH =  10'h040, SIXTH = 10'h020, SEVENTH = 10'h010,EIGHTH = 10'h008, NINTH = 10'h004, TENTH = 10'h002} e_WALKING_ONES ;
-
-endpackage
