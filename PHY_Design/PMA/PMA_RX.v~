@@ -31,6 +31,6 @@ Serial_to_Parallel #(.DATA_WIDTH(DATA_WIDTH)) serialToparallel (
 .RxPolarity       (RxPolarity), // inport
 //.K285             (K285), // out to comma detection
 .Data_to_Decoder  (Data_out) // parallel data to buffer
-);														
+);														);
 
 endmodule 

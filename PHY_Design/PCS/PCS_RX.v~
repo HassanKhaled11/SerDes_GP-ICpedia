@@ -12,7 +12,7 @@ module PCS_RX #(parameter DATA_WIDTH = 10,BUFFER_WIDTH = 10 , BUFFER_DEPTH = 16)
 				output 		[31:0]		RX_Data 		,
 				output 					RX_DataK		,
 				output 		[2:0] 		RX_Status		,
-				output  				RX_Valid			
+				output  				RX_Valid		,	
 				);
 
 ////////////////////////////////////////////////////////////

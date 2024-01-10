@@ -81,7 +81,7 @@ PMA   PMA_U
   .Ser_in	(serial_bit),
   .TX_Out_P     (TX_Out_P)         ,
   .TX_Out_N   	(TX_Out_N)         ,
-  //.K285         (detected_comma),//comma detection bit to comma block
+  .K285         (detected_comma),//comma detection bit to comma block
   .RX_Out       (Data_Out_PMA)//10 bits to elastic buffer  
 );
 
