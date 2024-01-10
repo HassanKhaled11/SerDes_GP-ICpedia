@@ -5,11 +5,11 @@ module elastic_memory (
     read_pointer,
     write_pointer,
     data_out,
-    rd_en,
+    // rd_en,
     full,
     empty,
     insert,
-    wr_en
+    // wr_en
 );
   parameter DATA_WIDTH = 10;
   parameter BUFFER_DEPTH = 16;
@@ -21,7 +21,7 @@ module elastic_memory (
   input [DATA_WIDTH-1:0] data_in;
   input [max_buffer_addr-1:0] read_pointer;
   input [max_buffer_addr-1:0] write_pointer;
-  input rd_en, wr_en;
+  // input rd_en, wr_en;
   input insert;
   output [DATA_WIDTH-1:0] data_out;
 
@@ -38,7 +38,7 @@ module elastic_memory (
 
   //writing
   always @(posedge write_clk) begin
-    if (wr_en == 1 && !full) begin
+    if ( !full) begin
       buffer[write_pointer] <= data_in;
     end
   end

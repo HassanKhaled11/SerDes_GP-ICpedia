@@ -16,7 +16,7 @@ sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_read_out \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_out \
 sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_read_reg1 \
-sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_reg1 
+sim:/elasticBuffer_tb/DUT/sync_unit_inst/gray_counter_write_reg1
 
 add wave -divider -height 30 "memory:"
 add wave -position insertpoint  \
@@ -30,8 +30,7 @@ sim:/elasticBuffer_tb/DUT/elastic_mem_inst/empty \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/data_in \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/read_pointer \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/write_pointer \
-sim:/elasticBuffer_tb/DUT/elastic_mem_inst/rd_en \
-sim:/elasticBuffer_tb/DUT/elastic_mem_inst/wr_en \
+sim:/elasticBuffer_tb/DUT/elastic_mem_inst/insert \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/data_out \
 sim:/elasticBuffer_tb/DUT/elastic_mem_inst/buffer
 
@@ -42,16 +41,14 @@ sim:/elasticBuffer_tb/DUT/write_inst/BUFFER_DEPTH \
 sim:/elasticBuffer_tb/DUT/write_inst/max_buffer_addr \
 sim:/elasticBuffer_tb/DUT/write_inst/data_in \
 sim:/elasticBuffer_tb/DUT/write_inst/write_clk \
-sim:/elasticBuffer_tb/DUT/write_inst/write_enable \
-sim:/elasticBuffer_tb/DUT/write_inst/read_enable \
 sim:/elasticBuffer_tb/DUT/write_inst/buffer_mode \
 sim:/elasticBuffer_tb/DUT/write_inst/delete_req \
 sim:/elasticBuffer_tb/DUT/write_inst/rst_n \
-sim:/elasticBuffer_tb/DUT/write_inst/gray_read_pointer \
 sim:/elasticBuffer_tb/DUT/write_inst/overflow \
 sim:/elasticBuffer_tb/DUT/write_inst/Skp_Removed \
 sim:/elasticBuffer_tb/DUT/write_inst/write_address \
 sim:/elasticBuffer_tb/DUT/write_inst/gray_write_pointer \
+sim:/elasticBuffer_tb/DUT/write_inst/gray_read_pointer \
 sim:/elasticBuffer_tb/DUT/write_inst/full_val
 
 add wave -divider -height 30 "read control:"
@@ -60,19 +57,17 @@ sim:/elasticBuffer_tb/DUT/read_inst/DATA_WIDTH \
 sim:/elasticBuffer_tb/DUT/read_inst/BUFFER_DEPTH \
 sim:/elasticBuffer_tb/DUT/read_inst/max_buffer_addr \
 sim:/elasticBuffer_tb/DUT/read_inst/read_clk \
-sim:/elasticBuffer_tb/DUT/read_inst/read_enable \
 sim:/elasticBuffer_tb/DUT/read_inst/buffer_mode \
 sim:/elasticBuffer_tb/DUT/read_inst/add_req \
 sim:/elasticBuffer_tb/DUT/read_inst/rst_n \
-sim:/elasticBuffer_tb/DUT/read_inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/read_inst/data_out \
 sim:/elasticBuffer_tb/DUT/read_inst/empty \
+sim:/elasticBuffer_tb/DUT/read_inst/insert \
 sim:/elasticBuffer_tb/DUT/read_inst/skp_added \
 sim:/elasticBuffer_tb/DUT/read_inst/read_address \
 sim:/elasticBuffer_tb/DUT/read_inst/gray_read_pointer \
+sim:/elasticBuffer_tb/DUT/read_inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/read_inst/empty_val
-
-#sim:/elasticBuffer_tb/DUT/read_inst/read_pointer 
 
 add wave -divider -height 30 "binary to gray:"
 add wave -position insertpoint  \
@@ -80,6 +75,17 @@ sim:/elasticBuffer_tb/DUT/write_inst/bin_gray_write/COUNTER_WIDTH \
 sim:/elasticBuffer_tb/DUT/write_inst/bin_gray_write/binary \
 sim:/elasticBuffer_tb/DUT/write_inst/bin_gray_write/gray
 
+add wave -divider -height 30 "gray to binary read:"
+add wave -position insertpoint  \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_to_bin_read/WIDTH \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_to_bin_read/gray \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_to_bin_read/binary
+
+add wave -divider -height 30 "gray to binary write:"
+add wave -position insertpoint  \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_to_bin_read/WIDTH \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_to_bin_read/gray \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_to_bin_read/binary
 
 add wave -divider -height 30 "Threshold_Monitor:"
 add wave -position insertpoint  \
@@ -88,7 +94,10 @@ sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/max_buffer_addr \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_read_pointer \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/gray_write_pointer \
 sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/delete_req \
-sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/add_req
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/add_req \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/binary_read_pointer \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/binary_write_pointer \
+sim:/elasticBuffer_tb/DUT/Threshold_Monitor_Inst/num_elements
 
 
 #coverage save  encoding.ucdb -onexit 

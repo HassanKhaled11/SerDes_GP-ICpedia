@@ -5,8 +5,8 @@ module elasticBuffer_tb ();
   reg read_clk;
   reg [DATA_WIDTH-1:0] data_in;
   reg buffer_mode;
-  reg write_enable;
-  reg read_enable;
+  // reg write_enable;
+  // reg read_enable;
   // reg RxElecIdle;
   reg rst_n;
   //////////////////////////
@@ -22,8 +22,8 @@ module elasticBuffer_tb ();
       .read_clk(read_clk),
       .data_in(data_in),
       .buffer_mode(buffer_mode),
-      .write_enable(write_enable),
-      .read_enable(read_enable),
+      // .write_enable(write_enable),
+      // .read_enable(read_enable),
       .rst_n(rst_n),
       // .RxElecIdle(RxElecIdle),
       .overflow(overflow),
@@ -42,96 +42,96 @@ module elasticBuffer_tb ();
     read_clk = 0;
     forever #3 read_clk = ~read_clk;
   end
-  initial begin
-    write_enable = 0;
-    read_enable  = 0;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
+  // initial begin
+  //   write_enable = 0;
+  //   read_enable  = 0;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
 
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
 
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
 
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
-    #7 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #2 write_enable = ~write_enable;
-    #5 write_enable = ~write_enable;
-    #1 write_enable = ~write_enable;
-    #3 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
+  //   #7 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #2 write_enable = ~write_enable;
+  //   #5 write_enable = ~write_enable;
+  //   #1 write_enable = ~write_enable;
+  //   #3 write_enable = ~write_enable;
 
-    #2 read_enable = ~read_enable;
-    // write_enable = ~write_enable;
-    #5 read_enable = ~read_enable;
-    // write_enable = ~write_enable;
-    #1 read_enable = ~read_enable;
-    #3 read_enable = ~read_enable;
-    #7 read_enable = ~read_enable;
-    #1 read_enable = ~read_enable;
-    #2 read_enable = ~read_enable;
-    #5 read_enable = ~read_enable;
-    #1 read_enable = ~read_enable;
-    #3 read_enable = ~read_enable;
-    #7 read_enable = ~read_enable;
-    #1 read_enable = ~read_enable;
-    #2 read_enable = ~read_enable;
-    #5 read_enable = ~read_enable;
-    #1 read_enable = ~read_enable;
-    #3 read_enable = ~read_enable;
-  end
+  //   #2 read_enable = ~read_enable;
+  //   // write_enable = ~write_enable;
+  //   #5 read_enable = ~read_enable;
+  //   // write_enable = ~write_enable;
+  //   #1 read_enable = ~read_enable;
+  //   #3 read_enable = ~read_enable;
+  //   #7 read_enable = ~read_enable;
+  //   #1 read_enable = ~read_enable;
+  //   #2 read_enable = ~read_enable;
+  //   #5 read_enable = ~read_enable;
+  //   #1 read_enable = ~read_enable;
+  //   #3 read_enable = ~read_enable;
+  //   #7 read_enable = ~read_enable;
+  //   #1 read_enable = ~read_enable;
+  //   #2 read_enable = ~read_enable;
+  //   #5 read_enable = ~read_enable;
+  //   #1 read_enable = ~read_enable;
+  //   #3 read_enable = ~read_enable;
+  // end
 
   initial begin
     // Initialize signals
@@ -152,7 +152,7 @@ module elasticBuffer_tb ();
     @(negedge write_clk);
     data_in = 10'h1CC;
     @(negedge write_clk);
-    read_enable = 1;
+    // read_enable = 1;
     // RxElecIdle = 0;
     data_in = 10'h0F9;  ///////skp
     @(negedge write_clk);
@@ -214,7 +214,7 @@ module elasticBuffer_tb ();
 
 
     // End simulation
-    #200;
+    #250;
     $stop;
   end
 endmodule
