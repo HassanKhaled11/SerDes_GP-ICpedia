@@ -10,13 +10,13 @@ module PMA (
     // input       Ser_in,
 
 
-    output       TX_Out_P,
-    output       TX_Out_N,
+    //output       TX_Out_P,
+    //output       TX_Out_N,
     //output                   K285            ,
     output [9:0] RX_Out
 );
 
-
+wire TX_Out_P ;
 
   PMA_TX #(
       .DATA_WIDTH(10)
@@ -26,9 +26,10 @@ module PMA (
       .Rst_n          (Rst_n),
       .Data_in        (Data_in),
       .MAC_Data_En    (MAC_Data_En),
-      .TX_Out_P       (TX_Out_P),
+      .TX_Out_P       (TX_Out_P)
       // .TX_Out_N       (TX_Out_N)
   );
+
 
   //CDR + serial to parallel
   PMA_RX #(

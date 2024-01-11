@@ -8,7 +8,7 @@ module PCS (
     input [31 : 0] MAC_TX_Data,
     input [ 3 : 0] MAC_TX_Datak,
     input          MAC_Data_En,
-    input          buffer_mode,
+   // input          buffer_mode,
     //input 				  K285						,
     input          WordClk,
     input          CLK_5G,
@@ -59,7 +59,7 @@ module PCS (
       .PCLK          (PCLK),
       .CLK_5G        (CLK_5G),          //  in port
       .Rst_n         (RST_n),
-      .buffer_mode   (buffer_mode),     // in port
+      //.buffer_mode   (buffer_mode),     // in port
       .DataBusWidth  (DataBusWidth),
       .RX_Data       (RX_Data),
       .RX_DataK      (RX_DataK),

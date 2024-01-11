@@ -2,7 +2,7 @@ module elasticBuffer (
     write_clk,
     read_clk,
     data_in,
-    buffer_mode,
+    //buffer_mode,
     // write_enable,
     // read_enable,
     rst_n,
@@ -21,7 +21,7 @@ module elasticBuffer (
   input write_clk;
   input read_clk;
   input [DATA_WIDTH-1:0] data_in;
-  input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
+  //input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
   //   input write_enable;
   //   input read_enable;
   input rst_n;
@@ -50,7 +50,7 @@ module elasticBuffer (
       .write_clk(write_clk),
       .data_in(data_in),
       .gray_read_pointer(sync_gray_read_out),
-      .buffer_mode(buffer_mode),
+      //.buffer_mode(buffer_mode),
       .rst_n(rst_n),
       //   .write_enable(write_enable),
       //   .read_enable(read_enable),
@@ -65,7 +65,7 @@ module elasticBuffer (
   read_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) read_inst (
       .read_clk(read_clk),
       .gray_write_pointer(sync_gray_write_out),
-      .buffer_mode(buffer_mode),
+      //.buffer_mode(buffer_mode),
       .rst_n(rst_n),
       .data_out(data_out),
       .add_req(add_req),

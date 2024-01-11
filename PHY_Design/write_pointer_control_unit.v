@@ -2,7 +2,7 @@ module write_pointer_control (
     write_clk,
     data_in,
     gray_read_pointer,
-    buffer_mode,
+  //  buffer_mode,
     rst_n,
     // write_enable,
     delete_req,
@@ -24,7 +24,7 @@ module write_pointer_control (
   input [DATA_WIDTH-1:0] data_in;
   input write_clk;
   // input write_enable;
-  input buffer_mode;
+ // input buffer_mode;
   input delete_req;
   input rst_n;
   input [max_buffer_addr:0] gray_read_pointer;

@@ -5,8 +5,8 @@ module PMA_TX #(parameter DATA_WIDTH = 'd10)
    input                    Rst_n           ,
    input [DATA_WIDTH - 1:0] Data_in         , 
    input                    MAC_Data_En     , 
-   output  reg              TX_Out_P        ,
-   output                   TX_Out_N            
+   output  reg              TX_Out_P        
+ //  output                   TX_Out_N            
   );
 
 
@@ -17,7 +17,7 @@ reg                      flag               ;
 
 
 
-assign TX_Out_N = ~TX_Out_P                 ;
+//assign TX_Out_N = ~TX_Out_P                 ;
 
 
 always @(posedge Bit_Rate_Clk_10 or negedge Rst_n) begin
