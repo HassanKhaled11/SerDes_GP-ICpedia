@@ -34,13 +34,13 @@ module elasticBuffer_tb ();
   );
   initial begin
     write_clk = 0;
-    forever #2 write_clk = ~write_clk;
+    forever #5 write_clk = ~write_clk;
 
   end
 
   initial begin
     read_clk = 0;
-    forever #3 read_clk = ~read_clk;
+    forever #5 read_clk = ~read_clk;
   end
   // initial begin
   //   write_enable = 0;
@@ -140,7 +140,7 @@ module elasticBuffer_tb ();
     buffer_mode = 0;
     data_in = 0;
 
-    #10 rst_n = 1;
+    #15 rst_n = 1;
 
 
 
@@ -214,7 +214,7 @@ module elasticBuffer_tb ();
 
 
     // End simulation
-    #250;
+    #300;
     $stop;
   end
 endmodule
