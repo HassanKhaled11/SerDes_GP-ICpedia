@@ -1,51 +1,303 @@
 module Comma_Detection  (
-    //input [PARALLEL_DATA_WIDTH-1:0] Data_in,
-    // input TXDataK,
     input clk,
     input rst_n,
-    input [9:0] detect_comma,
-    output reg RxValid,
-    output reg Comma_pulse
+    input [9:0] Data_Collected,
+    output reg  RxValid,
+    output reg  Comma_Pulse
 );
-reg internal;
-wire pulse;
-reg[1:0] count;
-wire comma_flag;
-always @(posedge clk or negedge rst_n) begin
-  if(~rst_n) begin
-    count <= 2'b00;
-  end else if(detect_comma == 10'b001111_1010 || detect_comma == 10'b110000_0101) begin
-    count <= count + 1;
-  end 
+
+
+reg Found_Comma;
+
+reg [3:0] count ;
+
+always @(*)begin
+if (Data_Collected==10'h0FA ||Data_Collected==10'h305 && count == 0) begin 
+  Found_Comma = 1;
 end
 
-always @(posedge clk or negedge rst_n) begin
-    if (~rst_n) begin
-      internal <= 1'b0;
-      RxValid <= 0;
-      Comma_pulse <= 0;
-    end else begin
-      RxValid <= pulse;
-      internal <= comma_flag;
-      Comma_pulse <= pulse;
+else begin
+ Found_Comma  = 0;
+end
+
+end
+
+
+always @(posedge clk or negedge rst_n)begin
+  if(!rst_n) begin
+    count<=0;
+    RxValid<=0;
+    Comma_Pulse<=0;
   end
-end
-assign pulse = internal && !comma_flag;
 
+  else if (Found_Comma == 1 || count != 0) begin 
+    count<=count+1;
+      if(count== 9) begin
+         count<=0  ;
+         RxValid<=1;
+         Comma_Pulse<=1;
+      end
 
-// un comment the following line for one comma sequence for 
-//assign comma_flag = (detect_comma == 10'b00_1111_1010 || detect_comma == 10'b11_0000_0101) ? 1'b1 : 1'b0;
+      else  begin 
+        RxValid<=0;
+        Comma_Pulse<=0;
+      end
+  end
 
-
-assign comma_flag = (count == 2'b11);
-/*
- if (Data_in == 10'b001111_1010 || Data_in == 10'b110000_0101) begin
-      RxValid = 1;
-      Comma_pulse = 1;
-    end else begin
-      RxValid = 0;
-      Comma_pulse = 0;
+  else begin
+      RxValid<=0;
+      Comma_Pulse<=0;
     end
-*/
+end
+
 
 endmodule
+
+
+
+// module Comma_Detection (
+//     input Recovered_Bit_Clk,
+//     input word_clk,
+//     input rst_n,
+//     input [9:0] Data_Collected,
+
+//     output reg RxValid,
+//     output reg Comma_Pulse
+// );
+
+//   reg Found_Comma;
+//   reg flag;
+//   reg temp_pulse;
+//   reg [9:0] data_temp; 
+ 
+
+//   always @(*) begin
+//     if (Data_Collected == 10'h0FA || Data_Collected == 10'h305) begin
+//       Found_Comma = 1;
+//       RxValid     = 1;
+//       flag        = 1;
+//     end
+
+//     else begin
+//       Found_Comma = 0;
+//       RxValid     = 0;
+//       flag        = 0;
+//     end
+
+//   end
+
+
+//   always @(posedge word_clk or negedge rst_n) begin
+//     if (!rst_n) begin
+//       Comma_Pulse <= 1'b0;
+//     end else if (temp_pulse) begin
+//       Comma_Pulse <= 1'b1;
+//     end else begin
+//       Comma_Pulse <= 0;
+//     end
+//   end
+
+
+//  always @(posedge Recovered_Bit_Clk or negedge rst_n) begin 
+//   if(~rst_n) begin
+//     temp_pulse <= 0;
+//   end 
+//   else if(flag) begin
+//     temp_pulse <= Found_Comma;
+//   end
+//   else begin
+//     temp_pulse <= temp_pulse;
+//   end
+// end
+
+
+// endmodule
+
+
+
+
+
+// module Top (
+
+//     input Recovered_Bit_Clk,
+//     input word_clk,
+//     input Ser_in,
+//     input Rst_n,
+//     input RxPolarity,
+//     output reg [9:0] Data_Collected,
+//     output reg RxValid,
+//     output reg Comma_Pulse
+// );
+
+//   Serial_to_Parallel #(
+//       .DATA_WIDTH(10)
+//   ) duts (
+
+//       .Recovered_Bit_Clk(Recovered_Bit_Clk),
+//       .Ser_in(Ser_in),
+//       .Rst_n(Rst_n),
+//       .RxPolarity(RxPolarity),
+//       .Data_Collected(Data_Collected)  //change
+
+//   );
+
+
+//   // Comma_Detection DUTC (
+//   //     .word_clk(word_clk),
+//   //     .Recovered_Bit_Clk(Recovered_Bit_Clk),
+//   //     .rst_n(Rst_n),
+//   //     .Data_Collected(Data_Collected),
+
+//   //     .RxValid(RxValid),
+//   //     .Comma_Pulse(Comma_Pulse)
+//   // );
+
+
+// Comma_Detection  Dutc(
+//     .clk    (Recovered_Bit_Clk)     ,
+//     .rst_n  (Rst_n)     ,
+//     .Data_Collected(Data_Collected),
+//     .RxValid(RxValid),
+//     .Comma_Pulse(Comma_Pulse)
+// );
+
+
+// endmodule
+
+
+
+
+
+// module comma_tb ();
+//   reg Recovered_Bit_Clk;
+//   reg word_clk;
+//   reg Ser_in;
+//   reg Rst_n;
+//   reg RxPolarity;
+//   wire [9:0] Data_Collected;
+//   wire RxValid;
+//   wire Comma_Pulse;
+
+
+
+//   integer i;
+//   reg [9:0] x;
+
+//   Serial_to_Parallel #(
+//       .DATA_WIDTH(10)
+//   ) duts (
+
+//       .Recovered_Bit_Clk(Recovered_Bit_Clk),
+//       .Ser_in(Ser_in),
+//       .Rst_n(Rst_n),
+//       .RxPolarity(RxPolarity),
+//       .Data_Collected(Data_Collected)  //change
+
+//   );
+
+
+//   // Comma_Detection DUTC (
+//   //     .word_clk(word_clk),
+//   //     .Recovered_Bit_Clk(Recovered_Bit_Clk),
+//   //     .rst_n(Rst_n),
+//   //     .Data_Collected(Data_Collected),
+
+//   //     .RxValid(RxValid),
+//   //     .Comma_Pulse(Comma_Pulse)
+//   // );
+
+
+
+// Comma_Detection Dutc (
+//     .clk    (Recovered_Bit_Clk)     ,
+//     .rst_n  (Rst_n)     ,
+//     .Data_Collected(Data_Collected),
+//     .RxValid(RxValid),
+//     .Comma_Pulse(Comma_Pulse)
+// );
+
+
+
+//   initial begin
+//     Recovered_Bit_Clk = 1;
+//     forever #1 Recovered_Bit_Clk = ~Recovered_Bit_Clk;
+//   end
+
+
+//   initial begin
+//     word_clk = 1;
+//     forever #10 word_clk = ~word_clk;
+//   end
+
+
+//   initial begin
+//     RxPolarity = 0;
+//     Ser_in = 0;
+
+//     Rst_n = 0;
+//     #4;
+//     Rst_n = 1;
+
+
+//     repeat (100) begin
+//       @(negedge word_clk);
+//       x = $random();
+//       send_coma();
+//       send_data(x);
+//     end
+
+
+//     #1000;
+//     $stop;
+
+//   end
+
+//   task send_coma();
+//     begin
+//       @(posedge Recovered_Bit_Clk);
+
+//       Ser_in = 0;
+//       #(2);
+
+//       Ser_in = 1;
+//       #(2);
+
+//       Ser_in = 0;
+//       #(2);
+
+//       Ser_in = 1;
+//       #(2);
+
+//       Ser_in = 1;
+//       #(2);
+
+//       Ser_in = 1;
+//       #(2);
+
+//       Ser_in = 1;
+//       #(2);
+
+//       Ser_in = 1;
+//       #(2);
+
+//       Ser_in = 0;
+//       #(2);
+
+//       Ser_in = 0;
+//       #(2);
+//     end
+//   endtask
+
+
+
+//   task send_data(input [9:0] data);
+//     begin
+//       for (i = 0; i < 10; i = i + 1) begin
+//         @(posedge Recovered_Bit_Clk);
+//         Ser_in = data[i];
+//       end
+//     end
+
+//   endtask
+
+// endmodule
