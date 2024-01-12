@@ -43,7 +43,7 @@ module elasticBuffer (
 
   wire [max_buffer_addr:0] sync_gray_read_out;
   wire [max_buffer_addr:0] sync_gray_write_out;
-  wire delete_req, insert;
+  wire delete_req;
   wire add_req;
   // Instantiate write_pointer_control module
   write_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) write_inst (
@@ -52,8 +52,7 @@ module elasticBuffer (
       .gray_read_pointer(sync_gray_read_out),
       //.buffer_mode(buffer_mode),
       .rst_n(rst_n),
-      //   .write_enable(write_enable),
-      //   .read_enable(read_enable),
+      .Skp_Added         (Skp_Added),
       .delete_req(delete_req),
       .overflow(overflow),
       .Skp_Removed(Skp_Removed),
@@ -70,13 +69,11 @@ module elasticBuffer (
       .data_out(data_out),
       .add_req(add_req),
       .empty(underflow),
-      .insert(insert),
-      .skp_added(skp_added),
-      //   .read_enable(read_enable),
-      //   .data_out(data_out),
       .read_address(read_address),
       .gray_read_pointer(gray_read_pointer)
   );
+
+
   elastic_memory #(DATA_WIDTH, BUFFER_DEPTH) elastic_mem_inst (
       .data_in(data_in),
       .write_clk(write_clk),
@@ -84,12 +81,11 @@ module elasticBuffer (
       .read_pointer(read_address[max_buffer_addr-1:0]),
       .write_pointer(write_address[max_buffer_addr-1:0]),
       .data_out(data_out),
-      //   .rd_en(read_enable),
       .full(overflow),
       .empty(underflow),
-      .insert(insert)
-      //   .wr_en(write_enable)
+      .add_req (add_req)
   );
+
   synchronous_unit #(max_buffer_addr) sync_unit_inst (
       .rst_n(rst_n),
       .read_to_write_clk(write_clk),

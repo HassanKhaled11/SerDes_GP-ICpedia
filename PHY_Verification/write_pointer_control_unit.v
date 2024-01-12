@@ -2,10 +2,9 @@ module write_pointer_control (
     write_clk,
     data_in,
     gray_read_pointer,
-    buffer_mode,
+  //  buffer_mode,
     rst_n,
-    write_enable,
-    read_enable,
+    // write_enable,
     delete_req,
     ////outputs/////
     overflow,
@@ -24,9 +23,8 @@ module write_pointer_control (
 
   input [DATA_WIDTH-1:0] data_in;
   input write_clk;
-  input write_enable;
-  input read_enable;
-  input buffer_mode;
+  // input write_enable;
+ // input buffer_mode;
   input delete_req;
   input rst_n;
   input [max_buffer_addr:0] gray_read_pointer;
@@ -52,7 +50,7 @@ module write_pointer_control (
       Skp_Removed   <= 0;
       // gray_write_pointer <= 0;
 
-    end else if (write_enable && !full_val) begin  //check not skp
+    end else if (!full_val) begin  //check not skp
       if (!(delete_req && (data_in == 10'b001111_1001 || data_in == 10'b110000_0110)))
         write_address <= write_address + 1;
       Skp_Removed <= 0;
@@ -73,11 +71,6 @@ module write_pointer_control (
     if (!rst_n) overflow = 1'b0;
     else overflow = full_val;
   end
-  // always @(*) begin
-  //     if (!rst_n) overflow = 1'b0;
-  //     else if (read_enable) overflow = 1'b0;
-  //     else if (write_enable) overflow = full_val;
-  //     else $display("%b", gray_read_pointer);
-  //   end
+
 
 endmodule

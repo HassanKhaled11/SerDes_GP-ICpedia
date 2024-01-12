@@ -2,9 +2,9 @@ module elasticBuffer (
     write_clk,
     read_clk,
     data_in,
-    buffer_mode,
-    write_enable,
-    read_enable,
+    //buffer_mode,
+    // write_enable,
+    // read_enable,
     rst_n,
     ////////////////////
     overflow,
@@ -21,9 +21,9 @@ module elasticBuffer (
   input write_clk;
   input read_clk;
   input [DATA_WIDTH-1:0] data_in;
-  input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
-  input write_enable;
-  input read_enable;
+  //input buffer_mode;  //0:nominal half full ,1:nominal empty buffer
+  //   input write_enable;
+  //   input read_enable;
   input rst_n;
 
   //outputs
@@ -50,10 +50,10 @@ module elasticBuffer (
       .write_clk(write_clk),
       .data_in(data_in),
       .gray_read_pointer(sync_gray_read_out),
-      .buffer_mode(buffer_mode),
+      //.buffer_mode(buffer_mode),
       .rst_n(rst_n),
-      .write_enable(write_enable),
-      .read_enable(read_enable),
+      //   .write_enable(write_enable),
+      //   .read_enable(read_enable),
       .delete_req(delete_req),
       .overflow(overflow),
       .Skp_Removed(Skp_Removed),
@@ -65,14 +65,14 @@ module elasticBuffer (
   read_pointer_control #(DATA_WIDTH, BUFFER_DEPTH) read_inst (
       .read_clk(read_clk),
       .gray_write_pointer(sync_gray_write_out),
-      .buffer_mode(buffer_mode),
+      //.buffer_mode(buffer_mode),
       .rst_n(rst_n),
       .data_out(data_out),
       .add_req(add_req),
       .empty(underflow),
       .insert(insert),
       .skp_added(skp_added),
-      .read_enable(read_enable),
+      //   .read_enable(read_enable),
       //   .data_out(data_out),
       .read_address(read_address),
       .gray_read_pointer(gray_read_pointer)
@@ -84,11 +84,11 @@ module elasticBuffer (
       .read_pointer(read_address[max_buffer_addr-1:0]),
       .write_pointer(write_address[max_buffer_addr-1:0]),
       .data_out(data_out),
-      .rd_en(read_enable),
+      //   .rd_en(read_enable),
       .full(overflow),
       .empty(underflow),
-      .insert(insert),
-      .wr_en(write_enable)
+      .insert(insert)
+      //   .wr_en(write_enable)
   );
   synchronous_unit #(max_buffer_addr) sync_unit_inst (
       .rst_n(rst_n),

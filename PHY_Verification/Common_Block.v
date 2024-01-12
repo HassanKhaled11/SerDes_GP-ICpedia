@@ -12,10 +12,10 @@ wire Bit_Rate_Clk;
 
 reg [7:0] ratio ;
 
-  //PLL PLL_frquency_mult (
-  //    .Ref_Clk(Ref_Clk),
-  //    .CLK(Bit_Rate_Clk)  // 5G
-  //);
+  PLL PLL_frquency_mult (
+      .Ref_Clk(Ref_Clk),
+      .CLK(Bit_Rate_Clk)  // 5G
+  );
 
   Clock_Div clock_divider (
       .Ref_Clk(Bit_Rate_Clk),  // 5G/10
