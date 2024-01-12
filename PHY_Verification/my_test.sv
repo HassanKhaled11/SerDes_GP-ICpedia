@@ -49,10 +49,12 @@ task run_phase(uvm_phase phase);
        	//   `uvm_warning("MY_TEST","MAIN SEQ START");
        	// end
        	begin
+           cfg.dut_vif.DataBusWidth = 6'd32;
           `uvm_warning("MY_TEST","RESET");
-           cfg.dut_vif.rst_n = 0 ;
-           #50 ;
-           cfg.dut_vif.rst_n = 1;
+           cfg.dut_vif.Reset_n = 0 ;
+           #100 ;
+           cfg.dut_vif.Reset_n = 1;
+
            #4;
           `uvm_warning("MY_TEST","MAIN TEST START.."); 
            main_seq.start(env.agent.sqr);

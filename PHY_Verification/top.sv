@@ -1,3 +1,6 @@
+`timescale 1ns/10ps
+
+
 import uvm_pkg::*    ;
 `include "uvm_macros.svh"
 
@@ -13,14 +16,14 @@ module top ;
 
 
  BFM_if          dut_if()     ;
- INTERNALS_if    internal_if();
+ INTERNALS_if    internals_if();
 
 
 /////////////////////////////////////
 ///////// Design instance ///////////
 /////////////////////////////////////
 
-PHY        //!!!!!! Will be updated 
+PHY    DUT      
 (
   .Ref_CLK       (dut_if.Ref_CLK)         ,
   .Reset_n       (dut_if.Reset_n)         ,
@@ -28,10 +31,13 @@ PHY        //!!!!!! Will be updated
   .MAC_TX_Data   (dut_if.MAC_TX_Data)     ,
   .MAC_TX_DataK  (dut_if.MAC_TX_DataK)    ,
   .MAC_Data_En   (dut_if.MAC_Data_En)     , 
-  .RX_In_P       (dut_if.RX_In_P)         ,
-  .RX_In_N       (dut_if.RX_In_N)         ,
-  .TX_Out_P      (dut_if.TX_Out_P)        ,
-  .TX_Out_N      (dut_if.TX_Out_N)
+  .RxPolarity    (dut_if.RxPolarity)      ,
+
+  .RX_Data       (dut_if.Rx_Data)         ,
+  .RX_DataK      (dut_if.Rx_DataK)        ,
+  .RX_Status     (dut_if.Rx_Status)       , 
+  .RX_Valid      (dut_if.Rx_Valid)        ,
+  .PCLK          (dut_if.PCLK)             
 );
 
 
@@ -39,7 +45,10 @@ PHY        //!!!!!! Will be updated
 //////////// INTERNALS /////////////
 ////////////////////////////////////
 
-
+assign internals_if.Bit_CLK      = DUT.Bit_Rate_Clk                   ;
+assign internals_if.Word_CLK     = DUT.Bit_Rate_CLK_10                ;
+assign internals_if.DataBusWidth = DUT.DataBusWidth                   ;
+assign internals_if.TX_Out_P     = DUT.PMA_U.TX_Out_P                 ;
 
 ///////////////////////////////////
 ///////// CLOCK GENERATION ////////

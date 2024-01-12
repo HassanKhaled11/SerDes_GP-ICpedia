@@ -22,7 +22,7 @@ module read_pointer_control (
   // input [DATA_WIDTH-1:0] data_in;
   input read_clk;
   // input read_enable;
-//  input buffer_mode;
+  //  input buffer_mode;
   input add_req;  //////////////
   input rst_n;
   input [max_buffer_addr:0] gray_write_pointer;

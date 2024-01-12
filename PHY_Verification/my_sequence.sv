@@ -21,9 +21,15 @@ endfunction
 
 
 task body();
-	repeat(100) begin
+
 	 stim_seq_item = my_sequence_item :: type_id :: create("stim_seq_item");
-	                       			`uvm_info("MY_SEQUENCE","BEFORE START ITEM",UVM_MEDIUM);	
+	                       			`uvm_info("MY_SEQUENCE","BEFORE START ITEM",UVM_MEDIUM);   
+
+	repeat(100) begin
+
+	 // stim_seq_item.DataBusWidth16_c.constraint_mode(0);    
+	 // stim_seq_item.DataBusWidth8_c.constraint_mode(0);
+
       start_item(stim_seq_item);
                           			`uvm_info("MY_SEQUENCE","AFTER START ITEM",UVM_MEDIUM);
       assert(stim_seq_item.randomize());

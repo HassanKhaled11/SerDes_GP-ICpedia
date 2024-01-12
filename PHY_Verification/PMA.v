@@ -16,7 +16,10 @@ module PMA (
     output [9:0] RX_Out
 );
 
-wire TX_Out_P ;
+
+
+ wire TX_Out_P ;
+
 
   PMA_TX #(
       .DATA_WIDTH(10)

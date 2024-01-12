@@ -1,3 +1,5 @@
+`timescale 1ns/10ps
+
 module Common_Block (
     input Ref_Clk,  // 100 MG 
     input Rst_n,
@@ -8,7 +10,6 @@ module Common_Block (
     output PCLK
 );
 
-wire Bit_Rate_Clk;
 
 reg [7:0] ratio ;
 

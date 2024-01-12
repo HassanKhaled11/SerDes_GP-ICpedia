@@ -12,6 +12,7 @@ parameter DATA_WIDTH = 10;
   logic         [31 : 0 ]      MAC_TX_Data      ;
   logic         [3  : 0 ]      MAC_TX_DataK     ;
   logic                        MAC_Data_En      ;
+  logic                        RxPolarity       ;
 
  
   
@@ -30,22 +31,9 @@ endinterface
 
 interface  INTERNALS_if;
 
-  parameter DATA_WIDTH = 10;
-
-
-  bit   write_clk;
-  bit   read_clk;
-  logic [DATA_WIDTH-1:0] data_in;
-  logic buffer_mode;                      //0:nominal half full ,1:nominal empty buffer
-  logic write_enable;
-  logic read_enable;
-  logic rst_n;
-
-  //OUTPUTS
-  logic skp_added;
-  logic Skp_Removed;
-  logic overflow, underflow;
-  logic [DATA_WIDTH-1:0] data_out;
-
+ bit Bit_CLK  ;
+ bit Word_CLK ;
+ logic [5:0] DataBusWidth ;
+ bit TX_Out_P ;
 
 endinterface 

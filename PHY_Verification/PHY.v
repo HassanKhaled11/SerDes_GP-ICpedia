@@ -8,24 +8,22 @@ module PHY
   input                                      MAC_Data_En            , 
   // input                                   RX_POS                 ,
   // input                                   RX_NEG                 ,
-  //input				     serial_bit		    ,
+  //input				                             serial_bit		          ,
   input                                      RxPolarity             ,
  // input                                    buffer_mode            ,
   
- // output                                     TX_Out_P               ,
- // output                                   TX_Out_N               ,
+ //output                                    TX_Out_P               ,
+ //output                                    TX_Out_N               ,
   output        [31 : 0 ]                    RX_Data                ,
   output                                     RX_DataK               ,
   output        [2:0]                        RX_Status              ,
   output                                     RX_Valid               ,
   output                                     PCLK                   
-   
 );
 
 wire [9:0] Data_In_PMA,Data_Out_PMA;
 wire Bit_Rate_Clk;
 wire Bit_Rate_CLK_10;
-wire PCLK ;
 //wire detected_comma;
 
 
@@ -81,7 +79,7 @@ PMA   PMA_U
   //.RX_NEG       (TX_Out_N), // serial bit
   .RxPolarity   (RxPolarity), // input to serial to parallel block
   //.Ser_in	(serial_bit),
- // .TX_Out_P     (TX_Out_P)         ,
+  //.TX_Out_P     (TX_Out_P)         ,
 //.TX_Out_N   	(TX_Out_N)         ,
   //.K285         (detected_comma),//comma detection bit to comma block
   .RX_Out       (Data_Out_PMA)//10 bits to elastic buffer  

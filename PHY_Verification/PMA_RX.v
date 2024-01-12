@@ -23,14 +23,24 @@ module PMA_RX #(parameter DATA_WIDTH = 10)
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-Serial_to_Parallel #(.DATA_WIDTH(DATA_WIDTH)) serialToparallel (
+// Serial_to_Parallel #(.DATA_WIDTH(DATA_WIDTH)) serialToparallel (
 															
-.Rst_n            (Rst_n),															
-.Recovered_Bit_Clk(CLK_5G), // from cdr sampled clk    --> Recovered_Bit_Clk
-.Ser_in           (Ser_in), // from cdr sampled bit
-.RxPolarity       (RxPolarity), // inport
-//.K285             (K285), // out to comma detection
-.Data_to_Decoder  (Data_out) // parallel data to buffer
-);														
+// .Rst_n            (Rst_n),															
+// .Recovered_Bit_Clk(CLK_5G), // from cdr sampled clk    --> Recovered_Bit_Clk
+// .Ser_in           (Ser_in), // from cdr sampled bit
+// .RxPolarity       (RxPolarity), // inport
+// //.K285             (K285), // out to comma detection
+// .Data_to_Decoder  (Data_out) // parallel data to buffer
+// );														
+
+  Serial_to_Parallel #(.DATA_WIDTH(DATA_WIDTH)) serialToparallel (
+
+      .Recovered_Bit_Clk(CLK_5G),
+      .Ser_in(Ser_in),
+      .Rst_n(Rst_n),
+      .RxPolarity(RxPolarity),
+      .Data_Collected(Data_out)  //change
+
+  );
 
 endmodule 

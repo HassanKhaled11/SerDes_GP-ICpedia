@@ -42,11 +42,11 @@ endtask : run_phase
 task drive(); 
   @(negedge bfm_vif.PCLK);
 
-  bfm_vif.DataBusWidth = stim_seq_item.DataBusWidth;
+  // bfm_vif.DataBusWidth = stim_seq_item.DataBusWidth;
   bfm_vif.MAC_TX_Data  = stim_seq_item.MAC_TX_Data ;
   bfm_vif.MAC_TX_DataK = stim_seq_item.MAC_TX_DataK;
   bfm_vif.MAC_Data_En  = stim_seq_item.MAC_Data_En ;
-
+  bfm_vif.RxPolarity   = stim_seq_item.RxPolarity  ;
 
 `uvm_info("MY_DRIVER","DRIVE FUN",UVM_MEDIUM);
 	

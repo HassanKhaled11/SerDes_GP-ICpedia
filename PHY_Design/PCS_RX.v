@@ -33,13 +33,24 @@ module PCS_RX #(
   //////////////// 	Comma Detection 	   /////////////////
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
-  Comma_Detection comma (
-      .RxValid     (RX_Valid),        //out port
-      .detect_comma(Collected_Data),  // from ---------
-      .Comma_pulse (Comma_pulse),     // to elastic buffer
-      .clk         (CLK_5G),
-      .rst_n       (Rst_n)
-  );
+  // Comma_Detection comma (
+  //     .RxValid     (RX_Valid),        //out port
+  //     .detect_comma(Collected_Data),  // from ---------
+  //     .Comma_pulse (Comma_pulse),     // to elastic buffer
+  //     .wordclk     (WordClk),
+  //     .clk         (CLK_5G),
+  //     .rst_n       (Rst_n)
+  // );
+
+
+Comma_Detection Dutc (
+    .clk    (CLK_5G)     ,
+    .rst_n  (Rst_n)     ,
+    .Data_Collected(Collected_Data),
+    .RxValid(RX_Valid),
+    .Comma_Pulse(Comma_pulse)
+);
+
 
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
