@@ -1,5 +1,10 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
+add wave -noupdate /top/DUTA/cover_Bit_CLK_period
+add wave -noupdate /top/DUTA/cover_WORD_CLK_period
+add wave -noupdate /top/DUTA/cover_PCLK32_period
+add wave -noupdate /top/DUTA/cover_PCLK16_period
+add wave -noupdate /top/DUTA/cover_PCLK8_period
 add wave -noupdate -divider -height 50 BFM
 add wave -noupdate /top/dut_if/Ref_CLK
 add wave -noupdate /top/dut_if/Reset_n
@@ -44,7 +49,7 @@ add wave -noupdate /top/DUT/MAC_TX_Data
 add wave -noupdate -radix binary /top/DUT/MAC_TX_DataK
 add wave -noupdate /top/DUT/Ref_CLK
 add wave -noupdate /top/DUT/Reset_n
-add wave -noupdate /top/DUT/RX_Data
+add wave -noupdate -color Magenta /top/DUT/RX_Data
 add wave -noupdate /top/DUT/RX_DataK
 add wave -noupdate /top/DUT/RX_Status
 add wave -noupdate /top/DUT/RX_Valid
@@ -97,9 +102,9 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
 add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/Temp_Reg
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18900 ps} 1} {{Cursor 2} {27300 ps} 1 Magenta default} {{Cursor 3} {111706 ps} 1 Magenta default} {{Cursor 4} {109243 ps} 0}
+WaveRestoreCursors {{Cursor 1} {18900 ps} 1} {{Cursor 2} {27300 ps} 1 Magenta default} {{Cursor 3} {110979 ps} 1 Magenta default} {{Cursor 4} {789658 ps} 0}
 quietly wave cursor active 4
-configure wave -namecolwidth 401
+configure wave -namecolwidth 375
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -113,4 +118,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {93877 ps} {145404 ps}
+WaveRestoreZoom {739894 ps} {814638 ps}

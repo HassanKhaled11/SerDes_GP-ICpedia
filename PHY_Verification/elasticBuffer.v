@@ -52,7 +52,7 @@ module elasticBuffer (
       .gray_read_pointer(sync_gray_read_out),
       //.buffer_mode(buffer_mode),
       .rst_n(rst_n),
-      .Skp_Added         (Skp_Added),
+      .Skp_Added(skp_added),
       .delete_req(delete_req),
       .overflow(overflow),
       .Skp_Removed(Skp_Removed),

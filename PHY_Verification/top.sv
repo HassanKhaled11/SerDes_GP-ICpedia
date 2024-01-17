@@ -47,8 +47,23 @@ PHY    DUT
 
 assign internals_if.Bit_CLK      = DUT.Bit_Rate_Clk                   ;
 assign internals_if.Word_CLK     = DUT.Bit_Rate_CLK_10                ;
+assign internals_if.PCLK         = DUT.PCLK                           ;
 assign internals_if.DataBusWidth = DUT.DataBusWidth                   ;
 assign internals_if.TX_Out_P     = DUT.PMA_U.TX_Out_P                 ;
+
+
+
+my_assertion DUTA
+(
+
+ .Bit_CLK      (DUT.Bit_Rate_Clk)   ,
+ .Word_CLK     (DUT.Bit_Rate_CLK_10),
+ .PCLK         (DUT.PCLK)           ,
+ .DataBusWidth (DUT.DataBusWidth)   ,
+ .TX_Out_P     (DUT.PMA_U.TX_Out_P)
+
+);
+
 
 ///////////////////////////////////
 ///////// CLOCK GENERATION ////////

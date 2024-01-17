@@ -14,7 +14,6 @@ parameter DATA_WIDTH = 10;
   logic                        MAC_Data_En      ;
   logic                        RxPolarity       ;
 
- 
   
   ///////// OUTPUTS ///////// 
 
@@ -33,7 +32,9 @@ interface  INTERNALS_if;
 
  bit Bit_CLK  ;
  bit Word_CLK ;
+ bit PCLK     ;
  logic [5:0] DataBusWidth ;
  bit TX_Out_P ;
+
 
 endinterface 

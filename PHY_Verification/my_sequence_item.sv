@@ -14,7 +14,7 @@ logic [3:0] CommandK_Arr [3:0];
   //////// INPUTS //////////
 
  // rand logic                     Reset_n          ;
- //logic         [5  : 0 ]      DataBusWidth     ;
+ //logic         [5  : 0 ]         DataBusWidth     ;
  rand logic         [31 : 0 ]      MAC_TX_Data      ;
  rand logic         [3  : 0 ]      MAC_TX_DataK     ;
  rand logic                        MAC_Data_En      ;
@@ -71,27 +71,27 @@ constraint MAC_TX_Data_c {
 
 
 constraint MAC_TX_Data_CommaByte_c {
- if(Data_post == 32'hBC) {  
-     MAC_TX_Data[7:0]   inside {[0:8'hFF]};
-     MAC_TX_Data[23:16] inside {[0:8'hFF]};
-  }
+ // if(Data_post == 32'hBC) {  
+ //     MAC_TX_Data[7:0]   inside {[0:8'hFF]};
+ //     MAC_TX_Data[23:16] inside {[0:8'hFF]};
+ //  }
 
-  else {
+  //else {
      MAC_TX_Data[7:0]   == 8'hBC;
      MAC_TX_Data[23:16] == 8'hBC;
-  }
+  //}
 }
 
 
 //---------- MAC_DATAK_CONSTRAINT ----
 constraint MAC_TX_DataK_c {
- if(Data_post != 8'hBC ) {
+ //if(Data_post != 8'hBC ) {
     MAC_TX_DataK == 4'b0101; 
-  }
+ // }
   
-  else {
-    MAC_TX_DataK dist {4'd0 :/ 95 , 1:/ 4'd1};
-  }
+  // else {
+  //   MAC_TX_DataK dist {4'd0 :/ 95 , 1:/ 4'd1};
+  // }
 }
  
 

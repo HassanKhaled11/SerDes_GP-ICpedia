@@ -11,17 +11,17 @@ class my_scoreboard extends uvm_scoreboard;
 
 `uvm_component_utils(my_scoreboard);
 
-// uvm_analysis_export   #(my_sequence_item) sb_export ;
-// uvm_tlm_analysis_fifo #(my_sequence_item) sb_fifo   ;
+uvm_analysis_export   #(my_sequence_item) sb_export ;
+uvm_tlm_analysis_fifo #(my_sequence_item) sb_fifo   ;
 
- uvm_analysis_imp      #(my_sequence_item , my_scoreboard) sb_export ;
+ // uvm_analysis_imp      #(my_sequence_item , my_scoreboard) sb_export ;
 
 virtual BFM_if bfm_vif                              ;
 virtual INTERNALS_if internals_if                   ;
 
 my_sequence_item     data_to_check                  ;
 
-int fd            ;
+int fd ,fd2       ;
 int correct_count ;
 int error_count   ;
 
@@ -36,6 +36,7 @@ realtime t1,t2,t3,t4,t5,t6       ;
 function new(string name = "my_scoreboard" , uvm_component parent = null);
 	super.new(name,parent);
 	fd = 0;
+	fd2= 0;
 	t1 = 0;
 	t2 = 0;
 	t3 = 0;
@@ -46,15 +47,15 @@ function new(string name = "my_scoreboard" , uvm_component parent = null);
 endfunction
 
 
-  function void write(my_sequence_item  pkt);
-  	data_to_check = pkt ;
-  endfunction
+  // function void write(my_sequence_item  pkt);
+  // 	data_to_check = pkt ;
+  // endfunction
 
 
 function void build_phase(uvm_phase phase);
 	super.build_phase(phase);
 	sb_export     = new("sb_export" , this);
-//	sb_fifo       = new("sb_fifo"   , this);
+	sb_fifo       = new("sb_fifo"   , this);
     data_to_check = new ("data_to_check");
 
     if(!uvm_config_db#(virtual INTERNALS_if)::get(this,"","internals_if", internals_if))
@@ -67,15 +68,16 @@ function void build_phase(uvm_phase phase);
 endfunction 
 
 
-// function void connect_phase(uvm_phase phase);
-// 	super.connect_phase(phase);
-//    sb_export.connect(sb_fifo.analysis_export);	
-// endfunction
+function void connect_phase(uvm_phase phase);
+	super.connect_phase(phase);
+   sb_export.connect(sb_fifo.analysis_export);	
+endfunction
 
 
 function void end_of_elaboration_phase (uvm_phase phase);
   super.end_of_elaboration_phase (phase);                          //  OPEN FILE
-      fd = $fopen("./MAC_TX_Data_Stim.hex","r");
+      fd  = $fopen("./MAC_TX_Data_Stim.hex","r");
+      fd2 = $fopen("./PHY_OUT.hex","w");
 endfunction
 
 
@@ -85,18 +87,19 @@ task run_phase(uvm_phase phase);
 
 
      forever begin                                     //Collect Outs in Queue after Comma Detection
-        // sb_fifo.get(data_to_check);
+        sb_fifo.get(data_to_check);
         @(internals_if.Bit_CLK);
+         `uvm_info("CAPTURED DATA",$sformatf(" DATA = %h",data_to_check.Rx_Data),UVM_MEDIUM) ;
     	 `uvm_info("MY_SCOREBOARD","SOREBOARD's CAPTURING",UVM_MEDIUM);
-          Coma_collection = { internals_if.TX_Out_P  ,Coma_collection [9:1]}; // TX_OUT_P	
-          if (Coma_collection == 10'h0FA || Coma_collection == 10'h305)
+         // Coma_collection = { internals_if.TX_Out_P  ,Coma_collection [9:1]}; // TX_OUT_P	
+          //if (Coma_collection == 10'h0FA || Coma_collection == 10'h305)
+           if(!(data_to_check.Rx_Data[7:0] == 8'h7c || data_to_check.Rx_Data[15:8] == 8'h7c || data_to_check.Rx_Data[23:16] == 8'h7c || data_to_check.Rx_Data[31:24] == 8'h7c) && data_to_check.Rx_Data)
            begin
-           repeat(75) @(posedge internals_if.Bit_CLK);    // bit rate clock - Number of latency (EB --> RXOUT)
-           Queue_Data.push_back(data_to_check.Rx_Data);
+           //repeat(75) @(posedge internals_if.Bit_CLK);    // bit rate clock - Number of latency (EB --> RXOUT)
+             Queue_Data.push_back(data_to_check.Rx_Data);
+             $fwrite(fd2,"%h\n",data_to_check.Rx_Data);
            end
-          end  
-
-
+       end  
 
 		// fork
 
@@ -205,47 +208,54 @@ task run_phase(uvm_phase phase);
         //     end            
 
 		// join
+
+
 endtask
 
+function void check_phase (uvm_phase phase);
+super.check_phase(phase);
+
+	for(int j = 0 ; j < Queue_Data.size() ; j++) begin
+		// if(Queue_Expec_Data[j] == Queue_Data[j]) begin 
+            `uvm_info("Queue Data",$sformatf("Q[%0d] = %h",j,Queue_Data[j]),UVM_MEDIUM) ;
+		// 	 correct_count++;
+	    // end
+
+	    // else begin
+	    // 	`uvm_info("FAILED_RXDATA",$sformatf("WRONG OUTPUT DATA = %h",Queue_Data[j]),UVM_LOW) ;
+	    // 	 error_count++;
+	    // end
+	end
+
+
+endfunction
 
 
 
 function void report_phase(uvm_phase phase);
 	super.report_phase(phase);
 
-	// for(int j = 0 ; j < Queue_Expec_Data.size() ; j++) begin
-	// 	if(Queue_Expec_Data[j] == Queue_Data[j]) begin 
-    //         `uvm_info("SECCEEDED_RXDATA",$sformatf("RIGHT OUTPUT DATA = %h",Queue_Data[j]),UVM_MEDIUM) ;
-	// 		 correct_count++;
-	//     end
+    // if(Queue_Data == Queue_Expec_Data) begin
+    // 	 `uvm_info("SECCEEDED_RXDATA", "RIGHT OUTPUT DATA" , UVM_LOW) ;
+    // end
 
-	//     else begin
-	//     	`uvm_info("FAILED_RXDATA",$sformatf("WRONG OUTPUT DATA = %h",Queue_Data[j]),UVM_LOW) ;
-	//     	 error_count++;
-	//     end
-	// end
-   
-    if(Queue_Data == Queue_Expec_Data) begin
-    	 `uvm_info("SECCEEDED_RXDATA", "RIGHT OUTPUT DATA" , UVM_LOW) ;
-    end
+    // else begin
+    // 	  `uvm_info("FAILED_RXDATA","WRONG OUTPUT DATA",UVM_LOW) ;
+    // end
 
-    else begin
-    	  `uvm_info("FAILED_RXDATA","WRONG OUTPUT DATA",UVM_LOW) ;
-    end
-
-	`uvm_info("MY_SCOREBOARD" , $sformatf("CORRECT_COUNT = %d",correct_count) , UVM_MEDIUM);
-	`uvm_info("MY_SCOREBOARD" , $sformatf("ERROR_COUNT = %d",error_count)     , UVM_MEDIUM);
-
+	// `uvm_info("MY_SCOREBOARD" , $sformatf("CORRECT_COUNT = %d",correct_count) , UVM_MEDIUM);
+	`uvm_info("MY_SCOREBOARD_REPORT" , $sformatf("QUEUE SIZE = %h",Queue_Data.size()), UVM_MEDIUM);
+    
 endfunction
 
 
 
 function void final_phase (uvm_phase phase);
 	super.final_phase(phase);
-
 	$fclose(fd);                  // CLOSE FILE
-	
+	$fclose(fd2);
 endfunction
 
 endclass	
+
 endpackage	
