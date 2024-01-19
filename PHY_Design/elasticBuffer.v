@@ -97,8 +97,8 @@ module elasticBuffer (
   );
 
   thresholdMonitor #(BUFFER_DEPTH) Threshold_Monitor_Inst (
-      .gray_read_pointer(sync_gray_read_out),
-      .gray_write_pointer(sync_gray_write_out),
+      .gray_read_pointer(gray_read_pointer),
+      .gray_write_pointer(gray_write_pointer),
       .delete_req(delete_req),
       .add_req(add_req)
   );
