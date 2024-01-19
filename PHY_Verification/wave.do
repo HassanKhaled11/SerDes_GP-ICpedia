@@ -5,7 +5,39 @@ add wave -noupdate /top/DUTA/cover_WORD_CLK_period
 add wave -noupdate /top/DUTA/cover_PCLK32_period
 add wave -noupdate /top/DUTA/cover_PCLK16_period
 add wave -noupdate /top/DUTA/cover_PCLK8_period
-add wave -noupdate -divider -height 50 BFM
+add wave -noupdate -divider -height 70 WATCH_SIGNALS
+add wave -noupdate /top/dut_if/Reset_n
+add wave -noupdate /top/dut_if/Ref_CLK
+add wave -noupdate -color Magenta /top/dut_if/PCLK
+add wave -noupdate -color Magenta /top/internals_if/Word_CLK
+add wave -noupdate -color Magenta /top/internals_if/Bit_CLK
+add wave -noupdate /top/internals_if/DataBusWidth
+add wave -noupdate /top/dut_if/MAC_Data_En
+add wave -noupdate /top/dut_if/MAC_TX_Data
+add wave -noupdate /top/dut_if/MAC_TX_DataK
+add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/TxData
+add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/TxDataK
+add wave -noupdate -color Yellow -radix hexadecimal /top/DUT/Data_In_PMA
+add wave -noupdate -radix binary /top/DUT/Data_In_PMA
+add wave -noupdate /top/internals_if/TX_Out_P
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/overflow
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/underflow
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/delete_req
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/add_req
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/read_pointer
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/write_pointer
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Data_Collected
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Found_Comma
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Comma_Pulse
+add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/Threshold_Monitor_Inst/num_elements
+add wave -noupdate /top/dut_if/MAC_TX_Data
+add wave -noupdate /top/dut_if/Rx_Data
+add wave -noupdate /top/dut_if/Rx_DataK
+add wave -noupdate -radix binary /top/dut_if/Rx_Status
+add wave -noupdate /top/dut_if/Rx_Valid
+add wave -noupdate -divider -height 70 BFM
 add wave -noupdate /top/dut_if/Ref_CLK
 add wave -noupdate /top/dut_if/Reset_n
 add wave -noupdate /top/dut_if/DataBusWidth
@@ -15,7 +47,7 @@ add wave -noupdate /top/dut_if/MAC_Data_En
 add wave -noupdate /top/dut_if/RxPolarity
 add wave -noupdate /top/dut_if/Rx_Data
 add wave -noupdate /top/dut_if/Rx_DataK
-add wave -noupdate /top/dut_if/Rx_Status
+add wave -noupdate -radix binary /top/dut_if/Rx_Status
 add wave -noupdate /top/dut_if/Rx_Valid
 add wave -noupdate -divider -height 50 INTERNALS
 add wave -noupdate /top/dut_if/PCLK
@@ -102,7 +134,8 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
 add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/Temp_Reg
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18900 ps} 1} {{Cursor 2} {27300 ps} 1 Magenta default} {{Cursor 3} {110979 ps} 1 Magenta default} {{Cursor 4} {789658 ps} 0}
+quietly WaveActivateNextPane
+WaveRestoreCursors {{Cursor 1} {18900 ps} 1} {{Cursor 2} {27068 ps} 1 Magenta default} {{Cursor 3} {110979 ps} 1 Magenta default} {{Cursor 4} {46900 ps} 0}
 quietly wave cursor active 4
 configure wave -namecolwidth 375
 configure wave -valuecolwidth 100
@@ -118,4 +151,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {739894 ps} {814638 ps}
+WaveRestoreZoom {0 ps} {93312 ps}

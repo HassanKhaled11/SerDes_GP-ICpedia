@@ -8,11 +8,11 @@ module Comma_Detection  (
 
 
 reg Found_Comma;
-
+wire Last_Comma;
 reg [3:0] count ;
-
+reg [2:0] symbol_count;
 always @(*)begin
-if (Data_Collected==10'h0FA ||Data_Collected==10'h305 && count == 0) begin 
+if ((Data_Collected==10'h0FA ||Data_Collected==10'h305)) begin 
   Found_Comma = 1;
 end
 
@@ -22,20 +22,37 @@ end
 
 end
 
+assign Last_Comma = ((symbol_count == 3'b100) && count == 0) ;
 
 always @(posedge clk or negedge rst_n)begin
   if(!rst_n) begin
     count<=0;
     RxValid<=0;
     Comma_Pulse<=0;
+    symbol_count <= 3'b000;
+  end
+  else if (Found_Comma == 1 && (count != 0 || Last_Comma == 0)) begin 
+    count<=count+1;
+      if(count== 9) begin
+         count<=0  ;
+         //RxValid<=1;
+        // Comma_Pulse<=1;
+         symbol_count <= symbol_count + 1;
+      end
+
+      // else  begin 
+      //   RxValid<=0;
+      //   Comma_Pulse<=0;
+      // end
   end
 
-  else if (Found_Comma == 1 || count != 0) begin 
+  else if (Last_Comma == 1 || count != 0 || symbol_count != 0 ) begin 
     count<=count+1;
       if(count== 9) begin
          count<=0  ;
          RxValid<=1;
          Comma_Pulse<=1;
+         symbol_count <= symbol_count - 1;
       end
 
       else  begin 

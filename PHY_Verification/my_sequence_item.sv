@@ -32,8 +32,8 @@ logic [3:0] CommandK_Arr [3:0];
 
  //////// Helpers ////////////
  logic [3:0]  randomK ;
- logic [7:0] Data_post;
-
+ // logic [7:0] Data_post;
+ logic [31:0] Data_post;
 
 function new(string name = "my_sequence_item");
 	super.new(name);
@@ -63,35 +63,81 @@ endfunction
 // }
 
 
+// //---------- MAC_DATAK_CONSTRAINT ----
+// constraint MAC_TX_Data_c {
+//  MAC_TX_Data[15:8 ] inside {[24'h0 : 24'hFFFFFF]};
+//  MAC_TX_Data[31:24] inside {[24'h0 : 24'hFFFFFF]};
+// }
+
+
+// constraint MAC_TX_Data_CommaByte_c {
+//  // if(Data_post == 32'hBC) {  
+//  //     MAC_TX_Data[7:0]   inside {[0:8'hFF]};
+//  //     MAC_TX_Data[23:16] inside {[0:8'hFF]};
+//  //  }
+
+//   //else {
+//      MAC_TX_Data[7:0]   == 8'hBC;
+//      MAC_TX_Data[23:16] == 8'hBC;
+//   //}
+// }
+
+
+// //---------- MAC_DATAK_CONSTRAINT ----
+// constraint MAC_TX_DataK_c {
+//  //if(Data_post != 8'hBC ) {
+//     MAC_TX_DataK == 4'b0101; 
+//  // }
+  
+//   // else {
+//   //   MAC_TX_DataK dist {4'd0 :/ 95 , 1:/ 4'd1};
+//   // }
+// }
+ 
+
+// //------ MAC_DATA_En CONSTARINT------
+// constraint MAC_Data_En_c {
+//  MAC_Data_En dist {1'b1 :/ 95 , 1'b0:/ 5};
+// }
+
+
+
+
 //---------- MAC_DATAK_CONSTRAINT ----
 constraint MAC_TX_Data_c {
- MAC_TX_Data[15:8 ] inside {[24'h0 : 24'hFFFFFF]};
- MAC_TX_Data[31:24] inside {[24'h0 : 24'hFFFFFF]};
+ if(Data_post == 32'hBCBC_BCBC) {
+     MAC_TX_Data inside {[32'h0 : 32'hFFFF_FFFF]};
+  }
+ 
+ else {
+     MAC_TX_Data == 32'hBCBC_BCBC ;
+  }
+
 }
 
 
-constraint MAC_TX_Data_CommaByte_c {
- // if(Data_post == 32'hBC) {  
- //     MAC_TX_Data[7:0]   inside {[0:8'hFF]};
- //     MAC_TX_Data[23:16] inside {[0:8'hFF]};
- //  }
+// constraint MAC_TX_Data_CommaByte_c {
+//  // if(Data_post == 32'hBC) {  
+//  //     MAC_TX_Data[7:0]   inside {[0:8'hFF]};
+//  //     MAC_TX_Data[23:16] inside {[0:8'hFF]};
+//  //  }
 
-  //else {
-     MAC_TX_Data[7:0]   == 8'hBC;
-     MAC_TX_Data[23:16] == 8'hBC;
-  //}
-}
+//   //else {
+//      MAC_TX_Data[7:0]   == 8'hBC;
+//      MAC_TX_Data[23:16] == 8'hBC;
+//   //}
+// }
 
 
 //---------- MAC_DATAK_CONSTRAINT ----
 constraint MAC_TX_DataK_c {
- //if(Data_post != 8'hBC ) {
-    MAC_TX_DataK == 4'b0101; 
- // }
+ if(Data_post != 32'hBCBC_BCBC) {
+    MAC_TX_DataK == 4'b1111; 
+  }
   
-  // else {
-  //   MAC_TX_DataK dist {4'd0 :/ 95 , 1:/ 4'd1};
-  // }
+  else {
+     MAC_TX_DataK == 4'b0000;
+  }
 }
  
 
@@ -100,6 +146,7 @@ constraint MAC_Data_En_c {
  MAC_Data_En dist {1'b1 :/ 95 , 1'b0:/ 5};
 }
 
+
 //--------RXPOLARITY CONSTRAINT--------
  constraint RxPolarity_c {
   RxPolarity == 0 ;
@@ -107,7 +154,7 @@ constraint MAC_Data_En_c {
 
 
 function void post_randomize;
-  Data_post = MAC_TX_Data[7:0];
+  Data_post = MAC_TX_Data;
 endfunction 
 
 
