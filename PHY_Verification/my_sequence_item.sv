@@ -104,7 +104,7 @@ endfunction
 
 
 //---------- MAC_DATAK_CONSTRAINT ----
-constraint MAC_TX_Data_c {
+constraint MAC_TX_Data_32c {
  if(Data_post == 32'hBCBC_BCBC) {
      MAC_TX_Data inside {[32'h0 : 32'hFFFF_FFFF]};
   }
@@ -114,6 +114,19 @@ constraint MAC_TX_Data_c {
   }
 
 }
+
+
+// constraint MAC_TX_Data_16c {
+//  if(Data_post == 32'hBCBC_BCBC) {
+//      MAC_TX_Data inside {[32'h0 : 32'hFFFF_FFFF]};
+//   }
+ 
+//  else {
+//      MAC_TX_Data == 32'hBCBC_BCBC ;
+//   }
+
+// }
+
 
 
 // constraint MAC_TX_Data_CommaByte_c {

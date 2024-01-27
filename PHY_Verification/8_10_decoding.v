@@ -595,10 +595,18 @@ always @(*) begin
 			10'b10_0001_0111 : begin  encoded_data_P = 8'b1111_1110; flag_p = 1'b1; RxDataK_P = 1'b1; end
 
 			default : begin 
-					RxDataK_P = 1'b0;
-					encoded_data_P = 8'b0000_0000;
 					DecodeError_P = 1'b1; // error in decoding 
 					flag_p = 1'b0;
+					
+					if(Data_in == 10'h0f3) begin
+					  encoded_data_P = 8'h7c;
+					  RxDataK_P = 1'b1;
+					end
+
+			    else begin
+			    	encoded_data_P = 8'b0000_0000;
+			      RxDataK_P = 1'b0;
+			    end
 			  end 
 
 	endcase 
