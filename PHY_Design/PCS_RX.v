@@ -114,6 +114,7 @@ Comma_Detection Dutc (
       .Rst_n     (Rst_n),           // in port
       .Data_in   (data_to_gasket),  // from decoder
       .width     (DataBusWidth),    // in port
+      .Rx_Datak  (RX_DataK),
       .Data_out  (RX_Data)          // final out port
   );
 endmodule
