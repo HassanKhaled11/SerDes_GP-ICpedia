@@ -18,8 +18,8 @@ localparam IDLE = 2'b00 ,
 
 
 
-assign CP1 = ((COMMA_NUMBER-2)*10 + 9);
-assign CP2 = CP1 + 10 ;
+assign CP2 = ((COMMA_NUMBER-1)*10 + 9);
+assign CP1 = (COMMA_NUMBER == 1)? 6'd0 : (CP2 - 10) ;
 
 
 always @(posedge clk or negedge rst_n) begin
@@ -33,47 +33,72 @@ end
 always @(*) begin
   case (cs)
     IDLE : begin
-      if(Data_Collected==10'h0FA || Data_Collected==10'h305) begin
-        ns = COMMA;
+      if(Data_Collected == 10'h0FA || Data_Collected==10'h305) begin
+         if(COMMA_NUMBER == 1) begin
+           ns = DATA;
+         end
+         else
+           ns = COMMA;
       end
+
       else 
-        ns = IDLE;
+          ns = IDLE;
     end 
+    
     COMMA : begin
+
       case(count)
         6'd9 : begin
             if(Data_Collected!=10'h0FA && Data_Collected!=10'h305)
               ns = IDLE;
-            else 
-              ns = COMMA;
+            else begin  
+              if(9 == CP1) ns = DATA;
+              else             ns = COMMA;
+            end
           end 
         
         6'd19 : begin
             if(Data_Collected!=10'h0FA && Data_Collected!=10'h305)
               ns = IDLE;
-            else 
-              ns = COMMA;
+            else begin
+              if(19 == CP1) ns = DATA;
+              else          ns = COMMA;
+            end
           end 
 
         6'd29 : begin
             if(Data_Collected!=10'h0FA && Data_Collected!=10'h305)
               ns = IDLE;
-            else 
-              ns = DATA;
+            else begin
+              if(29 == CP1) ns = DATA;
+              else          ns = COMMA;
+            end
           end 
-        //6'd40 :
+
         default : ns = COMMA;
       endcase 
-    end 
+
+    // if(Data_Collected!=10'h0FA && Data_Collected!=10'h305)
+    //   ns = IDLE;
+    // else begin
+    //   if(count == CP1) ns = DATA;
+    //   else ns = COMMA;
+    // end      
+      end 
+
+
     DATA : begin 
         if(count == CP2)
           ns = IDLE;
         else 
           ns = DATA; 
     end 
+
     default : ns = IDLE;
   endcase
 end
+
+
 
 always @(*) begin
   case (cs)
@@ -103,7 +128,8 @@ always @(*) begin
     
 
     DATA : begin 
-        count_reset = 0 ;
+      count_reset = 0 ;
+      
       case(count)
         6'd9 : begin
             Comma_Pulse = 1'b1;
@@ -122,12 +148,13 @@ always @(*) begin
             RxValid = 1'b1;
           end 
         default : begin 
-          Comma_Pulse = 1'b0;
-          RxValid = 1'b0;
+            Comma_Pulse = 1'b0;
+            RxValid = 1'b0;
         end   
       endcase
 
     end  
+
     default : begin
       Comma_Pulse = 1'b0;
       count_reset = 1'b0;
@@ -135,6 +162,7 @@ always @(*) begin
     end 
   endcase
 end
+
 
 always @(posedge clk or negedge rst_n) begin
   if(!rst_n)

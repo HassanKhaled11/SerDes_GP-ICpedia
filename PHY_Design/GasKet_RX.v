@@ -16,13 +16,11 @@ module GasKet_RX (
 
   always @(posedge clk_to_get or negedge Rst_n) begin
     if (!Rst_n) begin
-      //temp <= 8'b0;
       count <= 3'b01;
     end 
 	else if((width == 6'd8 && count == 2'b00) || (width == 6'd16 && count == 2'b01) || (width == 6'd32 && count == 2'b11) || Rx_Datak) begin
       count <= 2'b00;
     end else begin
-      //temp <= Data_in;
       count <= count + 1'b1;
     end
   end
@@ -67,9 +65,20 @@ module GasKet_RX (
     temp_reg <= 0;
    end
 
-   else if(&flag) begin
+   else if(width == 6'd8 && flag[0]) begin
+    temp_reg <= {0,data_out[7:0]};
+   end
+
+  else if (width == 6'd16 && (&flag[1:0])) begin
+    temp_reg <= {0,data_out[15:0]};
+   end
+  
+  else if(width == 6'd32 && &flag) begin
     temp_reg <= data_out;
    end
+  
+   else 
+    temp_reg <= 0;
  end
 
   always @(posedge PCLK or negedge Rst_n) begin
