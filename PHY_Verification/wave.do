@@ -28,11 +28,25 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/read_pointer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/write_pointer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Data_Collected
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Found_Comma
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Comma_Pulse
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/clk
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/rst_n
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Data_Collected
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/RxValid
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Comma_Pulse
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/cs
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/ns
+add wave -noupdate -radix unsigned /top/DUT/PCS_U/PCS_RX_U/Dutc/CP1
+add wave -noupdate -radix unsigned /top/DUT/PCS_U/PCS_RX_U/Dutc/CP2
+add wave -noupdate -radix unsigned /top/DUT/PCS_U/PCS_RX_U/Dutc/count
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/count_reset
 add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/Threshold_Monitor_Inst/num_elements
 add wave -noupdate /top/dut_if/MAC_TX_Data
+add wave -noupdate -color Magenta /top/dut_if/PCLK
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK
 add wave -noupdate /top/dut_if/Rx_Data
 add wave -noupdate /top/dut_if/Rx_DataK
 add wave -noupdate -radix binary /top/dut_if/Rx_Status
@@ -65,7 +79,6 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/rst_n
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Data_Collected
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/RxValid
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Comma_Pulse
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Found_Comma
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/count
 add wave -noupdate -divider -height 50 DUT
 add wave -noupdate /top/dut_if/MAC_TX_Data
@@ -102,7 +115,6 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/rst_n
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Data_Collected
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/RxValid
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Comma_Pulse
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Found_Comma
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/count
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/write_clk
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/read_clk
@@ -133,11 +145,41 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Dutc/Data_Collected
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
 add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/Temp_Reg
+add wave -noupdate -divider -height 50 Decoder
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/CLK
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Rst_n
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_in
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DisparityError
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/temp
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/encoded_data_N
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/encoded_data_P
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError_N
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError_P
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK_N
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK_P
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag_n
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag_p
+add wave -noupdate -divider -height 50 RX_GASKET
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/clk_to_get
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/PCLK
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/Rst_n
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/Rx_Datak
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/width
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/Data_in
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/Data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/count
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/flag
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/temp_reg
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
-WaveRestoreCursors {{Cursor 1} {18900 ps} 1} {{Cursor 2} {27068 ps} 1 Magenta default} {{Cursor 3} {110979 ps} 1 Magenta default} {{Cursor 4} {46900 ps} 0}
+WaveRestoreCursors {{Cursor 1} {18900 ps} 1} {{Cursor 2} {27068 ps} 1 Magenta default} {{Cursor 3} {110979 ps} 1 Magenta default} {{Cursor 4} {70900 ps} 0}
 quietly wave cursor active 4
-configure wave -namecolwidth 375
+configure wave -namecolwidth 419
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -151,4 +193,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {93312 ps}
+WaveRestoreZoom {0 ps} {111036 ps}

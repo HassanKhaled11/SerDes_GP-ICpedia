@@ -32,14 +32,17 @@ logic [3:0] CommandK_Arr [3:0];
 
  //////// Helpers ////////////
  logic [3:0]  randomK ;
- // logic [7:0] Data_post;
  logic [31:0] Data_post;
+ int count_8 ;
+ int count_16;
+
 
 function new(string name = "my_sequence_item");
 	super.new(name);
    CommandK_Arr = '{4'b0001 , 4'b0010 , 4'b0100 , 4'b1000};
    Data_post = 0 ;
-   //randomK = 0;
+   count_8  = 0  ;
+   count_16 = 0  ;
 endfunction
 
 
@@ -103,7 +106,7 @@ endfunction
 
 
 
-//---------- MAC_DATAK_CONSTRAINT ----
+//---------- MAC_DATAK_CONSTRAINT --------
 constraint MAC_TX_Data_32c {
  if(Data_post == 32'hBCBC_BCBC) {
      MAC_TX_Data inside {[32'h0 : 32'hFFFF_FFFF]};
@@ -117,7 +120,7 @@ constraint MAC_TX_Data_32c {
 
 
 // constraint MAC_TX_Data_16c {
-//  if(Data_post == 32'hBCBC_BCBC) {
+//  if(Data_post == 32'hBCBC_BCBC && count_16 == 2) {
 //      MAC_TX_Data inside {[32'h0 : 32'hFFFF_FFFF]};
 //   }
  
@@ -128,22 +131,20 @@ constraint MAC_TX_Data_32c {
 // }
 
 
+// constraint MAC_TX_Data_8c {
+//  if(Data_post == 32'hBCBC_BCBC && count_8 == 4) {
+//      MAC_TX_Data inside {[32'h0 : 32'hFFFF_FFFF]};
+//   }
+ 
+//  else {
+//      MAC_TX_Data == 32'hBCBC_BCBC ;
+//   }
 
-// constraint MAC_TX_Data_CommaByte_c {
-//  // if(Data_post == 32'hBC) {  
-//  //     MAC_TX_Data[7:0]   inside {[0:8'hFF]};
-//  //     MAC_TX_Data[23:16] inside {[0:8'hFF]};
-//  //  }
-
-//   //else {
-//      MAC_TX_Data[7:0]   == 8'hBC;
-//      MAC_TX_Data[23:16] == 8'hBC;
-//   //}
 // }
 
 
-//---------- MAC_DATAK_CONSTRAINT ----
-constraint MAC_TX_DataK_c {
+//---------- MAC_DATAK_CONSTRAINT ---------
+constraint MAC_TX_DataK_32c {
  if(Data_post != 32'hBCBC_BCBC) {
     MAC_TX_DataK == 4'b1111; 
   }
@@ -152,6 +153,27 @@ constraint MAC_TX_DataK_c {
      MAC_TX_DataK == 4'b0000;
   }
 }
+
+// constraint MAC_TX_DataK_16c {
+//  if(Data_post != 32'hBCBC_BCBC && count_16 != 2) {
+//     MAC_TX_DataK == 4'b1111; 
+//   }
+  
+//   else {
+//      MAC_TX_DataK == 4'b0000;
+//   }
+// }
+
+
+// constraint MAC_TX_DataK_8c {
+//  if(Data_post != 32'hBCBC_BCBC && count_8 != 4) {
+//     MAC_TX_DataK == 4'b1111; 
+//   }
+  
+//   else {
+//      MAC_TX_DataK == 4'b0000;
+//   }
+// }
  
 
 //------ MAC_DATA_En CONSTARINT------
@@ -168,6 +190,8 @@ constraint MAC_Data_En_c {
 
 function void post_randomize;
   Data_post = MAC_TX_Data;
+  count_16  = (count_16 + 1) % 3;
+  count_8   = (count_8  + 1) % 5;  
 endfunction 
 
 

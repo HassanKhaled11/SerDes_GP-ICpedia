@@ -24,11 +24,24 @@ task body();
 
 	 stim_seq_item = my_sequence_item :: type_id :: create("stim_seq_item");
 	                       			`uvm_info("MY_SEQUENCE","BEFORE START ITEM",UVM_MEDIUM);   
+   
+	 // stim_seq_item.MAC_TX_Data_16c.constraint_mode (0);    
+	 // stim_seq_item.MAC_TX_Data_8c.constraint_mode  (0);
+	 // stim_seq_item.MAC_TX_DataK_16c.constraint_mode(0);    
+	 // stim_seq_item.MAC_TX_DataK_8c.constraint_mode (0);
+
+	 // stim_seq_item.MAC_TX_Data_32c.constraint_mode (0);    
+	 // stim_seq_item.MAC_TX_Data_8c.constraint_mode  (0);
+	 // stim_seq_item.MAC_TX_DataK_32c.constraint_mode(0);    
+	 // stim_seq_item.MAC_TX_DataK_8c.constraint_mode (0);
+
+	 // stim_seq_item.MAC_TX_Data_32c.constraint_mode (0);    
+	 // stim_seq_item.MAC_TX_Data_16c.constraint_mode  (0);
+	 // stim_seq_item.MAC_TX_DataK_32c.constraint_mode(0);    
+	 // stim_seq_item.MAC_TX_DataK_16c.constraint_mode (0);
 
 	repeat(100) begin
 
-	 // stim_seq_item.DataBusWidth16_c.constraint_mode(0);    
-	 // stim_seq_item.DataBusWidth8_c.constraint_mode(0);
 
       start_item(stim_seq_item);
                           			`uvm_info("MY_SEQUENCE","AFTER START ITEM",UVM_MEDIUM);
