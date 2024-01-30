@@ -16,9 +16,13 @@ my_sequence_item      data_to_cover                 ;
 
 
 covergroup cg;
-// cp1: coverpoint data_to_cover.A ;
-// cp2: coverpoint data_to_cover.B;
-// cp3: coverpoint data_to_cover.out;
+
+TX_cp: coverpoint data_to_cover.TX_Out_P   ;
+// TX_cp: coverpoint data_to_cover.TX_Out_N   ;
+MAC_TX_Data_cp: coverpoint data_to_cover.MAC_TX_Data;
+MAC_TX_DataK:coverpoint data_to_cover.MAC_TX_DataK;
+  
+
 endgroup
 
 

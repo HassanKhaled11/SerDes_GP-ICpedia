@@ -49,6 +49,7 @@ task run_phase(uvm_phase phase);
      rsp_seq_item.Rx_Status    = bfm_vif.Rx_Status   ;
      rsp_seq_item.Rx_Valid     = bfm_vif.Rx_Valid    ;
      rsp_seq_item.PCLK         = bfm_vif.PCLK        ;
+     
 
 	 mon_port.write(rsp_seq_item)                    ;
      

@@ -16,7 +16,8 @@ parameter DATA_WIDTH = 10;
 
   
   ///////// OUTPUTS ///////// 
-
+  logic                        TX_Out_P         ;      
+  logic                        TX_Out_N         ;            
   logic         [31 : 0 ]      Rx_Data          ;
   logic                        Rx_DataK         ;
   logic         [2  : 0 ]      Rx_Status        ; 

@@ -33,6 +33,8 @@ PHY    DUT
   .MAC_Data_En   (dut_if.MAC_Data_En)     , 
   .RxPolarity    (dut_if.RxPolarity)      ,
 
+  .TX_Out_P      (dut_if.TX_Out_P)        ,
+  .TX_Out_N      (dut_if.TX_Out_N)        ,
   .RX_Data       (dut_if.Rx_Data)         ,
   .RX_DataK      (dut_if.Rx_DataK)        ,
   .RX_Status     (dut_if.Rx_Status)       , 

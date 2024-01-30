@@ -66,11 +66,11 @@ module GasKet_RX (
    end
 
    else if(width == 6'd8 && flag[0]) begin
-    temp_reg <= {0,data_out[7:0]};
+    temp_reg <= {24'b0,data_out[7:0]};
    end
 
   else if (width == 6'd16 && (&flag[1:0])) begin
-    temp_reg <= {0,data_out[15:0]};
+    temp_reg <= {24'b0,data_out[15:0]};
    end
   
   else if(width == 6'd32 && &flag) begin

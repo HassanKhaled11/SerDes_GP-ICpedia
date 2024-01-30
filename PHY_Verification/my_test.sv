@@ -52,7 +52,7 @@ task run_phase(uvm_phase phase);
            cfg.dut_vif.DataBusWidth = 6'd32;
           `uvm_warning("MY_TEST","RESET");
            cfg.dut_vif.Reset_n = 0 ;
-           #100 ;
+           #1000;
            cfg.dut_vif.Reset_n = 1;
 
            #4;

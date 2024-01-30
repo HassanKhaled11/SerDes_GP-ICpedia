@@ -56,7 +56,7 @@ function void build_phase(uvm_phase phase);
 	super.build_phase(phase);
 	sb_export     = new("sb_export" , this);
 	sb_fifo       = new("sb_fifo"   , this);
-    data_to_check = new ("data_to_check");
+  data_to_check = new ("data_to_check");
 
     if(!uvm_config_db#(virtual INTERNALS_if)::get(this,"","internals_if", internals_if))
   `uvm_fatal("MY_TEST" , "FATAL PUTTING INTERNALS INTERFACE in CONFIG_DB");
