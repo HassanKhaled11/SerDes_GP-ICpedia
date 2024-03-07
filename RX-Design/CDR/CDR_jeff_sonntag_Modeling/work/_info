@@ -1,0 +1,171 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/questasim64_2021.1/examples
+T_opt
+!s110 1709703362
+Vk<ea5TR3:7j]a<=kiY;em3
+04 6 4 work CDR_Tb fast 0
+=8-c46516850461-65e800c1-16c-c74
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vBBPD
+!s110 1709694232
+!i10b 1
+!s100 [j6a1e11B:fk1518KHm473
+I^KhW2mmR;A>mhT5kn17:>3
+Z2 dE:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling
+Z3 w1709690464
+8E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/BBPD.v
+FE:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/BBPD.v
+!i122 0
+L0 2 32
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2021.1;73
+r1
+!s85 0
+31
+!s108 1709694232.000000
+!s107 E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/BBPD.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/BBPD.v|
+!i113 0
+Z6 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+n@b@b@p@d
+vCDR_Loop
+!s110 1709694233
+!i10b 1
+!s100 jObVzhDK^;HAozEzjdDm[1
+IJ[@=30Q5FYEBN1;87:Q3c2
+R2
+R3
+8E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Loop.v
+FE:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Loop.v
+!i122 1
+L0 2 45
+R4
+R5
+r1
+!s85 0
+31
+!s108 1709694233.000000
+!s107 E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Loop.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Loop.v|
+!i113 0
+R6
+R1
+n@c@d@r_@loop
+vCDR_Tb
+Z7 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+!s110 1709703355
+!i10b 1
+!s100 eg@Y>A1V:lZSE:ShNl[zj1
+IO=FVR?2@i?N:@83ZkgMad1
+S1
+R2
+w1709703346
+8E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Tb.sv
+FE:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Tb.sv
+!i122 12
+L0 2 70
+R4
+R5
+r1
+!s85 0
+31
+!s108 1709703355.000000
+!s107 E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Tb.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Tb.sv|
+!i113 0
+Z8 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+n@c@d@r_@tb
+vDigital_Loop_Filter
+!s110 1709701503
+!i10b 1
+!s100 ghT[5mT9AA:^VN=YSQDT=3
+I4C>E7ik@:Qbi:E6186XMl2
+R2
+w1709701497
+8E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/Digital_Loop_Filter.v
+FE:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/Digital_Loop_Filter.v
+!i122 11
+L0 2 138
+R4
+R5
+r1
+!s85 0
+31
+!s108 1709701503.000000
+!s107 E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/Digital_Loop_Filter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/Digital_Loop_Filter.v|
+!i113 0
+R6
+R1
+n@digital_@loop_@filter
+vPMIX
+R7
+Z9 !s110 1709694234
+!i10b 1
+!s100 5g_dmaXS<^ZiBi:^_DYIX3
+Ijb^1fIe:<QRf>`[FIi2cL0
+S1
+R2
+Z10 w1709690773
+Z11 8E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/PMIX.sv
+Z12 FE:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/PMIX.sv
+!i122 4
+L0 4 140
+R4
+R5
+r1
+!s85 0
+31
+Z13 !s108 1709694234.000000
+Z14 !s107 E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/PMIX.sv|
+Z15 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/PMIX.sv|
+!i113 0
+R8
+R1
+n@p@m@i@x
+vPMIX_Tb
+R7
+R9
+!i10b 1
+!s100 6nTiQTWjOSd;nVM`UV[?10
+Ie4SeCI>70KY4^O;zX3AQ^3
+S1
+R2
+R10
+R11
+R12
+!i122 4
+L0 170 94
+R4
+R5
+r1
+!s85 0
+31
+R13
+R14
+R15
+!i113 0
+R8
+R1
+n@p@m@i@x_@tb

@@ -135,7 +135,7 @@ end
 // 		freq_integrator <= freq_integrator + Up - Dn;
 // 	end 
 // end
-assign code = phase_integrator[15:5]; // top 10
+assign code = phase_integrator[15:6]; // top 10
 endmodule
 
 /*

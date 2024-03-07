@@ -39,7 +39,7 @@ end
 // end
 initial begin
 	// #110;
-	forever #100 clk_data = ~clk_data;
+	forever #99.9 clk_data = ~clk_data;
 end
 
 ////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ initial begin
 	rst_n = 0;
 	@(negedge clk_0);
 	rst_n = 1;
-	for (int i = 0; i < 200000; i++) begin
+	for (int i = 0; i < 20000000; i++) begin
 		Din = ~Din;
 		// #(50);
 		@(negedge clk_data);

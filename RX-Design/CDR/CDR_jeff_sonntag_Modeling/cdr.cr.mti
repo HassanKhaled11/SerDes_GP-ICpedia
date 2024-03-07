@@ -1,0 +1,47 @@
+E:/SerDes_GP/codes/RX_Design/phase_mixer/PMIX2.v {0 {vlog -work work -vopt -stats=none E:/SerDes_GP/codes/RX_Design/phase_mixer/PMIX2.v
+** Error: (vlog-3) System call 'VirtualAlloc()' failed.
+** Fatal: (vlog-4) ****** Memory allocation failure. *****
+Attempting to allocate 131072 bytes
+Please check your system for available memory and swap space.
+** Fatal: (vlog-4) ****** Memory allocation failure. *****
+Attempting to allocate 131072 bytes
+Please check your system for available memory and swap space.
+Verilog Compiler exiting
+
+} {2.0 3.0} {}} E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/Digital_Loop_Filter.v {1 {vlog -work work -vopt -stats=none E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/Digital_Loop_Filter.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module Digital_Loop_Filter
+
+Top level modules:
+	Digital_Loop_Filter
+
+} {} {}} E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/BBPD.v {1 {vlog -work work -vopt -stats=none E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/BBPD.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module BBPD
+
+Top level modules:
+	BBPD
+
+} {} {}} E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Tb.sv {1 {vlog -work work -vopt -sv -stats=none E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Tb.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module CDR_Tb
+
+Top level modules:
+	CDR_Tb
+
+} {} {}} E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/PMIX.sv {1 {vlog -work work -vopt -sv -stats=none E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/PMIX.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module PMIX
+-- Compiling module PMIX_Tb
+
+Top level modules:
+	PMIX_Tb
+
+} {} {}} E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Loop.v {1 {vlog -work work -vopt -stats=none E:/gittt/SerDes_GP-ICpedia/RX-Design/CDR/CDR_jeff_sonntag_Modeling/CDR_Loop.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module CDR_Loop
+
+Top level modules:
+	CDR_Loop
+
+} {} {}}
