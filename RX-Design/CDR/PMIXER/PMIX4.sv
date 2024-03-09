@@ -1,5 +1,4 @@
 
-
 `timescale 1ns/1fs
 module PMIX #(parameter THRESHOLD = 25 , parameter WIDTH = 9)
 (
@@ -194,7 +193,9 @@ end
 
 reg clk_sin;
 initial clk_sin = 0;
-always #((0.2/360) / 2) clk_sin = ~ clk_sin; 
+always #((0.1999/360) / 2) clk_sin = ~ clk_sin; 
+
+
 
 always @(T1) begin
   preparation_flag = 1            ;   
@@ -218,7 +219,7 @@ end
 
 
 initial clk_index = 0;
-always #(0.00002) clk_index= ~clk_index;   
+always #(0.0002) clk_index= ~clk_index;   
 
     
 ////////////////////////////////////////////////
@@ -226,8 +227,8 @@ always #(0.00002) clk_index= ~clk_index;
 ////////////////////////////////////////////////
 
  always @(posedge clk_index) begin
-    time_now = $realtime - 0.2*$floor($realtime/0.2);                      //0.2 ---> change to T1
-    index   = integer'((time_now/0.2) * 360 ) % 360;
+    time_now = $realtime - 0.1999*$floor($realtime/0.1999);                      //0.2 ---> change to T1
+    index   = integer'((time_now/0.1999) * 360 ) % 360;
   end
 
 ////////////////////////////////////////////////
@@ -243,35 +244,35 @@ begin
    case(Code[10:8]) 
     
         3'b000 : begin
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_45[index]  + ((255.0 - Code[7:0])/255.0 * sin_0[index] ))) % 1000     ; 
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_45[index]  + ((255.0 - Code[7:0])/255.0 * sin_0[index] ))) % 51     ; 
         end
     
         3'b001 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_90[index]  + ((255.0 - Code[7:0])/255.0 * sin_45[index] ))) % 1000   ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_90[index]  + ((255.0 - Code[7:0])/255.0 * sin_45[index] ))) % 51   ;    
         end 
         
         3'b010 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_135[index] + ((255.0 - Code[7:0])/255.0 * sin_90[index] ))) % 1000   ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_135[index] + ((255.0 - Code[7:0])/255.0 * sin_90[index] ))) % 51   ;    
         end
         
         3'b011 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_180[index]  + ((255.0 - Code[7:0])/255.0 * sin_135[index] ))) % 1000 ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_180[index]  + ((255.0 - Code[7:0])/255.0 * sin_135[index] ))) % 51 ;    
         end
         
         3'b100 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_225[index]  + ((255.0 - Code[7:0])/255.0 * sin_180[index] ))) % 1000 ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_225[index]  + ((255.0 - Code[7:0])/255.0 * sin_180[index] ))) % 51 ;    
         end
         
         3'b101 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_270[index]  + ((255.0 - Code[7:0])/255.0 * sin_225[index] ))) % 1000 ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_270[index]  + ((255.0 - Code[7:0])/255.0 * sin_225[index] ))) % 51 ;    
         end
         
         3'b110 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_315[index]  + ((255.0 - Code[7:0])/255.0 * sin_270[index] ))) % 1000 ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_315[index]  + ((255.0 - Code[7:0])/255.0 * sin_270[index] ))) % 51 ;    
         end
         
         3'b111 : begin 
-             sin_sum  = integer'((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] ))) % 1000   ;    
+             sin_sum  = integer'((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] ))) % 51   ;    
         end
     endcase 
 
@@ -360,7 +361,7 @@ module PMIX_Tb;
 
 PMIX PMIX_DUT (.*)       ;
 
-always #0.1 CLK = ~CLK   ;
+always #0.0999 CLK = ~CLK   ;    //5.001Ghz --> 0.1999
 // assign CLK_180  = ~CLK   ;
 // assign CLK_270  = ~CLK_90; 
 
@@ -428,12 +429,11 @@ initial begin
 
   for (i = 0; i < 2050; i = (i + 1)%2048) begin
    Code = i ;
-  #(0.000002);
+  #(0.03);
   end
 $stop();
 
 end
-
 endmodule      
 
 
