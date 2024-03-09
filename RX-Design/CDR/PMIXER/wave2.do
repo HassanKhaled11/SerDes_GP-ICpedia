@@ -5,11 +5,10 @@ add wave -noupdate /PMIX_Tb/PMIX_DUT/Code
 add wave -noupdate /PMIX_Tb/PMIX_DUT/CLK_Out
 add wave -noupdate /PMIX_Tb/PMIX_DUT/clk_index
 add wave -noupdate /PMIX_Tb/PMIX_DUT/index
-add wave -noupdate /PMIX_Tb/PMIX_DUT/PHASE_SHIFT
 add wave -noupdate /PMIX_Tb/PMIX_DUT/t1
 add wave -noupdate /PMIX_Tb/PMIX_DUT/t2
-add wave -noupdate /PMIX_Tb/PMIX_DUT/T1
-add wave -noupdate /PMIX_Tb/PMIX_DUT/T1_
+add wave -noupdate -color Magenta /PMIX_Tb/PMIX_DUT/T1
+add wave -noupdate -color Magenta /PMIX_Tb/PMIX_DUT/T_
 add wave -noupdate /PMIX_Tb/PMIX_DUT/t3
 add wave -noupdate /PMIX_Tb/PMIX_DUT/t4
 add wave -noupdate /PMIX_Tb/PMIX_DUT/t5
@@ -86,10 +85,10 @@ add wave -noupdate /PMIX_Tb/PMIX_DUT/sin_225
 add wave -noupdate /PMIX_Tb/PMIX_DUT/sin_270
 add wave -noupdate /PMIX_Tb/PMIX_DUT/sin_315
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {9058357 fs} 0}
+WaveRestoreCursors {{Cursor 1} {2113237 fs} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 321
-configure wave -valuecolwidth 40
+configure wave -valuecolwidth 102
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
 configure wave -snapdistance 10
@@ -102,4 +101,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {103550721 fs} {111973057 fs}
+WaveRestoreZoom {0 fs} {17096084 fs}

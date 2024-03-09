@@ -17,7 +17,7 @@ integer PHASE_SHIFT     ;
 
 realtime t1             ;
 realtime t2             ;
-realtime T1  ;
+realtime T1 ,T_ ;
 reg [15:0] sin1 ;
 
 
@@ -68,7 +68,7 @@ reg sign_315 ;
 
 
 
-cdr_assertion #(.clk_period_expected_min(2) , .clk_period_expected_max(5)) pi_assertion
+cdr_assertion #(.clk_period_expected_min(19) , .clk_period_expected_max(21)) pi_assertion
 (
   .PI_CLK_OUT(CLK_Out_i)
 );
@@ -177,6 +177,19 @@ end
 end
 
 
+initial begin
+forever begin
+@(negedge sign_0);
+t3 = $realtime;
+@(negedge sign_0);
+t4 = $realtime;
+T_  = t4 - t3 ;
+end
+end
+
+
+
+
 
 initial begin
 forever begin
@@ -193,13 +206,14 @@ end
 
 reg clk_sin;
 initial clk_sin = 0;
-always #((0.1999/360) / 2) clk_sin = ~ clk_sin; 
+always #(((T1/360)/ 2)+0.000001) clk_sin = ~clk_sin; 
 
 
 
-always @(T1) begin
+initial begin   
+
+ do begin  
   preparation_flag = 1            ;   
- do begin
    @(posedge clk_sin)             ;
    sin_0   [i] = sine[i]          ;
    sin_45  [i] = sine[(i+45)%360] ;
@@ -227,8 +241,8 @@ always #(0.0002) clk_index= ~clk_index;
 ////////////////////////////////////////////////
 
  always @(posedge clk_index) begin
-    time_now = $realtime - 0.1999*$floor($realtime/0.1999);                      //0.2 ---> change to T1
-    index   = integer'((time_now/0.1999) * 360 ) % 360;
+    time_now = $realtime - T1*$floor($realtime/T1);                      //T1 ---> change to T1
+    index   = integer'((time_now/T1) * 360 ) % 360;
   end
 
 ////////////////////////////////////////////////
@@ -361,7 +375,7 @@ module PMIX_Tb;
 
 PMIX PMIX_DUT (.*)       ;
 
-always #0.0999 CLK = ~CLK   ;    //5.001Ghz --> 0.1999
+always #(0.2002/2) CLK = ~CLK   ;    //5.001Ghz --> 0.1999
 // assign CLK_180  = ~CLK   ;
 // assign CLK_270  = ~CLK_90; 
 
@@ -429,7 +443,7 @@ initial begin
 
   for (i = 0; i < 2050; i = (i + 1)%2048) begin
    Code = i ;
-  #(0.03);
+  #(0.088);              //SLOPE    0.06 (-ppm)
   end
 $stop();
 
@@ -438,7 +452,7 @@ endmodule
 
 
 
-module cdr_assertion #(clk_period_expected_min = 0.1 , clk_period_expected_max = 0.3)
+module cdr_assertion #(clk_period_expected_min = 0.18 , clk_period_expected_max = 0.31)
 (input PI_CLK_OUT
 );
 
@@ -446,8 +460,8 @@ module cdr_assertion #(clk_period_expected_min = 0.1 , clk_period_expected_max =
 property CLK_OUT_PERIOD_prop (time clk_period_expected_min , time clk_period_expected_max);
  realtime current_time;    
 @(posedge PI_CLK_OUT) ('1,current_time = $realtime()) |=> 
-      ((clk_period_expected_min <= int'(1000*($realtime()-current_time))) &&
-      (clk_period_expected_max  >= int'(1000*($realtime()-current_time)))); 
+      ((clk_period_expected_min <= int'(100*($realtime()-current_time))) &&
+      (clk_period_expected_max  >= int'(100*($realtime()-current_time)))); 
 endproperty     
 
 CLK_OUT_PERIOD_assert: assert property(CLK_OUT_PERIOD_prop(clk_period_expected_min , clk_period_expected_max));
