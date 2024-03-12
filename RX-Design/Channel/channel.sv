@@ -76,7 +76,7 @@ module channel_Tb;
   channel #(
       .NUMBER_OF_LEVELS(256),
       .THRESHOLD(128),
-      .FASTER_CLK_PERIOD(0.0019)  //0.00019 will be always correct
+      .FASTER_CLK_PERIOD(0.0010)  //0.00019 will be always correct
   ) channel_inst (
       .clk(clk),
       .rst_n(rst_n),
