@@ -3,7 +3,7 @@ module channel (
     input clk,
     input rst_n,
     input in,
-    output real out
+    output reg out
 );
 
   reg faster_clk;
@@ -11,8 +11,16 @@ module channel (
   parameter NUMBER_OF_LEVELS = 256;
   parameter THRESHOLD = NUMBER_OF_LEVELS / 2;
   // parameter precision = 5;
-  reg [8-1:0] out_fading;
+  reg [$clog2(NUMBER_OF_LEVELS)-1:0] out_fading;
 
+
+  threshold_detector #(
+      .NUMBER_OF_LEVELS(256)
+  ) Thres_inst (
+      out_fading,
+      THRESHOLD,
+      out
+  );
   initial begin
     faster_clk = 0;
     forever #(FASTER_CLK_PERIOD / 2) faster_clk = ~faster_clk;
@@ -20,7 +28,7 @@ module channel (
   always @(posedge faster_clk or negedge rst_n) begin
     if (!rst_n) begin
       out_fading <= 0;
-      out <= 0;
+      // out <= 0;
     end else begin
       if (in == 1) begin
         if (out_fading < NUMBER_OF_LEVELS - 1) out_fading <= out_fading + 1;
@@ -30,16 +38,31 @@ module channel (
         else out_fading <= 0;
       end
     end
-    out = out_fading / NUMBER_OF_LEVELS;
+    // out = out_fading / NUMBER_OF_LEVELS;
   end
 endmodule
+
+module threshold_detector (
+    input_fading,
+    threshold,
+    value
+);
+  parameter NUMBER_OF_LEVELS = 256;
+  input [$clog2(NUMBER_OF_LEVELS)-1:0] input_fading;
+  input int threshold;
+  output value;
+
+
+  assign value = (input_fading > threshold) ? 1 : 0;
+endmodule
+
 
 `timescale 1ns / 1fs
 module channel_Tb;
   reg clk;
   reg rst_n;
   reg in;
-  real out;
+  wire out;
 
   reg [19:0] inputVal;
 
