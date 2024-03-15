@@ -22,8 +22,17 @@ module CDR_Loop (
       .PI_CLK_OUT (PI_Clk),
       .Data_CLK_IN(clk_data)
   );
-
-
+  realtime t1, t2, T1_in_CDRLOOP;
+  initial begin
+    forever begin
+      @(posedge clk_data);
+      t1 = $realtime;
+      @(posedge clk_data);
+      t2 = $realtime;
+      T1_in_CDRLOOP = t2 - t1;
+      // PPM = int'(((5 - (1 / T1)) / (5)) * (10 ** 6));
+    end
+  end
 
 
   // wire PI_clk;
