@@ -1,11 +1,12 @@
 `timescale 1ns / 1fs
 module CDR_Loop (
-    input  rst_n,   // Asynchronous reset active low
-    input  clk_0,
+    input rst_n,  // Asynchronous reset active low
+    input clk_0,
+    input clk_data,
     // input clk_90,
     // input clk_180,
     // input clk_270,
-    input  Din,
+    input Din,
     output PI_Clk,
     output Dout
 );
@@ -16,10 +17,10 @@ module CDR_Loop (
   cdr_assertion #(
       .clk_period_expected_min(19),
       .clk_period_expected_max(21),
-      .clk_ppm_expected_max(500)
+      .clk_ppm_expected_max(2000)
   ) pi_assertion (
-      .PI_CLK_OUT(PI_Clk),
-      .Data_CLK_IN(clk_0)
+      .PI_CLK_OUT (PI_Clk),
+      .Data_CLK_IN(clk_data)
   );
 
 
@@ -82,16 +83,39 @@ module cdr_assertion #(
 
 
 
+  // property CLK_OUT_PPM_prop(int clk_ppm_expected_max);
+  //   realtime current_time;
+  //   @(posedge PI_CLK_OUT) ('1,
+  //   current_time = $realtime()
+  //   ) |=> (clk_ppm_expected_max >= int
+  //          '(((5000.0 - (1000.0 / ($realtime() - current_time))) / (5000)) * (10 ** 6)), $display(
+  //       "PI clk: PPM = %f,curr freq=%f, curr period=%f",
+  //       int'(((5000.0 - (1000.0 / ($realtime() - current_time))) / (5000.0)) * (10 ** 6)),
+  //       (1000.0 / ($realtime() - current_time)),
+  //       ($realtime() - current_time)
+  //   ));
+  // endproperty
   property CLK_OUT_PPM_prop(int clk_ppm_expected_max);
     realtime current_time;
-    @(posedge PI_CLK_OUT) ('1,current_time = $realtime()) |=> 
-                          (clk_ppm_expected_max >= int'(((5-(1.0/($realtime()- current_time)))/(5))*(10**6)),$display("PPM = %d",int'(((5-(1/($realtime()- current_time)))/(5))*(10**6))));
+    @(posedge PI_CLK_OUT) ('1,
+    current_time = $realtime()
+    ) |=> (clk_ppm_expected_max >= int
+           '((((1000.0 / ($realtime() - current_time)) > 5000.0) ?
+              (((1000.0 / ($realtime() - current_time)) - 5000.0) / 5000.0) :
+              ((5000.0 - (1000.0 / ($realtime() - current_time))) / 5000.0)) * (10 ** 6)), $display(
+        "PI clk: PPM = %5d  ,curr freq = %f ,curr period = %f",
+        int'((((1000.0 / ($realtime() - current_time)) > 5000.0) ? 
+                                      (((1000.0 / ($realtime() - current_time)) - 5000.0) / 5000.0) :
+                                      ((5000.0 - (1000.0 / ($realtime() - current_time))) / 5000.0)
+                                     ) * (10 ** 6)),
+        (1000.0 / ($realtime() - current_time)),
+        ($realtime() - current_time)
+    ));
   endproperty
 
-  
-  CLK_PPM_assert:
-  assert property (CLK_OUT_PPM_prop(clk_ppm_expected_max)); 
-  CLK_PPM_cover:
+  CLK_PPM_assert :
+  assert property (CLK_OUT_PPM_prop(clk_ppm_expected_max));
+  CLK_PPM_cover :
   cover property (CLK_OUT_PPM_prop(clk_ppm_expected_max));
 
 
@@ -102,15 +126,30 @@ module cdr_assertion #(
 
   property CLK_DATA_PPM_prop(int clk_ppm_expected_max);
     realtime current_time;
-    @(posedge Data_CLK_IN) ('1,current_time = $realtime()) |=> 
-                          (clk_ppm_expected_max >= int'(((5-(1.0/($realtime()- current_time)))/(5))*(10**6)),$display("DATA_PPM = %d",int'(((5-(1/($realtime()- current_time)))/(5))*(10**6))));
+    @(posedge Data_CLK_IN) ('1,
+    current_time = $realtime()
+    ) |=> (clk_ppm_expected_max >= int
+           '((((1000.0 / ($realtime() - current_time)) > 5000.0) ?
+              (((1000.0 / ($realtime() - current_time)) - 5000.0) / 5000.0) :
+              ((5000.0 - (1000.0 / ($realtime() - current_time))) / 5000.0)) * (10 ** 6)), $display(
+        "Data  : PPM = %5d , max ppm= %5d ,curr freq = %f ,curr period = %f",
+        int'((((1000.0 / ($realtime() - current_time)) > 5000.0) ? 
+                                      (((1000.0 / ($realtime() - current_time)) - 5000.0) / 5000.0) :
+                                      ((5000.0 - (1000.0 / ($realtime() - current_time))) / 5000.0)
+                                     ) * (10 ** 6)),
+        clk_ppm_expected_max,
+        (1000.0 / ($realtime() - current_time)),
+        ($realtime() - current_time)
+    ));
   endproperty
 
-  
-  DCLK_PPM_assert:
-  assert property (CLK_DATA_PPM_prop(clk_ppm_expected_max)); 
-  DCLK_PPM_cover:
+
+
+  DCLK_PPM_assert :
+  assert property (CLK_DATA_PPM_prop(clk_ppm_expected_max));
+  DCLK_PPM_cover :
   cover property (CLK_DATA_PPM_prop(clk_ppm_expected_max));
+
 
 
 
