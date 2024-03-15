@@ -9,14 +9,15 @@ module Digital_Loop_Filter (
 
 );
 
-parameter GAIN = 2;
+parameter GAIN   = 2 ;
+parameter WIDTH  = 16;
 
-reg  [15:0] freq_integrator;
-reg  [15:0] phase_integrator;
+reg  [WIDTH-1:0] freq_integrator;
+reg  [WIDTH-1:0] phase_integrator;
 
 
 
-assign code = phase_integrator[15:5]; // top 11
+assign code = phase_integrator[WIDTH-1:WIDTH-11]; // top 11
 
 
 
@@ -34,14 +35,14 @@ always @(posedge clk or negedge rst_n) begin
 			2'b10: begin // late
 
 					freq_integrator <=  (Up - Dn) + freq_integrator ;
-					phase_integrator  <=  phase_integrator  + freq_integrator[14:6] + GAIN*(Up - Dn);//$unsigned(~freq_integrator[18:11])
+					phase_integrator  <=  phase_integrator  + freq_integrator[WIDTH-2:WIDTH-10] + GAIN*(Up - Dn);//$unsigned(~freq_integrator[18:11])
 
 					end  
 
 			2'b01: begin // early 
 
 					freq_integrator <=  (Up - Dn) + freq_integrator ;
-					phase_integrator  <=  phase_integrator  - $unsigned(~freq_integrator[14:6]) + GAIN*(Up - Dn);//$unsigned(~freq_integrator[18:11])		 
+					phase_integrator  <=  phase_integrator  - $unsigned(~freq_integrator[WIDTH-2:WIDTH-10]) + GAIN*(Up - Dn);//$unsigned(~freq_integrator[18:11])		 
 
 				end
 

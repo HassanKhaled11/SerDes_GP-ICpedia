@@ -85,7 +85,7 @@ module cdr_assertion #(
   property CLK_OUT_PPM_prop(int clk_ppm_expected_max);
     realtime current_time;
     @(posedge PI_CLK_OUT) ('1,current_time = $realtime()) |=> 
-                          (clk_ppm_expected_max >= int'(((5-(1/($realtime()- current_time)))/(5))*(10**6)),$display("PPM = %d",int'(((5-(1/($realtime()- current_time)))/(5))*(10**6))));
+                          (clk_ppm_expected_max >= int'(((5-(1.0/($realtime()- current_time)))/(5))*(10**6)),$display("PPM = %d",int'(((5-(1/($realtime()- current_time)))/(5))*(10**6))));
   endproperty
 
   
@@ -103,7 +103,7 @@ module cdr_assertion #(
   property CLK_DATA_PPM_prop(int clk_ppm_expected_max);
     realtime current_time;
     @(posedge Data_CLK_IN) ('1,current_time = $realtime()) |=> 
-                          (clk_ppm_expected_max >= int'(((5-(1/($realtime()- current_time)))/(5))*(10**6)),$display("DATA_PPM = %d",int'(((5-(1/($realtime()- current_time)))/(5))*(10**6))));
+                          (clk_ppm_expected_max >= int'(((5-(1.0/($realtime()- current_time)))/(5))*(10**6)),$display("DATA_PPM = %d",int'(((5-(1/($realtime()- current_time)))/(5))*(10**6))));
   endproperty
 
   
