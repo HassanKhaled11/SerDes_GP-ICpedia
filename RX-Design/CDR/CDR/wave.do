@@ -1,9 +1,11 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
+add wave -noupdate -expand /CDR_Tb/Dut/pi_assertion/CLK_PPM_assert
+add wave -noupdate /CDR_Tb/clk_data
+add wave -noupdate /CDR_Tb/Dut/T1_in_CDRLOOP
 add wave -noupdate -divider -height 40 BBPD
 add wave -noupdate /CDR_Tb/Dut/phaseDetector/rst_n
 add wave -noupdate -color {Violet Red} /CDR_Tb/Dut/phaseDetector/Up
-add wave -noupdate /CDR_Tb/clk_data
 add wave -noupdate -color Gold -format Literal /CDR_Tb/Dut/phaseDetector/Din
 add wave -noupdate -color Gold /CDR_Tb/Dut/phaseDetector/Din
 add wave -noupdate /CDR_Tb/Dut/phaseDetector/clk
@@ -79,7 +81,7 @@ add wave -noupdate /CDR_Tb/Dut/phase_interpolator/sign_315
 add wave -noupdate /CDR_Tb/Dut/phase_interpolator/clk_sin
 add wave -noupdate -radix unsigned /CDR_Tb/Dut/phase_interpolator/PPM
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {254442002 fs} 1} {{Cursor 2} {98691872 fs} 1} {{Cursor 3} {239256345 fs} 0}
+WaveRestoreCursors {{Cursor 1} {254442002 fs} 1} {{Cursor 2} {98691872 fs} 1} {{Cursor 3} {71152103 fs} 0} {{Cursor 4} {439592238 fs} 0}
 quietly wave cursor active 3
 configure wave -namecolwidth 312
 configure wave -valuecolwidth 100
@@ -95,4 +97,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 fs} {1432045276 fs}
+WaveRestoreZoom {67957240 fs} {79209737 fs}
