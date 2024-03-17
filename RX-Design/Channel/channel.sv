@@ -1,113 +1,102 @@
-`timescale 1ns / 1fs
-module channel (
-    input clk,
-    input rst_n,
-    input in,
-    output reg out
+`timescale 1ns/1fs
+
+module Channel #(parameter ATTENUATION = 10 , parameter F = 2.5 , parameter N = 10)
+(
+  input       Sample_CLK	 ,
+  input       Data_in      ,
+
+  output reg  Data_out	          // Atenuated Data
 );
 
-  reg faster_clk;
-  parameter FASTER_CLK_PERIOD = 0.00019;
-  parameter NUMBER_OF_LEVELS = 256;
-  parameter THRESHOLD = NUMBER_OF_LEVELS / 2;
-  // parameter precision = 5;
-  reg [$clog2(NUMBER_OF_LEVELS)-1:0] out_fading;
+real Unew ;
+real Uold ;
+real Ynew ;
+real Yold ;
+real Ynewn;
+
+real A , A_ , x1 , x2 , Wc , alpha , beta;
 
 
-  threshold_detector #(
-      .NUMBER_OF_LEVELS(256)
-  ) Thres_inst (
-      out_fading,
-      THRESHOLD,
-      out
-  );
-  initial begin
-    faster_clk = 0;
-    forever #(FASTER_CLK_PERIOD / 2) faster_clk = ~faster_clk;
-  end
-  always @(posedge faster_clk or negedge rst_n) begin
-    if (!rst_n) begin
-      out_fading <= 0;
-      // out <= 0;
-    end else begin
-      if (in == 1) begin
-        if (out_fading < NUMBER_OF_LEVELS - 1) out_fading <= out_fading + 1;
-        else out_fading = NUMBER_OF_LEVELS - 1;
-      end else begin
-        if (out_fading > 0) out_fading <= out_fading - 1;
-        else out_fading <= 0;
-      end
-    end
-    // out = out_fading / NUMBER_OF_LEVELS;
-  end
-endmodule
 
-module threshold_detector (
-    input_fading,
-    threshold,
-    value
-);
-  parameter NUMBER_OF_LEVELS = 256;
-  input [$clog2(NUMBER_OF_LEVELS)-1:0] input_fading;
-  input int threshold;
-  output value;
+assign Data_out = Ynew ;
 
 
-  assign value = (input_fading > threshold) ? 1 : 0;
-endmodule
+initial begin
+Unew   = 0 ;
+Uold   = 0 ;
+Ynew   = 0 ;
+Yold   = 0 ; 
+end
+
+initial begin
+
+if(ATTENUATION == 10) begin
+A = 1.0/$sqrt(10);  
+end  
+
+// else if(ATTENUATION == 5) begin
+//  A_ = 1.0/$sqrt(10);
+//  A  = $sqrt(A_); 
+// end
+
+else begin
+A  = $pow(10,ATTENUATION/20);  
+end
+                     // 10^(db/20)
+x1 = 1.0/$pow(A,2)  ;               // 1 + (W/Wc)^2
+x2 = $sqrt(x1 - 1.0);               // W/Wc = x2 = sqrt(x1-1)
+Wc = (1.0/x2)*2*3.14;    // Wc
+alpha = $exp(Wc*(-1*1.0/N))  ;
+beta  = 1.0 - alpha ; 
+
+end
 
 
-`timescale 1ns / 1fs
-module channel_Tb;
-  reg clk;
-  reg rst_n;
-  reg in;
-  wire out;
+always @(posedge Sample_CLK) begin
+ // Ynew <= 0.811 * Yold + 0.189 * Uold ;
+ Ynew <= alpha * Yold + beta * Uold ;
+ Yold <= Ynew    ;
+ Uold <= Unew    ;
+ Unew <= Data_in ;
+end
 
-  reg [19:0] inputVal;
-
-  // Clock generation
-  initial begin
-    clk = 0;
-    forever #0.1 clk = ~clk;
-  end
-
-  // Instantiate the channel module
-  channel #(
-      .NUMBER_OF_LEVELS(256),
-      .THRESHOLD(128),
-      .FASTER_CLK_PERIOD(0.0010)  //0.00019 will be always correct
-  ) channel_inst (
-      .clk(clk),
-      .rst_n(rst_n),
-      .in(in),
-      .out(out)
-  );
-
-  // Stimulus
-  initial begin
-    // Reset
-    rst_n = 0;
-    #5;
-    rst_n = 1;
-
-    in = 1;
-    repeat (10) @(negedge clk);
-
-
-    // Provide stimuli
-    for (int i = 0; i < 1000; i = i + 1) begin
-      @(negedge clk) in = $random();
-    end
-
-    #10 $stop;  // Stop simulation after 150 time units
-  end
-
-  // Monitor
-  always @(posedge clk) begin
-    $display("Time = %0t, in = %b, out = %f", $time, in, out);
-  end
+assign Ynewn = 1.0 - Ynew ;
 
 endmodule
 
-// module edgeDetector(input )
+
+
+module Channel_TB;
+
+ parameter ATTENUATION = 10 ;
+ parameter F           = 2.5;
+ parameter N           = 10;
+
+ reg  Sample_CLK   ;
+ reg  Data_in      ;
+ wire Data_out     ;
+ 
+ reg CLK;
+
+ Channel #(.ATTENUATION(ATTENUATION) , .F(F) , .N(N)) DUT (.*);
+
+
+  // always #(0.000001) Sample_CLK = ~Sample_CLK ;
+ always #((0.2/N)/2.0) Sample_CLK = ~Sample_CLK ;
+
+ always #(0.2/2) CLK = ~CLK ; 
+
+ initial begin
+   Sample_CLK = 0 ;
+   CLK = 0 ;
+
+   for (int i = 0; i < 1000; i++) begin
+     @(negedge CLK);
+     Data_in = $random();
+   end
+
+$stop;
+ end
+
+
+endmodule
