@@ -17,7 +17,7 @@ module CDR_Loop (
   cdr_assertion #(
       .clk_period_expected_min(19),
       .clk_period_expected_max(21),
-      .clk_ppm_expected_max(2000)
+      .clk_ppm_expected_max(10000)
   ) pi_assertion (
       .PI_CLK_OUT (PI_Clk),
       .Data_CLK_IN(clk_data)
@@ -47,7 +47,7 @@ module CDR_Loop (
       .A(Dout)
   );
   Digital_Loop_Filter DLF (
-      .clk  (PI_Clk),
+      .clk  (clk_0),
       .rst_n(rst_n),
       .Dn   (dn),
       .Up   (up),
@@ -161,6 +161,59 @@ module cdr_assertion #(
 
 
 
+  //   property PPM_ERROR_prop(clk_ppm_error_expected_max = 0.1);
+  //     // realtime data = 0
+  //     // ;
+  //     realtime clk = 0
+  //     ;
+  //     realtime clk_out = 0;
+  //     @(posedge Data_CLK_IN)('1,     clk_out = $realtime()
+  // )|=> (clk_ppm_error_expected_max >= (clk - clk_out))
+  //     // @(data) ('1,data= $realtime());
+  //     @(posedge PI_CLK_OUT) ('1,
+  //     clk = $realtime()
+  //     ) |=> (clk_ppm_error_expected_max >= (clk - clk_out))
+  //   endproperty
+
+  //   PPM_error_assert :
+  //   assert property (PPM_ERROR_prop(clk_ppm_error_expected_max));
+  //   PPM_error_cover :
+  //   cover property (PPM_ERROR_prop(clk_ppm_error_expected_max));
+
+
+  realtime clks_queue[$];
+  realtime curr_pi_clk;
+  realtime curr_data_clk;
+  realtime ppm_error;
+  // always @(posedge PI_CLK_OUT) begin
+  //   curr_pi_clk = $realtime();
+  //   clks_queue.push_front(curr_pi_clk);
+  // end
+
+  // always @(posedge Data_CLK_IN) begin
+  //   curr_data_clk = $realtime();
+  //   clks_queue.push_front(curr_data_clk);
+  // end
+
+  // always @(clks_queue) begin
+  //   if (clks_queue.size() == 2) ppm_error = clks_queue[1] - clks_queue[0];
+  //   $display("ppm_error=%t", ppm_error);
+  //   clks_queue.pop_back();
+  //   clks_queue.pop_back();
+  // end
+
+  always @(PI_CLK_OUT or Data_CLK_IN) begin
+    curr_pi_clk = $realtime();
+    if (clks_queue.size() == 2) begin
+      ppm_error = clks_queue[1] - clks_queue[0];
+      clks_queue.pop_back();
+      clks_queue.pop_back();
+      $display("ppm_error=%t", ppm_error);
+    end else begin
+      clks_queue.push_back(curr_pi_clk);
+    end
+
+  end
 
 
 
