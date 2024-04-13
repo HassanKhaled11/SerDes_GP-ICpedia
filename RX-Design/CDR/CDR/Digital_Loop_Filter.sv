@@ -1,59 +1,80 @@
-`timescale 1ns/1fs
+`timescale 1ns / 1fs
 
 module Digital_Loop_Filter (
 
-	input Up,Dn,
-	input clk,    // Clock
-	input  rst_n,  // Asynchronous reset active low
-	output [10:0] code
+    input Up,
+    Dn,
+    input clk,  // Clock
+    input rst_n,  // Asynchronous reset active low
+    output [10:0] code
 
 );
 
-parameter GAIN   = 2 ;
-parameter WIDTH  = 16;
+  parameter GAIN = 3;
+  parameter WIDTH = 16;
+  parameter FRUG = 8;
 
-reg  [WIDTH-1:0] freq_integrator;
-reg  [WIDTH-1:0] phase_integrator;
-
-
-
-assign code = phase_integrator[WIDTH-1:WIDTH-11]; // top 11
+  reg [WIDTH-1:0] freq_integrator;
+  reg [WIDTH-1:0] phase_integrator;
 
 
 
-always @(posedge clk or negedge rst_n) begin
-
-	if(!rst_n)begin
-
-		phase_integrator <= 0;
-		freq_integrator  <= 10000;
-
-	end else begin
-
-		case({Up,Dn})
-
-			2'b10: begin // late
-
-					freq_integrator <=  (Up - Dn) + freq_integrator ;
-					phase_integrator  <=  phase_integrator  + freq_integrator[WIDTH-2:WIDTH-10] + GAIN*(Up - Dn);//$unsigned(~freq_integrator[18:11])
-
-					end  
-
-			2'b01: begin // early 
-
-					freq_integrator <=  (Up - Dn) + freq_integrator ;
-					phase_integrator  <=  phase_integrator  - $unsigned(~freq_integrator[WIDTH-2:WIDTH-10]) + GAIN*(Up - Dn);//$unsigned(~freq_integrator[18:11])		 
-
-				end
-
-			endcase 
-
-	end
-
-end
+  assign code = phase_integrator[WIDTH-1:WIDTH-11];  // top 11
 
 
 
+  always @(posedge clk or negedge rst_n) begin
+
+    if (!rst_n) begin
+
+      phase_integrator <= 0;
+      freq_integrator  <= 0;
+
+    end else begin
+
+      case ({
+        Up, Dn
+      })
+
+        2'b10: begin  // late
+
+          freq_integrator <= FRUG * (Up - Dn) + (freq_integrator);
+          phase_integrator  <=  phase_integrator  + freq_integrator[WIDTH-2:WIDTH-10] + GAIN*(Up - Dn); //$unsigned(~freq_integrator[18:11])
+
+        end
+
+        2'b01: begin  // early 
+
+          freq_integrator <= FRUG * (Up - Dn) + (freq_integrator);
+          phase_integrator <= phase_integrator - $unsigned(
+              ~freq_integrator[WIDTH-2:WIDTH-10]
+          ) + GAIN * (Up - Dn);  //$unsigned(~freq_integrator[18:11])		 
+
+        end
+
+      endcase
+
+    end
+
+  end
+
+
+  ///////////////////////////
+
+  // always @(posedge clk or negedge rst_n) begin
+
+  //   if (!rst_n) begin
+
+  //     phase_integrator <= 0;
+  //     freq_integrator  <= 0;
+
+  //   end else begin
+
+  //     freq_integrator <= FRUG * (Up - Dn) + signed'(freq_integrator);
+  //     phase_integrator  <=  (phase_integrator)  + signed'(freq_integrator[WIDTH-2:WIDTH-10]) + GAIN*(Up - Dn); //$unsigned(~freq_integrator[18:11])
+
+  //   end
+  // end
 
 endmodule
 

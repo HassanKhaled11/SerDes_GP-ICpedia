@@ -1,0 +1,3 @@
+vlog CDR_Loop.sv PMIX4.SV CDR_Tb.sv Digital_Loop_Filter.sv BBPD.v
+restart
+run -all
