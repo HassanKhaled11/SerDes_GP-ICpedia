@@ -1,0 +1,12 @@
+vlib work
+vlog DLF.cpp DLF.sv DLF_TB.sv  -dpiheader DLF.h
+
+vsim -voptargs=+accs work.DLF_tb 
+
+add wave *
+add wave -position insertpoint  \
+sim:/DLF_tb/DUT/phase_integrator
+add wave -position insertpoint  \
+sim:/DLF_tb/DUT/freq_integrator
+
+run -all
