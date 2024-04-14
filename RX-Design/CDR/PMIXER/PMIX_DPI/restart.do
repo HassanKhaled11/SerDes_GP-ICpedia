@@ -1,3 +1,3 @@
-vlog PI_cpp.cpp PI_sv.sv -sv  +cover
+vlog PI_cpp2.cpp PI_sv2.sv -sv  +cover
 restart
 run -all
