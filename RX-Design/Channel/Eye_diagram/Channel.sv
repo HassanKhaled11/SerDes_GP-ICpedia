@@ -85,12 +85,22 @@ module Channel_TB;
  always #((0.2/N)/2.0) Sample_CLK = ~Sample_CLK ;
 
  always #(0.2/2) CLK = ~CLK ; 
-
+reg [13:0] seq;
  initial begin
+  seq =14'b01001000100001;
    Sample_CLK = 0 ;
    CLK = 0 ;
 
-   for (int i = 0; i < 1000; i++) begin
+for (int i = 0; i < 14; i++) begin
+@(negedge CLK);
+  Data_in = seq[i];
+end
+  seq = 14'b10110111011110;
+  for (int i = 0; i < 14; i++) begin
+@(negedge CLK);
+  Data_in = seq[i];
+end
+   for (int i = 0; i < 10000; i++) begin
      @(negedge CLK);
      Data_in = $random();
    end
@@ -122,3 +132,4 @@ $fclose(fd);
 end
 
 endmodule
+
