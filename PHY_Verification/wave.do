@@ -175,15 +175,29 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/RxPolarity
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Data_Collected
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/serial
 add wave -noupdate -divider -height 30 {CDR important signals}
-add wave -noupdate -format Analog-Step -height 74 -max 123.99999999999999 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_sum
-add wave -noupdate -format Analog-Step -height 74 -max 10424.0 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/freq_integrator
-add wave -noupdate -format Analog-Step -height 74 -max 3971.9999999999995 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/phase_integrator
+add wave -noupdate -format Analog-Step -height 74 -max 123.99999999999999 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/CLK_Out_i
+add wave -noupdate -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_sum
+add wave -noupdate -format Analog-Step -height 74 -max 17000.0 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/freq_integrator
+add wave -noupdate -format Analog-Step -height 74 -max 3000.0 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/phase_integrator
+add wave -noupdate -divider -height 30 Sine
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_90
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_180
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_270
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_135
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_225
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_315
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/index
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/rst_n
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/clk_0
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/clk_data
+add wave -noupdate -color Magenta /top/DUT/PMA_U/Bit_Rate_Clk
+add wave -noupdate /top/dut_if/Bit_CLK_Offset
+add wave -noupdate -color Magenta /top/DUT/PMA_U/Bit_Rate_Clk_offset
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Din
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/PI_Clk
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
@@ -194,8 +208,8 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/up
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {272171900 fs} 0}
-quietly wave cursor active 4
+WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {37443710000 fs} 1} {{Cursor 5} {3370198000 fs} 1} {{Cursor 6} {7797566964 fs} 0}
+quietly wave cursor active 6
 configure wave -namecolwidth 419
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -210,4 +224,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 fs} {851445 ps}
+WaveRestoreZoom {7797426326 fs} {7797809926 fs}

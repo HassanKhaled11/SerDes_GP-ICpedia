@@ -57,7 +57,8 @@ module CDR_Loop (
   PMIX phase_interpolator (
       .CLK   (clk_0),
       .Code   (code),
-      .clk_filter_(PI_Clk)
+      // .clk_filter_(PI_Clk)
+      .CLK_Out(PI_Clk)
   );
 
 

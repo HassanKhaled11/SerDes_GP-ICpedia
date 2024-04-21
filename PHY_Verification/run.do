@@ -1,5 +1,5 @@
 #vlib work
-vlog -f files.txt
+vlog -sv -f files.txt -dpiheader headerDPI.h 
 vsim -voptargs=+acc work.top 
 #coverage save  alu.ucdb -onexit 
 #add wave -position insertpoint  \
