@@ -297,6 +297,10 @@ module PMIX #(
 
         3'b111: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] )))    ;
+          $display(
+              "%t,sin_sum=%d(%h), Code= %0d(%0h), sin0= %0d(%0h), index= %0d(%0h), sin315= %0d(%0h) ",
+              $time, sin_sum, sin_sum, Code[7:0], Code[7:0], sin_0[index], sin_0[index], index,
+              index, sin_315[index], sin_315[index]);
         end
       endcase
 

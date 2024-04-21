@@ -58,7 +58,7 @@ module CDR_Loop (
       .CLK   (clk_0),
       .Code   (code),
       // .clk_filter_(PI_Clk)
-      .CLK_Out(PI_Clk)
+      .CLK_Out_i(PI_Clk)
   );
 
 

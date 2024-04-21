@@ -27,9 +27,7 @@ synchronous_unit.v
 thresholdMonitor.v
 write_pointer_control_unit.v
 CDR_Loop.sv
-PI_cpp2.cpp
-PI_sv2.sv
-CDR_Tb.sv
+PMIX4.sv
 DLF.cpp
 DLF.sv
 golden_model.sv

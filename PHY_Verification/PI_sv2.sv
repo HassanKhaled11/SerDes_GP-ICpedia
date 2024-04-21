@@ -9,7 +9,7 @@ module PMIX #(
 ) (
     input         CLK,
     input  [10:0] Code,
-    output        CLK_Out
+    output        CLK_Out_i
 );
 
 

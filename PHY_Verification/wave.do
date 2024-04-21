@@ -175,6 +175,7 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/RxPolarity
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Data_Collected
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/serial
 add wave -noupdate -divider -height 30 {CDR important signals}
+add wave -noupdate -max 123.99999999999999 -radix hexadecimal /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
 add wave -noupdate -format Analog-Step -height 74 -max 123.99999999999999 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/CLK_Out_i
 add wave -noupdate -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_sum
@@ -208,7 +209,7 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/up
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {37443710000 fs} 1} {{Cursor 5} {3370198000 fs} 1} {{Cursor 6} {7797566964 fs} 0}
+WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {37443710000 fs} 1} {{Cursor 5} {3370198000 fs} 1} {{Cursor 6} {39411984 fs} 0}
 quietly wave cursor active 6
 configure wave -namecolwidth 419
 configure wave -valuecolwidth 100
@@ -224,4 +225,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {7797426326 fs} {7797809926 fs}
+WaveRestoreZoom {17818258 fs} {55629494 fs}

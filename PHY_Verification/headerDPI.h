@@ -37,33 +37,10 @@ accum_phase(
 
 DPI_LINK_DECL DPI_DLLESPEC
 void
-generate_LUTs(
-    double amp,
-    int freq);
-
-DPI_LINK_DECL DPI_DLLESPEC
-void
-generate_sin_waves(
-    double amplitude,
-    int frequencye);
-
-DPI_LINK_DECL DPI_DLLESPEC
-void
 init_f(
     int frug,
     int freq_width,
     int phug,
     int phase_width);
-
-DPI_LINK_DECL void
-write(
-    const double* arr_0,
-    const double* arr_45,
-    const double* arr_90,
-    const double* arr_135,
-    const double* arr_180,
-    const double* arr_225,
-    const double* arr_270,
-    const double* arr_315);
 
 #endif 
