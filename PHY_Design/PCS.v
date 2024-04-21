@@ -8,10 +8,11 @@ module PCS (
     input [31 : 0] MAC_TX_Data,
     input [ 3 : 0] MAC_TX_Datak,
     input          MAC_Data_En,
-   // input          buffer_mode,
+    // input          buffer_mode,
     //input 				  K285						,
     input          WordClk,
-    input          CLK_5G,
+    // input          CLK_5G,
+    input          recovered_clk_5G,
     input [   9:0] Collected_Data,
 
     // input                Loopback_Path          ,
@@ -54,17 +55,17 @@ module PCS (
       .BUFFER_DEPTH(16)
   ) PCS_RX_U (
       //.K285          (K285),	// from pma
-      .WordClk       (WordClk),         // 
-      .Collected_Data(Collected_Data),  //from PMA
-      .PCLK          (PCLK),
-      .CLK_5G        (CLK_5G),          //  in port
-      .Rst_n         (RST_n),
+      .WordClk         (WordClk),           // 
+      .Collected_Data  (Collected_Data),    //from PMA
+      .PCLK            (PCLK),
+      .recovered_clk_5G(recovered_clk_5G),  //  in port
+      .Rst_n           (RST_n),
       //.buffer_mode   (buffer_mode),     // in port
-      .DataBusWidth  (DataBusWidth),
-      .RX_Data       (RX_Data),
-      .RX_DataK      (RX_DataK),
-      .RX_Status     (RX_Status),
-      .RX_Valid      (RX_Valid)
+      .DataBusWidth    (DataBusWidth),
+      .RX_Data         (RX_Data),
+      .RX_DataK        (RX_DataK),
+      .RX_Status       (RX_Status),
+      .RX_Valid        (RX_Valid)
   );
 
 endmodule
