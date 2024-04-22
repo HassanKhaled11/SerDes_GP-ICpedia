@@ -22,7 +22,7 @@ module PMA (
   initial begin
     Bit_Rate_Clk_offset = 0;
     forever begin
-      #100.6 Bit_Rate_Clk_offset = ~Bit_Rate_Clk_offset;
+      #100.01 Bit_Rate_Clk_offset = ~Bit_Rate_Clk_offset;
     end
   end
 

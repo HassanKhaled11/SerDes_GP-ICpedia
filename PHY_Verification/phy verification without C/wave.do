@@ -181,11 +181,11 @@ add wave -noupdate -format Analog-Step -height 74 -max 10424.0 /top/DUT/PMA_U/PM
 add wave -noupdate -format Analog-Step -height 74 -max 3971.9999999999995 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/phase_integrator
 add wave -noupdate -divider -height 30 Sine
 add wave -noupdate -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/index
-add wave -noupdate -childformat {{{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0[176]} -radix unsigned}} -expand -subitemconfig {{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0[176]} {-radix unsigned}} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0
+add wave -noupdate -childformat {{{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0[176]} -radix unsigned}} -subitemconfig {{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0[176]} {-height 15 -radix unsigned}} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_90
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_180
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_270
-add wave -noupdate -childformat {{{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45[176]} -radix unsigned}} -expand -subitemconfig {{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45[176]} {-radix unsigned}} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45
+add wave -noupdate -childformat {{{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45[176]} -radix unsigned}} -expand -subitemconfig {{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45[176]} {-height 15 -radix unsigned}} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_135
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_225
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_315
@@ -196,13 +196,13 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/clk_0
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/clk_data
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Din
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/PI_Clk
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
+add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/up
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {167700200 fs} 1} {{Cursor 5} {301899915 fs} 1} {{Cursor 6} {402098291 fs} 1}
-quietly wave cursor active 6
+WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {167700200 fs} 1} {{Cursor 5} {301899915 fs} 1} {{Cursor 6} {402098291 fs} 1} {{Cursor 7} {80007798000 fs} 0}
+quietly wave cursor active 7
 configure wave -namecolwidth 419
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -217,4 +217,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {714767145 fs} {726956841 fs}
+WaveRestoreZoom {78679002349 fs} {78682265837 fs}
