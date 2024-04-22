@@ -19,17 +19,29 @@ module PMA (
     output       recovered_clk_5G
 );
   reg Bit_Rate_Clk_offset;
+  parameter OFFSET_PERIOD = 100.01;
+  parameter N             = 10;
+  parameter Threshold = 0.5;
   initial begin
     Bit_Rate_Clk_offset = 0;
     forever begin
-      #100.01 Bit_Rate_Clk_offset = ~Bit_Rate_Clk_offset;
+      #(OFFSET_PERIOD) Bit_Rate_Clk_offset = ~Bit_Rate_Clk_offset;
     end
   end
+reg channel_clk;
 
+initial begin
+  channel_clk = 0;
+  forever #(OFFSET_PERIOD/N) channel_clk = ~channel_clk;
+end
+
+
+
+//////////////////////////////////////////////
   wire TX_P;
   wire TX_N;
-
-
+  real Data_from_channel;
+  wire  Data_out;
   assign TX_Out_P = TX_P;
   assign TX_Out_N = TX_N;
 
@@ -47,12 +59,22 @@ module PMA (
       .TX_Out_N       (TX_N)
   );
 
+  //Channel
+  Channel #(.F(2.5),.ATTENUATION(10),.N(N)) channelInst  (
+                      .Sample_CLK(channel_clk),
+                      .Data_in   (TX_P),
+                      .Ynew      (Data_from_channel)
+                      );
 
+  Data_sampling #(.Threshold(Threshold)) dataSample(
+                            .Data_out(Data_out),
+                            .data_in (Data_from_channel)
+                            );
   //CDR + serial to parallel
   PMA_RX #(
       .DATA_WIDTH(10)
   ) PM_RX_U (
-      .RX_POS          (TX_P),
+      .RX_POS          (Data_out),
       .RX_NEG          (TX_N),
       // .Ser_in    (TX_Out_P),
       .Rst_n           (Rst_n),
