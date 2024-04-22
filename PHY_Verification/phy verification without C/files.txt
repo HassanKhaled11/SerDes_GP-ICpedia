@@ -12,8 +12,6 @@ GasKet_RX.v
 grayToBin.v
 line_coding_8_10.v
 memory.v
-Channel.sv
-Data_sampling.sv
 PCS.v
 PCS_RX.v
 PCS_TX.v
