@@ -68,6 +68,17 @@ constraint MAC_TX_Data_32c {
 
 
 
+constraint MAC_TX_Data_TSEQ {
+ if(Data_post == 32'hBCBC_BCBC) {
+     MAC_TX_Data == 32'h4A_4A_4A_4A;
+  }
+ 
+ else {
+     MAC_TX_Data == 32'hBCBC_BCBC ;
+  }
+}
+
+
 
 //---------- MAC_DATAK_CONSTRAINT ---------
 constraint MAC_TX_DataK_32c {
@@ -81,9 +92,11 @@ constraint MAC_TX_DataK_32c {
 }
 
 
+
 //------ MAC_DATA_En CONSTARINT------
 constraint MAC_Data_En_c {
- MAC_Data_En dist {1'b1 :/ 95 , 1'b0:/ 5};
+// MAC_Data_En dist {1'b1 :/ 95 , 1'b0:/ 5};
+  MAC_Data_En == 1'b1 ;
 }
 
 

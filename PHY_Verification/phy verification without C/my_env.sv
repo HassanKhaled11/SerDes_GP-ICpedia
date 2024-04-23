@@ -28,7 +28,7 @@ function void build_phase(uvm_phase phase);
 	agent      = my_agent      :: type_id :: create("agent"     ,this);
 	scoreboard = my_scoreboard :: type_id :: create("scoreboard",this);
 	coverage   = my_coverage   :: type_id :: create("coverage"  ,this);
-	`uvm_info("MY_ENV","BUILD_PHASE",UVM_MEDIUM);
+	`uvm_info("MY_ENV","BUILD_PHASE",UVM_HIGH);
 endfunction 
 
 

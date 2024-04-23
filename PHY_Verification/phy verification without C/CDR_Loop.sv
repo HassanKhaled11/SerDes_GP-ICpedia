@@ -62,6 +62,17 @@ module CDR_Loop (
   );
 
 
+  int fd;
+  initial begin
+    fd = $fopen("./Up_Dn.hex", "w");
+
+  end
+
+  always @(up, dn) begin
+    $fwrite(fd, "%h,%h\n", up, dn);
+  end
+
+
 endmodule
 
 

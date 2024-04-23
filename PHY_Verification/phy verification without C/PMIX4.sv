@@ -245,7 +245,7 @@ module PMIX #(
 
 
   initial clk_index = 0;
-  always #(0.002) clk_index = ~clk_index;  //0.0002
+  always #(0.0001) clk_index = ~clk_index;  //0.0002
 
 
   ////////////////////////////////////////////////
@@ -269,23 +269,22 @@ module PMIX #(
 
         3'b000: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_45[index]  + ((255.0 - Code[7:0])/255.0 * sin_0[index] )))      ;
-          if (Code[7:0] == 'h15 && sin_sum == 'h18)
-            $display(
-                "%t,sin_sum=%d(%h), Code= %0d(%0h)(%0b), sin0= %0d(%0h), index= %0d(%0h), sin45= %0d(%0h) ",
-                $time,
-                sin_sum,
-                sin_sum,
-                Code,
-                Code,
-                Code,
-                sin_0[index],
-                sin_0[index],
-                index,
-                index,
-                sin_45[index],
-                sin_45[index]
-            );
-
+          // if (Code[7:0] == 'h15 && sin_sum == 'h18)
+          //   $display(
+          //       "%t,sin_sum=%d(%h), Code= %0d(%0h)(%0b), sin0= %0d(%0h), index= %0d(%0h), sin45= %0d(%0h) ",
+          //       $time,
+          //       sin_sum,
+          //       sin_sum,
+          //       Code,
+          //       Code,
+          //       Code,
+          //       sin_0[index],
+          //       sin_0[index],
+          //       index,
+          //       index,
+          //       sin_45[index],
+          //       sin_45[index]
+          //   );
         end
 
         3'b001: begin

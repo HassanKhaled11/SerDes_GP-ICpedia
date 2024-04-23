@@ -10,10 +10,10 @@ module Digital_Loop_Filter (
 
 );
 
-  parameter PHUG = 3;
+  parameter PHUG = 8;
   parameter PHASE_WIDTH = 16;
-  parameter FREQ_WIDTH = 16;
-  parameter FRUG = 8;
+  parameter FREQ_WIDTH  = 16;
+  parameter FRUG = 3;
 
   reg [ FREQ_WIDTH-1:0] freq_integrator;
   reg [PHASE_WIDTH-1:0] phase_integrator;

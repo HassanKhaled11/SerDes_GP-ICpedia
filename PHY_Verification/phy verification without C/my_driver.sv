@@ -23,7 +23,7 @@ endfunction
 
 function void build_phase(uvm_phase phase);
 	super.build_phase(phase);
-	`uvm_info("MY_DRIVER","BUILD_PHASE",UVM_MEDIUM);
+	`uvm_info("MY_DRIVER","BUILD_PHASE",UVM_HIGH);
 endfunction 
 
 
@@ -49,7 +49,7 @@ task drive();
   bfm_vif.MAC_Data_En  = stim_seq_item.MAC_Data_En ;
   bfm_vif.RxPolarity   = stim_seq_item.RxPolarity  ;
 
-`uvm_info("MY_DRIVER","DRIVE FUN",UVM_MEDIUM);
+`uvm_info("MY_DRIVER","DRIVE FUN",UVM_HIGH);
 	
 endtask 
 
