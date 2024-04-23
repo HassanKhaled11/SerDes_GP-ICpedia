@@ -60,8 +60,13 @@ module CDR_Loop (
       // .clk_filter_(PI_Clk)
       .CLK_Out_i(PI_Clk)
   );
+  int fd;
+  initial begin
+    fd = $fopen("./Up_Dn.hex", "w");
 
+  end
 
+<<<<<<< HEAD
   int fd;
   initial begin
     fd = $fopen("./Up_Dn.hex", "w");
@@ -73,6 +78,12 @@ module CDR_Loop (
   end
 
 
+=======
+  always @(up, dn) begin
+    $fwrite(fd, "%h,%h\n", up, dn);
+  end
+  // $fclose(fd);
+>>>>>>> 8be47f2573a6df1e09d818a35215d5605b64e6ac
 endmodule
 
 
