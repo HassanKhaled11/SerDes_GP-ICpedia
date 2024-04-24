@@ -41,7 +41,7 @@ module PMIX #(
   //////////////////////////////////
   /////// CLK FILTERING SIGNALS/////
   //////////////////////////////////
-  reg             clk_filter;
+  // reg             clk_filter;
   reg glitchR_found, glitchF_found;
   //////////////////////////////////
   //////////////////////////////////  
@@ -157,7 +157,7 @@ module PMIX #(
     last_time     = 0;
     T1            = 0;
     // clk_filter_   = 0;
-    clk_filter    = 0;
+    // clk_filter    = 0;
     glitchF_found = 0;
     glitchR_found = 0;
   end
@@ -245,7 +245,7 @@ module PMIX #(
 
 
   initial clk_index = 0;
-  always #(0.0002) clk_index = ~clk_index;  //0.0002
+  always #(0.0001) clk_index = ~clk_index;  //0.0002
 
 
   ////////////////////////////////////////////////
@@ -269,6 +269,22 @@ module PMIX #(
 
         3'b000: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_45[index]  + ((255.0 - Code[7:0])/255.0 * sin_0[index] )))      ;
+          // if (Code[7:0] == 'h15 && sin_sum == 'h18)
+          //   $display(
+          //       "%t,sin_sum=%d(%h), Code= %0d(%0h)(%0b), sin0= %0d(%0h), index= %0d(%0h), sin45= %0d(%0h) ",
+          //       $time,
+          //       sin_sum,
+          //       sin_sum,
+          //       Code,
+          //       Code,
+          //       Code,
+          //       sin_0[index],
+          //       sin_0[index],
+          //       index,
+          //       index,
+          //       sin_45[index],
+          //       sin_45[index]
+          //   );
         end
 
         3'b001: begin
@@ -297,10 +313,6 @@ module PMIX #(
 
         3'b111: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] )))    ;
-          $display(
-              "%t,sin_sum=%d(%h), Code= %0d(%0h), sin0= %0d(%0h), index= %0d(%0h), sin315= %0d(%0h) ",
-              $time, sin_sum, sin_sum, Code[7:0], Code[7:0], sin_0[index], sin_0[index], index,
-              index, sin_315[index], sin_315[index]);
         end
       endcase
 

@@ -1,9 +1,10 @@
 #vlib work
-vlog -sv -f files.txt -dpiheader headerDPI.h 
+vlog -f files.txt
 vsim -voptargs=+acc work.top 
 
 # Set UVM verbosity level to filter out UVM_MEDIUM messages
 set UVM_VERBOSITY UVM_HIGH
+
 
 #coverage save  alu.ucdb -onexit 
 #add wave -position insertpoint  \

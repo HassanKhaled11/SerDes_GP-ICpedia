@@ -5,6 +5,13 @@ add wave -noupdate /top/DUTA/cover_WORD_CLK_period
 add wave -noupdate /top/DUTA/cover_PCLK32_period
 add wave -noupdate /top/DUTA/cover_PCLK16_period
 add wave -noupdate /top/DUTA/cover_PCLK8_period
+add wave -noupdate -divider CHANNEL
+add wave -noupdate /top/DUT/PMA_U/channelInst/Data_in
+add wave -noupdate -format Analog-Step -height 74 -max 0.99997153019957374 /top/DUT/PMA_U/channelInst/Ynew
+add wave -noupdate -divider -height 30 {CDR important signals}
+add wave -noupdate -format Analog-Step -height 74 -max 1023.0 -min -1024.0 -radix decimal /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
+add wave -noupdate -format Analog-Step -height 74 -max 65532.999999999993 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/freq_integrator
+add wave -noupdate -format Analog-Step -height 74 -max 3971.9999999999995 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/phase_integrator
 add wave -noupdate -divider -height 70 WATCH_SIGNALS
 add wave -noupdate /top/dut_if/Reset_n
 add wave -noupdate /top/dut_if/Ref_CLK
@@ -16,7 +23,8 @@ add wave -noupdate /top/dut_if/MAC_Data_En
 add wave -noupdate /top/dut_if/MAC_TX_DataK
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/TxData
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/TxDataK
-add wave -noupdate -color Yellow -radix hexadecimal /top/DUT/Data_In_PMA
+add wave -noupdate -color Yellow -radix binary -childformat {{{/top/DUT/Data_In_PMA[9]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[8]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[7]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[6]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[5]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[4]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[3]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[2]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[1]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[0]} -radix hexadecimal}} -subitemconfig {{/top/DUT/Data_In_PMA[9]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[8]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[7]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[6]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[5]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[4]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[3]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[2]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[1]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[0]} {-color Yellow -height 15 -radix hexadecimal}} /top/DUT/Data_In_PMA
+add wave -noupdate -color Yellow -radix hexadecimal -childformat {{{/top/DUT/Data_In_PMA[9]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[8]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[7]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[6]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[5]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[4]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[3]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[2]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[1]} -radix hexadecimal} {{/top/DUT/Data_In_PMA[0]} -radix hexadecimal}} -subitemconfig {{/top/DUT/Data_In_PMA[9]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[8]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[7]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[6]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[5]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[4]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[3]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[2]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[1]} {-color Yellow -height 15 -radix hexadecimal} {/top/DUT/Data_In_PMA[0]} {-color Yellow -height 15 -radix hexadecimal}} /top/DUT/Data_In_PMA
 add wave -noupdate -radix binary /top/DUT/Data_In_PMA
 add wave -noupdate /top/internals_if/TX_Out_P
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/overflow
@@ -28,7 +36,7 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/write_pointer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
 add wave -noupdate -color Magenta /top/dut_if/MAC_TX_Data
 add wave -noupdate -color Magenta /top/DUT/RX_Data
-add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
+add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/Threshold_Monitor_Inst/num_elements
 add wave -noupdate /top/dut_if/MAC_TX_Data
 add wave -noupdate -color Magenta /top/dut_if/PCLK
@@ -77,7 +85,12 @@ add wave -noupdate -radix binary /top/DUT/MAC_TX_DataK
 add wave -noupdate /top/DUT/Ref_CLK
 add wave -noupdate /top/DUT/Reset_n
 add wave -noupdate -color Magenta /top/DUT/RX_Data
-add wave -noupdate /top/DUT/RX_DataK
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_out
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK_N
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK_P
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK
 add wave -noupdate /top/DUT/RX_Status
 add wave -noupdate /top/DUT/RX_Valid
 add wave -noupdate /top/DUT/RxPolarity
@@ -117,7 +130,7 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/read_pointer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/write_pointer
 add wave -noupdate -radix hexadecimal /top/DUT/Data_In_PMA
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
-add wave -noupdate -expand /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/Temp_Reg
 add wave -noupdate -divider -height 50 Decoder
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/CLK
@@ -174,43 +187,48 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Rst_n
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/RxPolarity
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Data_Collected
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/serial
-add wave -noupdate -divider -height 30 {CDR important signals}
-add wave -noupdate -max 123.99999999999999 -radix hexadecimal /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
-add wave -noupdate -format Analog-Step -height 74 -max 123.99999999999999 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/CLK_Out_i
-add wave -noupdate -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_sum
-add wave -noupdate -format Analog-Step -height 74 -max 17000.0 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/freq_integrator
-add wave -noupdate -format Analog-Step -height 74 -max 3000.0 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/phase_integrator
 add wave -noupdate -divider -height 30 Sine
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0
+add wave -noupdate -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/index
+add wave -noupdate -childformat {{{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0[176]} -radix unsigned}} -subitemconfig {{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0[176]} {-height 15 -radix unsigned}} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_0
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_90
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_180
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_270
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45
+add wave -noupdate -childformat {{{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45[176]} -radix unsigned}} -subitemconfig {{/top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45[176]} {-height 15 -radix unsigned}} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_45
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_135
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_225
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_315
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/index
+add wave -noupdate -divider -height 50 CHANNEL
+add wave -noupdate /top/DUT/PMA_U/channelInst/A
+add wave -noupdate /top/DUT/PMA_U/channelInst/A_
+add wave -noupdate /top/DUT/PMA_U/channelInst/alpha
+add wave -noupdate /top/DUT/PMA_U/channelInst/ATTENUATION
+add wave -noupdate /top/DUT/PMA_U/channelInst/beta
+add wave -noupdate /top/DUT/PMA_U/channelInst/Data_in
+add wave -noupdate /top/DUT/PMA_U/channelInst/F
+add wave -noupdate /top/DUT/PMA_U/channelInst/N
+add wave -noupdate /top/DUT/PMA_U/channelInst/Sample_CLK
+add wave -noupdate /top/DUT/PMA_U/channelInst/Unew
+add wave -noupdate /top/DUT/PMA_U/channelInst/Uold
+add wave -noupdate /top/DUT/PMA_U/channelInst/Wc
+add wave -noupdate /top/DUT/PMA_U/channelInst/x1
+add wave -noupdate /top/DUT/PMA_U/channelInst/x2
+add wave -noupdate /top/DUT/PMA_U/channelInst/Ynew
+add wave -noupdate /top/DUT/PMA_U/channelInst/Ynewn
+add wave -noupdate /top/DUT/PMA_U/channelInst/Yold
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/rst_n
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/clk_0
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/clk_data
-add wave -noupdate -color Magenta /top/DUT/PMA_U/Bit_Rate_Clk
-add wave -noupdate /top/dut_if/Bit_CLK_Offset
-add wave -noupdate -color Magenta /top/DUT/PMA_U/Bit_Rate_Clk_offset
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Din
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/PI_Clk
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/t1
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/t2
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/T1_in_CDRLOOP
+add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/up
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {18900000 fs} 1} {{Cursor 2} {27068000 fs} 1 Magenta default} {{Cursor 3} {110979000 fs} 1 Magenta default} {{Cursor 4} {37443710000 fs} 1} {{Cursor 5} {3370198000 fs} 1} {{Cursor 6} {39411984 fs} 0}
-quietly wave cursor active 6
+WaveRestoreCursors {{Cursor 9} {4350894543 fs} 1} {{Cursor 6} {4426900000 fs} 1} {{Cursor 7} {4911704931 fs} 1} {{Cursor 8} {5002890620 fs} 1} {{Cursor 9} {55418700 fs} 0}
+quietly wave cursor active 5
 configure wave -namecolwidth 419
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -225,4 +243,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {17818258 fs} {55629494 fs}
+WaveRestoreZoom {452829789 fs} {480752268 fs}

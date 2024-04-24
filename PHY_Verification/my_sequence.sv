@@ -40,26 +40,45 @@ package my_sequence_pkg;
       // stim_seq_item.MAC_TX_DataK_32c.constraint_mode(0);    
       // stim_seq_item.MAC_TX_DataK_16c.constraint_mode (0);
 
+    
+      stim_seq_item.MAC_TX_Data_TSEQ.constraint_mode(1);
+      stim_seq_item.MAC_TX_Data_32c.constraint_mode(0) ;
 
-
-
-
-      repeat (10000) begin
-
-
+      repeat(500) begin
         start_item(stim_seq_item);
-        `uvm_info("MY_SEQUENCE", "AFTER START ITEM", UVM_MEDIUM);
-        assert (stim_seq_item.randomize());
-        $fwrite(fd, "%h\n", stim_seq_item.MAC_TX_Data);
+        assert(stim_seq_item.randomize());
+
+        if (stim_seq_item.MAC_TX_Data != 32'hbcbcbcbc && stim_seq_item.MAC_TX_Data != 32'h4A4A4A4A) begin
+          //  `uvm_info("FILE_IN", "AFTER FINISH ITEM", UVM_DEBUG);
+            $fwrite(fd, "%h\n", stim_seq_item.MAC_TX_Data);
+        end
 
         finish_item(stim_seq_item);
-        get_response(stim_seq_item);
-        `uvm_info("MY_SEQUENCE", "AFTER FINISH ITEM", UVM_MEDIUM);
       end
+
+
+      stim_seq_item.MAC_TX_Data_TSEQ.constraint_mode(0);
+      stim_seq_item.MAC_TX_Data_32c.constraint_mode(1) ;
+      
+
+      repeat (5000) begin
+
+        start_item(stim_seq_item);
+        //`uvm_info("MY_SEQUENCE", "AFTER START ITEM", UVM_DEBUG);
+        assert (stim_seq_item.randomize());
+
+        if (stim_seq_item.MAC_TX_Data != 32'hbcbcbcbc) begin
+          //  `uvm_info("FILE_IN", "AFTER FINISH ITEM", UVM_LOW);
+            $fwrite(fd, "%h\n", stim_seq_item.MAC_TX_Data);
+        end
+    
+        finish_item (stim_seq_item);
+        get_response(stim_seq_item);
+        //`uvm_info("MY_SEQUENCE", "AFTER FINISH ITEM", UVM_MEDIUM);
+      end
+
       $fclose(fd);
     endtask
-
-
   endclass
 
 

@@ -26,7 +26,7 @@ endfunction
 function void build_phase(uvm_phase phase);
 	super.build_phase(phase);
 	mon_port = new("mon_port" , this);
-	`uvm_info("MY_MONITOR","BUILD_PHASE",UVM_MEDIUM);
+	`uvm_info("MY_MONITOR","BUILD_PHASE",UVM_HIGH);
 
 endfunction 
 
@@ -37,7 +37,7 @@ task run_phase(uvm_phase phase);
 	rsp_seq_item = my_sequence_item:: type_id :: create("rsp_seq_item");
      @(posedge internals_if.Bit_CLK);    // BIT CLK
      
-     `uvm_info("MY_MONITOR","MONITOR IS CAPTURING",UVM_MEDIUM);
+     `uvm_info("MY_MONITOR","MONITOR IS CAPTURING",UVM_HIGH);
     
      // rsp_seq_item.DataBusWidth = bfm_vif.DataBusWidth;
      rsp_seq_item.MAC_TX_Data  = bfm_vif.MAC_TX_Data ;
@@ -49,6 +49,9 @@ task run_phase(uvm_phase phase);
      rsp_seq_item.Rx_Status    = bfm_vif.Rx_Status   ;
      rsp_seq_item.Rx_Valid     = bfm_vif.Rx_Valid    ;
      rsp_seq_item.PCLK         = bfm_vif.PCLK        ;
+
+     rsp_seq_item.TX_Out_P     = bfm_vif.TX_Out_P    ;
+     
      
 
 	 mon_port.write(rsp_seq_item)                    ;

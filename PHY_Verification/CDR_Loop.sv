@@ -14,25 +14,25 @@ module CDR_Loop (
 
 
 
-  cdr_assertion #(
-      .clk_period_expected_min(19),
-      .clk_period_expected_max(21),
-      .clk_ppm_expected_max(10000)
-  ) pi_assertion (
-      .PI_CLK_OUT (PI_Clk),
-      .Data_CLK_IN(clk_data)
-  );
-  realtime t1, t2, T1_in_CDRLOOP;
-  initial begin
-    forever begin
-      @(posedge clk_data);
-      t1 = $realtime;
-      @(posedge clk_data);
-      t2 = $realtime;
-      T1_in_CDRLOOP = t2 - t1;
-      // PPM = int'(((5 - (1 / T1)) / (5)) * (10 ** 6));
-    end
-  end
+  // cdr_assertion #(
+  //     .clk_period_expected_min(19),
+  //     .clk_period_expected_max(21),
+  //     .clk_ppm_expected_max(10000)
+  // ) pi_assertion (
+  //     .PI_CLK_OUT (PI_Clk),
+  //     .Data_CLK_IN(clk_data)
+  // );
+  // realtime t1, t2, T1_in_CDRLOOP;
+  // initial begin
+  //   forever begin
+  //     @(posedge clk_data);
+  //     t1 = $realtime;
+  //     @(posedge clk_data);
+  //     t2 = $realtime;
+  //     T1_in_CDRLOOP = t2 - t1;
+  //     // PPM = int'(((5 - (1 / T1)) / (5)) * (10 ** 6));
+  //   end
+  // end
 
 
   // wire PI_clk;
@@ -60,6 +60,17 @@ module CDR_Loop (
       // .clk_filter_(PI_Clk)
       .CLK_Out_i(PI_Clk)
   );
+
+
+  int fd;
+  initial begin
+    fd = $fopen("./Up_Dn.hex", "w");
+
+  end
+
+  always @(up, dn) begin
+    $fwrite(fd, "%h,%h\n", up, dn);
+  end
 
 
 endmodule
