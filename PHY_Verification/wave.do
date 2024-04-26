@@ -1,24 +1,21 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate /top/DUTA/cover_Bit_CLK_period
-add wave -noupdate /top/DUTA/cover_WORD_CLK_period
-add wave -noupdate /top/DUTA/cover_PCLK32_period
-add wave -noupdate /top/DUTA/cover_PCLK16_period
-add wave -noupdate /top/DUTA/cover_PCLK8_period
 add wave -noupdate -divider CHANNEL
 add wave -noupdate /top/DUT/PMA_U/channelInst/Data_in
-add wave -noupdate -format Analog-Step -height 74 -max 0.99997153019957374 /top/DUT/PMA_U/channelInst/Ynew
+add wave -noupdate -format Analog-Step -height 74 -max 0.99997199999999997 /top/DUT/PMA_U/channelInst/Ynew
 add wave -noupdate -divider -height 30 {CDR important signals}
 add wave -noupdate -format Analog-Step -height 74 -max 1023.0 -min -1024.0 -radix decimal /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
-add wave -noupdate -format Analog-Step -height 74 -max 65532.999999999993 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/freq_integrator
+add wave -noupdate -color Magenta -format Analog-Step -height 74 -max 524276.0 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/freq_integrator
 add wave -noupdate -format Analog-Step -height 74 -max 3971.9999999999995 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF/phase_integrator
 add wave -noupdate -divider -height 70 WATCH_SIGNALS
+add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/dut_if/Reset_n
 add wave -noupdate /top/dut_if/Ref_CLK
 add wave -noupdate -color Magenta /top/dut_if/PCLK
 add wave -noupdate -color Magenta /top/internals_if/Word_CLK
 add wave -noupdate -color Magenta /top/internals_if/Bit_CLK
 add wave -noupdate /top/internals_if/DataBusWidth
+add wave -noupdate /top/dut_if/MAC_TX_Data
 add wave -noupdate /top/dut_if/MAC_Data_En
 add wave -noupdate /top/dut_if/MAC_TX_DataK
 add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/GasKet_U/TxData
@@ -227,8 +224,8 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/up
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 9} {4350894543 fs} 1} {{Cursor 6} {4426900000 fs} 1} {{Cursor 7} {4911704931 fs} 1} {{Cursor 8} {5002890620 fs} 1} {{Cursor 9} {55418700 fs} 0}
-quietly wave cursor active 5
+WaveRestoreCursors {{Cursor 6} {8031969887 fs} 1} {{Cursor 7} {7969756359 fs} 0} {{Cursor 8} {8046921757 fs} 1} {{Cursor 9} {10175282445 fs} 1} {{Cursor 10} {9166766863 fs} 1} {{Cursor 11} {7275827510 fs} 0}
+quietly wave cursor active 6
 configure wave -namecolwidth 419
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -243,4 +240,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {452829789 fs} {480752268 fs}
+WaveRestoreZoom {7275844532 fs} {8849000106 fs}

@@ -54,6 +54,7 @@ package my_sequence_pkg;
         end
 
         finish_item(stim_seq_item);
+        get_response(stim_seq_item);
       end
 
 
