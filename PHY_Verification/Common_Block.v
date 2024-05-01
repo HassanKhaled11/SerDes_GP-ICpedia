@@ -1,4 +1,4 @@
-`timescale 1ns/10ps
+`timescale 1ns/1fs
 
 module Common_Block (
     input Ref_Clk,  // 100 MG 
@@ -7,6 +7,9 @@ module Common_Block (
     input  [5:0] DataBusWidth ,
     output Bit_Rate_Clk,
     output Bit_Rate_CLK_10,
+    `ifdef OFFSET_TEST
+       output reg Bit_Rate_Clk_offset,
+    `endif
     output PCLK
 );
 
@@ -32,6 +35,18 @@ reg [7:0] ratio ;
       .divided_clk(PCLK)
   );
 
+ 
+ `ifdef OFFSET_TEST
+   initial begin
+     Bit_Rate_Clk_offset = 0 ;
+     @(posedge Bit_Rate_Clk) ;
+     Bit_Rate_Clk_offset  = 1 ;
+     forever begin
+       #0.10001 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
+     end
+       
+   end
+ `endif
 
 
 always @(*) begin

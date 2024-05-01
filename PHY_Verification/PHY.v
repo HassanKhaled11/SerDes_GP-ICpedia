@@ -35,6 +35,9 @@ module PHY (
       .Ref_Clk        (Ref_CLK),          // 100 MG 
       .Bit_Rate_Clk   (Bit_Rate_Clk),
       .Bit_Rate_CLK_10(Bit_Rate_CLK_10),
+      `ifdef OFFSET_TEST
+        .Bit_Rate_Clk_offset(Bit_Rate_Clk_offset),
+      `endif
       .PCLK           (PCLK),
       .Rst_n          (Reset_n),
       .DataBusWidth   (DataBusWidth)
@@ -74,6 +77,9 @@ module PHY (
   PMA PMA_U (
       .Bit_Rate_Clk_10 (Bit_Rate_CLK_10),
       .Bit_Rate_Clk    (Bit_Rate_Clk),
+      `ifdef OFFSET_TEST
+        .Bit_Rate_Clk_offset(Bit_Rate_Clk_offset),
+      `endif      
       .Rst_n           (Reset_n),
       .Data_in         (Data_In_PMA),
       .MAC_Data_En     (MAC_Data_En),

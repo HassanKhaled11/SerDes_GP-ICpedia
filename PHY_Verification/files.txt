@@ -1,9 +1,6 @@
 8_10_decoding.v
-BBPD.v
 binToGray.v
-Clock_Div.v
 Comma_Detection.v
-Common_Block.v
 elasticBuffer.v
 Encoding.v
 FSM_RD.v
@@ -13,13 +10,12 @@ grayToBin.v
 line_coding_8_10.v
 memory.v
 Channel.sv
+parameters_pkg.sv
+PPM_checker.sv
 Data_sampling.sv
 PCS.v
 PCS_RX.v
 PCS_TX.v
-PHY.v
-PLL.v
-PMA.v
 PMA_RX.v
 PMA_TX.v
 read_pointer_control.v
@@ -28,10 +24,8 @@ Serial_to_Parallel.v
 synchronous_unit.v
 thresholdMonitor.v
 write_pointer_control_unit.v
-CDR_Loop.sv
-PMIX4.sv
-CDR_Tb.sv
 Digital_Loop_Filter.sv
+Box_Car_Voting.sv
 golden_model.sv
 interface.sv
 my_assertion.sv

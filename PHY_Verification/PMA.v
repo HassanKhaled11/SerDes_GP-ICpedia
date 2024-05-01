@@ -2,7 +2,9 @@
 module PMA (
     input       Bit_Rate_Clk_10,
     input       Bit_Rate_Clk,
-    // input       Bit_Rate_Clk_offset,
+    `ifdef OFFSET_TEST
+       input  Bit_Rate_Clk_offset,
+    `endif
     input       Rst_n,
     input [9:0] Data_in,
     input       MAC_Data_En,
@@ -18,16 +20,30 @@ module PMA (
     output [9:0] RX_Out,
     output       recovered_clk_5G
 );
-  reg Bit_Rate_Clk_offset;
+  // reg Bit_Rate_Clk_offset;
+  // reg Bit_Rate_Clk_10_offset;
+
   parameter OFFSET_PERIOD = 100.01;
+  parameter OFFSET_10_PERIOD = 1000.10001;
   parameter N             = 10;
   parameter Threshold = 0.5;
-  initial begin
-    Bit_Rate_Clk_offset = 0;
-    forever begin
-      #(OFFSET_PERIOD) Bit_Rate_Clk_offset = ~Bit_Rate_Clk_offset;
-    end
-  end
+
+  // initial begin
+  //   Bit_Rate_Clk_offset = 0;
+  //   forever begin
+  //     #(OFFSET_PERIOD) Bit_Rate_Clk_offset = ~Bit_Rate_Clk_offset;
+  //   end
+  // end
+
+
+  //   initial begin
+  //   Bit_Rate_Clk_10_offset = 0;
+  //   forever begin
+  //     #(OFFSET_10_PERIOD) Bit_Rate_Clk_10_offset = ~Bit_Rate_Clk_10_offset;
+  //   end
+  // end
+
+
 reg channel_clk;
 
 initial begin
@@ -42,6 +58,8 @@ end
   wire TX_N;
   real Data_from_channel;
   wire  Data_out;
+
+
   assign TX_Out_P = TX_P;
   assign TX_Out_N = TX_N;
 
@@ -50,8 +68,11 @@ end
       .DATA_WIDTH(10)
   ) PMA_TX_U (
       .Bit_Rate_Clk_10(Bit_Rate_Clk_10),
-      .Bit_Rate_Clk   (Bit_Rate_Clk),
-      //   .Bit_Rate_Clk   (Bit_Rate_Clk_offset),
+        `ifdef OFFSET_TEST
+           .Bit_Rate_Clk(Bit_Rate_Clk_offset),
+        `else
+           .Bit_Rate_Clk(Bit_Rate_Clk),   
+        `endif
       .Rst_n          (Rst_n),
       .Data_in        (Data_in),
       .MAC_Data_En    (MAC_Data_En),
@@ -74,11 +95,11 @@ end
   PMA_RX #(
       .DATA_WIDTH(10)
   ) PM_RX_U (
-      .RX_POS          (Data_out),
+      .RX_POS          (Data_from_channel),
       .RX_NEG          (TX_N),
-      // .Ser_in    (TX_Out_P),
+      // .Ser_in       (TX_Out_P),
       .Rst_n           (Rst_n),
-      .CLK_5G          (Bit_Rate_Clk_offset),  //CLK_5G
+      .CLK_5G          (Bit_Rate_Clk),  //CLK_5G
       .RxPolarity      (RxPolarity),
       .Data_out        (RX_Out),
       .recovered_clk_5G(recovered_clk_5G)
