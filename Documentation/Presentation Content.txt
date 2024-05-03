@@ -1,0 +1,15 @@
+Presentation Content
+=======================
+-Intro.
+-Overview on the system whole.
+-review each component of the system.
+-CDR intro [Transition from analog to Digital].
+-CDR System Implementation.
+-Each Component of CDR [PD - DLF - PI].
+-Integration of CDR with The system.
+-Features On The System [DPI].
+-Verification On The System.
+-Overall Recap The Experience.
+-Special Thanks.
+-Saying GoodBye.
+============================================================
