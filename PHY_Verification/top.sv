@@ -65,7 +65,7 @@ module top;
       .PERIOD (PARAMETERS_PKG::REF_CLK_PERIOD_5G),
       .MAX_PPM(PARAMETERS_PKG::PPM_TOLERANCE_MAX)
   ) PPM_checker_PI_clk_U (
-      DUT.PMA_U.Bit_Rate_Clk_offset,
+      DUT.PMA_U.Bit_Rate_Clk,
       DUT.PMA_U.recovered_clk_5G,
       dut_if.Reset_n
   );

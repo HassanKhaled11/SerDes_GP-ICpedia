@@ -2,15 +2,14 @@
 
 module Digital_Loop_Filter (
 
-    input Up,
-    Dn,
+    input Up,Dn,
     input clk,  // Clock
     input rst_n,  // Asynchronous reset active low
     output [10:0] code
 
-);
+); 
 
-  parameter PHUG = 8;
+  parameter PHUG = 5;
   parameter PHASE_WIDTH = 16;
   parameter FREQ_WIDTH  = 16;
   parameter FRUG = 3;

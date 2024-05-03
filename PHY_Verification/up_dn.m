@@ -21,7 +21,7 @@ function up_dn()
     formatSpec = '%f %f';  % Define the format (e.g., two floating point numbers)
     
     % Read the data from the file using textscan instead of csvread for more control
-    data = textscan(fileID, formatSpec, 'Delimiter', ',');
+    data = textscan(fileID, formatSpec, 'Delimiter', ',')
     fclose(fileID);  % Close the file after reading
     
     % Convert cell array data to a matrix

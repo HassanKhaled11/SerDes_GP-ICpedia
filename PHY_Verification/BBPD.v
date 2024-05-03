@@ -10,9 +10,12 @@ module BBPD (
 
 	input Din, // serial data
 	input rst_n,  // Asynchronous reset active low
-	output  Up,Dn,
+	output   Up,Dn,
 	output reg A
 );
+
+
+///////////////////////////////////////////////////////////// IMP1
 
 // reg B;
 // reg T_ , T;
@@ -47,7 +50,7 @@ module BBPD (
 // assign Dn = B ^ T;
 
 
-
+///////////////////////////////////////////////////////////// IMP2
 
 reg B , C;
 
@@ -86,6 +89,9 @@ end
 assign Up =  A ^ B ;
 assign Dn =  B ^ C ;
 
+
+
+///////////////////////////////////////////////////////////// IMP3
 
 // reg clear ;
 
@@ -146,7 +152,7 @@ assign Dn =  B ^ C ;
 
 
 
-endmodule
+ endmodule
 
 
 

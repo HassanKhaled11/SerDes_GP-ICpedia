@@ -29,7 +29,7 @@ wire clk_180;
 
   initial begin
     voting_clk = 0;
-    forever #((period / 2) / NUMBER_SAMPLES) voting_clk = ~voting_clk;  //200/5 (5 samples per bits)
+    forever #((period / 2) / 2*NUMBER_SAMPLES) voting_clk = ~voting_clk;  //200/5 (5 samples per bits)
   end
 
 
@@ -61,8 +61,8 @@ wire clk_180;
   Digital_Loop_Filter DLF_U (
       .clk  (clk_0),
       .rst_n(rst_n),
-      .Dn   (vote_Dn),
       .Up   (vote_Up),
+      .Dn   (vote_Dn),
       .code (code)
   );
 

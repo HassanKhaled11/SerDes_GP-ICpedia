@@ -6,12 +6,27 @@ add wave -noupdate /top/PPM_checker_PI_clk_U/assert_PI_PPM
 add wave -noupdate /top/PPM_checker_PI_clk_U/assert_no_PI_glitch
 add wave -noupdate /top/PPM_checker_PI_clk_U/PPM_value
 add wave -noupdate /top/PPM_checker_PI_clk_U/PI_PPM_value
+add wave -noupdate -divider -height 30 {Watched Signals}
+add wave -noupdate -color Magenta /top/internals_if/Bit_CLK
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Recovered_Bit_Clk
+add wave -noupdate -color Magenta /top/dut_if/MAC_TX_Data
+add wave -noupdate -color Magenta /top/DUT/RX_Data
+add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
+add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Din
+add wave -noupdate -color {Green Yellow} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/PI_Clk
+add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
+add wave -noupdate -color Gold -format Analog-Step -height 74 -max 50.0 /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_sum
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
+add wave -noupdate -color Magenta -format Analog-Step -height 74 -max 65532.999999999993 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/freq_integrator
+add wave -noupdate -format Analog-Step -height 74 -max 65532.0 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/phase_integrator
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/UP_DN
+add wave -noupdate -color Magenta /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/Up
+add wave -noupdate -color Magenta /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/Dn
 add wave -noupdate -divider CHANNEL
 add wave -noupdate /top/DUT/PMA_U/channelInst/Data_in
 add wave -noupdate -color Yellow -format Analog-Step -height 74 -max 0.99997199999999997 /top/DUT/PMA_U/channelInst/Ynew
 add wave -noupdate -divider -height 30 {CDR important signals}
-add wave -noupdate -color Magenta -format Analog-Step -height 74 -max 65532.999999999993 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/freq_integrator
-add wave -noupdate -format Analog-Step -height 74 -max 696.0 -min -17.0 -radix decimal /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
+add wave -noupdate -format Analog-Step -height 74 -min -1.0 -radix decimal /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
 add wave -noupdate -divider -height 70 WATCH_SIGNALS
 add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/dut_if/Reset_n
@@ -39,7 +54,7 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/write_pointer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/data_out
 add wave -noupdate -color Magenta /top/dut_if/MAC_TX_Data
 add wave -noupdate -color Magenta /top/DUT/RX_Data
-add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -expand -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
+add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/Threshold_Monitor_Inst/num_elements
 add wave -noupdate /top/dut_if/MAC_TX_Data
 add wave -noupdate -color Magenta /top/dut_if/PCLK
@@ -54,11 +69,11 @@ add wave -noupdate -divider -height 70 BFM
 add wave -noupdate /top/dut_if/Ref_CLK
 add wave -noupdate /top/dut_if/Reset_n
 add wave -noupdate /top/dut_if/DataBusWidth
-add wave -noupdate /top/dut_if/MAC_TX_Data
+add wave -noupdate -color Magenta /top/dut_if/MAC_TX_Data
 add wave -noupdate /top/dut_if/MAC_TX_DataK
 add wave -noupdate /top/dut_if/MAC_Data_En
 add wave -noupdate /top/dut_if/RxPolarity
-add wave -noupdate /top/dut_if/Rx_Data
+add wave -noupdate -color Magenta /top/dut_if/Rx_Data
 add wave -noupdate /top/dut_if/Rx_DataK
 add wave -noupdate -radix binary /top/dut_if/Rx_Status
 add wave -noupdate /top/dut_if/Rx_Valid
@@ -224,7 +239,50 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phaseDetector/clk_ref
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phaseDetector/Din
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phaseDetector/rst_n
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phaseDetector/Up
+add wave -noupdate -color Magenta -format Analog-Step -height 74 -max 1073740000.0000001 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/freq_integrator
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phaseDetector/Dn
+add wave -noupdate -divider -height 50 PI
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/CLK
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/Code
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/rst_n
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/clk_90
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/clk_180
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/CLK_Out_i
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/clk_index
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/index
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin_sum
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/PHASE_SHIFT
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/t1
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/t2
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/T1
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/T_
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin1
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/t3
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/t4
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/T1_P2
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sin2
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/t5
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/t6
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/RESULT_PERIOD
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/time_now
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/preparation_flag
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/glitchR_found
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/glitchF_found
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/PPM
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/CLK_Out
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/i
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/j
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/k
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/last_time
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_0
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_90
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_180
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_270
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_45
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_135
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_225
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_315
+add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/clk_sin
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/rst_n
@@ -248,15 +306,15 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phaseDetector/B
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/clk
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/rst_n
 add wave -noupdate -color {Orange Red} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/PI_Clk
-add wave -noupdate -color Magenta -format Analog-Step -height 74 -max 65532.999999999993 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/freq_integrator
-add wave -noupdate -format Analog-Step -height 74 -max 65528.0 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/phase_integrator
+add wave -noupdate -color Magenta -format Analog-Step -height 74 -max 1073740000.0000001 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/freq_integrator
+add wave -noupdate -format Analog-Step -height 74 -max 1073740000.0000001 -radix unsigned /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/phase_integrator
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/UP_DN
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 11} {1243645849 fs} 0}
+WaveRestoreCursors {{Cursor 11} {15119475487 fs} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 419
+configure wave -namecolwidth 407
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -270,4 +328,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {381297631 fs} {384673073 fs}
+WaveRestoreZoom {0 fs} {21011445 ps}
