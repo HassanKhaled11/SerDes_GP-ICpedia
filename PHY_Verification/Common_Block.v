@@ -47,8 +47,7 @@ module Common_Block (
      Bit_Rate_Clk_offset  = 1 ;
      forever begin
        #0.1 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
-     end
-       
+     end 
    end
 
    // initial begin

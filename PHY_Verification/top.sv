@@ -107,4 +107,46 @@ module top;
   end
 
 
+
+///////////////////////////////////
+/////// MATLAB PREPARATION ////////
+///////////////////////////////////
+
+wire [15:0] Freq_Integrator; 
+wire [15:0] Phase_Integrator;
+
+assign UP = DUT.PMA_U.PM_RX_U.CDRLoopInst.DLF_U.Up;
+assign DN = DUT.PMA_U.PM_RX_U.CDRLoopInst.DLF_U.Dn;
+assign Freq_Integrator  = DUT.PMA_U.PM_RX_U.CDRLoopInst.DLF_U.freq_integrator;
+assign Phase_Integrator = DUT.PMA_U.PM_RX_U.CDRLoopInst.DLF_U.phase_integrator;
+
+  int fd , fd2 , fd3;
+  initial begin
+    fd  = $fopen("./Up_Dn.hex", "w");
+    fd2 = $fopen("./Freq_Integrator.hex","w");
+    fd3 = $fopen("./Phase_Integrator.hex","w");
+  end
+
+  always @(UP, DN) begin
+    $fwrite(fd, "%h,%h\n", UP, DN);
+  end
+
+  always @(Freq_Integrator) begin
+    $fwrite(fd2,"%h\n",Freq_Integrator);
+  end
+
+
+  always @(Phase_Integrator) begin
+    $fwrite(fd3,"%h\n",Phase_Integrator);
+  end
+
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+
+
+
+
+
+
 endmodule
