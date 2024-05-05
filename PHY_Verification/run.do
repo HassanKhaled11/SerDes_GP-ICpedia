@@ -4,7 +4,7 @@
 vlog  PLL.v Clock_Div.v  Common_Block.v  PHY.v  PMA.v +define+OFFSET_TEST
 vlog  BBPD.v PMIX4.sv clk_generation.sv CDR_Loop.sv +define+THREE_CLKS
 vlog -f files.txt
-vsim -voptargs=+acc work.top 
+vsim -voptargs=+acc work.top  -debugDB
 
 # Set UVM verbosity level to filter out UVM_MEDIUM messages
 set UVM_VERBOSITY UVM_MEDIUM

@@ -38,5 +38,11 @@ interface INTERNALS_if;
   bit         TX_Out_P;
   bit         Clk_offset;
   bit         recovered_clk_5G;
+  
+  bit         MAC_Data_En;
+  bit         COMMA_PULSE;
+  bit         Decode_Error;
+  bit         Disparity_Error;
+
 
 endinterface

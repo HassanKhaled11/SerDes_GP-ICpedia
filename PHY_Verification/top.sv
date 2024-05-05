@@ -52,14 +52,12 @@ module top;
   assign internals_if.TX_Out_P         = DUT.PMA_U.TX_Out_P;
   assign internals_if.Clk_offset       = DUT.PMA_U.Bit_Rate_Clk_offset;
   assign internals_if.recovered_clk_5G = DUT.PMA_U.recovered_clk_5G;
+  assign internals_if.MAC_Data_En      = DUT.MAC_Data_En;
+  assign internals_if.Decode_Error     = DUT.PCS_U.PCS_RX_U.DecodeError;
+  assign internals_if.Disparity_Error  = DUT.PCS_U.PCS_RX_U.Disparity_Error;
+  assign internals_if.COMMA_PULSE      = DUT.PCS_U.PCS_RX_U.Comma_pulse;
 
-  // PPM_checker #(
-  //     .PERIOD (PARAMETERS_PKG::REF_CLK_PERIOD_5G),
-  //     .MAX_PPM(PARAMETERS_PKG::PPM_TOLERANCE_MAX)
-  // ) PPM_checker_U (
-  //     DUT.PMA_U.Bit_Rate_Clk_offset,
-  //     dut_if.Reset_n
-  // );
+
 
   PPM_checker #(
       .PERIOD (PARAMETERS_PKG::REF_CLK_PERIOD_5G),
