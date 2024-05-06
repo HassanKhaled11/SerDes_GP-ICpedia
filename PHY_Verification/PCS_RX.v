@@ -35,11 +35,10 @@ module PCS_RX #(
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
 
-  Comma_Detection #(
-      .COMMA_NUMBER(4)
-  ) Comma_Detection_U (
+  Comma_Detection Comma_Detection_U (
       .clk           (recovered_clk_5G),
       .rst_n         (Rst_n),
+      .COMMA_NUMBER  (DataBusWidth / 8),
       .Data_Collected(Collected_Data),
       .RxValid       (RX_Valid),
       .Comma_Pulse   (Comma_pulse)
