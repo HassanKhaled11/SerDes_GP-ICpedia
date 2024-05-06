@@ -57,8 +57,6 @@ module top;
   assign internals_if.Disparity_Error  = DUT.PCS_U.PCS_RX_U.Disparity_Error;
   assign internals_if.COMMA_PULSE      = DUT.PCS_U.PCS_RX_U.Comma_pulse;
 
-
-
   PPM_checker #(
       .PERIOD (PARAMETERS_PKG::REF_CLK_PERIOD_5G),
       .MAX_PPM(PARAMETERS_PKG::PPM_TOLERANCE_MAX)
@@ -129,6 +127,7 @@ module top;
     $fclose(fd4);
     fd5 = $fopen("./PHY_OUT.hex", "w");
     $fclose(fd5);
+
 
   end
 

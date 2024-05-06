@@ -81,7 +81,7 @@ package my_scoreboard_pkg;
     function void end_of_elaboration_phase(uvm_phase phase);
       super.end_of_elaboration_phase(phase);  //  OPEN FILE
       fd  = $fopen("./MAC_TX_Data_Stim.hex", "r");
-      fd2 = $fopen("./PHY_OUT.hex", "w");
+      fd2 = $fopen("./PHY_OUT.hex", "a");
       Queue_Data.push_back(0);
     endfunction
 

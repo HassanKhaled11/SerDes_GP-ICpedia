@@ -19,7 +19,7 @@ plot(data);
 % Add labels and title (modify as needed)
 xlabel('#symbol');
 ylabel('Frequency');
-title('Freq Integrator Saturation');
+title('Freq_integrator Saturation');
 
 % Show the plot
 grid on;

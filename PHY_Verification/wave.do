@@ -1,4 +1,20 @@
 onerror {resume}
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { (empty  or add_req )} dbgTemp0_2
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ((bool)dbgTemp0_2  ? 1'b0 : 1'b1)} dbgTemp1_dbgTemp_buffer__re__1
+quietly virtual signal -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst {/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/dbgTemp1_dbgTemp_buffer__re__1  } dbgTemp_buffer__re_
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ((bool)dbgTemp0_2  ? 4'b0000 : read_pointer[3:0])} dbgTemp1_dbgTemp_buffer__ra__1
+quietly virtual signal -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst {/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/dbgTemp1_dbgTemp_buffer__ra__1  } dbgTemp_buffer__ra_
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[dbgTemp_buffer__ra_]} dbgTemp_buffer__rd_
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ((bool)dbgTemp0_2  ? 10'b0011110011 : dbgTemp_buffer__rd_)} dbgTemp1_data_out_1
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ( ~(bool)(full ) )} dbgTemp1_11
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ((bool)dbgTemp1_11  ? 1'b1 : 1'b0)} dbgTemp2_dbgTemp_buffer__we__1
+quietly virtual signal -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst {/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/dbgTemp2_dbgTemp_buffer__we__1  } dbgTemp_buffer__we_
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ((bool)dbgTemp1_11  ? write_pointer[3:0] : 4'b0000)} dbgTemp2_dbgTemp_buffer__wa__1
+quietly virtual signal -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst {/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/dbgTemp2_dbgTemp_buffer__wa__1  } dbgTemp_buffer__wa_
+quietly virtual function -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst -env /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst { ((bool)dbgTemp1_11  ? data_in[9:0] : 10'b0000000000)} dbgTemp2_dbgTemp_buffer__wd__1
+quietly virtual signal -install /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst {/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/dbgTemp2_dbgTemp_buffer__wd__1  } dbgTemp_buffer__wd_
+quietly virtual function -install /top/DUT/PMA_U/PM_RX_U/serialToparallel -env /top/DUT/PMA_U/PM_RX_U/serialToparallel { ( ~(bool)(Rst_n ) )} dbgTemp0_6
+quietly virtual function -install /top/DUT/PMA_U/PM_RX_U/serialToparallel -env /top/DUT/PMA_U/PM_RX_U/serialToparallel { ( ~(bool)(Rst_n ) )} dbgTemp1_6
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /top/PPM_checker_PI_clk_U/assert_no_glitch
 add wave -noupdate /top/PPM_checker_PI_clk_U/assert_PPM
@@ -7,11 +23,12 @@ add wave -noupdate /top/PPM_checker_PI_clk_U/assert_no_PI_glitch
 add wave -noupdate /top/PPM_checker_PI_clk_U/PPM_value
 add wave -noupdate /top/PPM_checker_PI_clk_U/PI_PPM_value
 add wave -noupdate -divider -height 30 {Watched Signals}
+add wave -noupdate /top/dut_if/DataBusWidth
 add wave -noupdate -color Magenta /top/internals_if/Bit_CLK
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Recovered_Bit_Clk
 add wave -noupdate -color Magenta /top/dut_if/MAC_TX_Data
 add wave -noupdate -color Magenta /top/DUT/RX_Data
-add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
+add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -expand -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Din
 add wave -noupdate -color {Green Yellow} /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/PI_Clk
 add wave -noupdate -color Cyan /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/Dout
@@ -194,8 +211,9 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/cs
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/ns
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/CP1
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/CP2
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/count
+add wave -noupdate -radix unsigned /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/count
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U/count_reset
+add wave -noupdate -childformat {{{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} -radix hexadecimal}} -expand -subitemconfig {{/top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer[14]} {-height 15 -radix hexadecimal}} /top/DUT/PCS_U/PCS_RX_U/buffer/elastic_mem_inst/buffer
 add wave -noupdate -divider -height 30 Serial_To_Parallel
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/DATA_WIDTH
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/serialToparallel/Recovered_Bit_Clk
@@ -311,11 +329,10 @@ add wave -noupdate -format Analog-Step -height 74 -max 1073740000.0000001 -radix
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/DLF_U/UP_DN
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
-add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/voting_clk
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 11} {1448994250 fs} 0}
-quietly wave cursor active 1
-configure wave -namecolwidth 407
+WaveRestoreCursors {{Cursor 11} {39011900000 fs} 1} {{Cursor 2} {39019343700 fs} 1} {{Cursor 3} {39052900000 fs} 1} {{Cursor 4} {39053911826 fs} 0} {Trace {39035344900 fs} 0}
+quietly wave cursor active 5
+configure wave -namecolwidth 340
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -329,4 +346,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {4050027250 fs} {25061472250 fs}
+WaveRestoreZoom {39031632809 fs} {39096381203 fs}
