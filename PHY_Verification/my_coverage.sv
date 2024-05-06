@@ -46,7 +46,7 @@ package my_coverage_pkg;
 
       MAC_TX_Enable_cp: coverpoint internals_if.MAC_Data_En {
         bins ENABLE_H = {1'b1};
-        bins ENABLE_L = {1'b1};
+        bins ENABLE_L = {1'b0};
         bins ENABLE_HL = (1 => 0);
         bins ENABLE_LH = (0 => 1);
       }
@@ -109,7 +109,7 @@ package my_coverage_pkg;
 
     //...........................................
 
-    covergroup CONFIG_gp;
+    covergroup RESET_gp;
 
       RESET_cp: coverpoint bfm_vif.Reset_n {
         bins RESET_HIGH = {1'b1};
@@ -117,8 +117,9 @@ package my_coverage_pkg;
         bins RST_TRANS_HL = (1 => 0);
         bins RST_TRANS_LH = (0 => 1);
       }
+    endgroup
 
-
+    covergroup CONFIG_gp;
       DATA_BUS_WIDTH_cp: coverpoint internals_if.DataBusWidth {
         bins BUS_WIDTH_8 = {6'd8}; bins BUS_WIDTH_16 = {6'd16}; bins BUS_WIDTH_32 = {6'd32};
       }
@@ -158,19 +159,31 @@ package my_coverage_pkg;
       PMA_COV_gp = new();
       PCS_COV_gp = new();
       CONFIG_gp  = new();
+      RESET_gp   = new();
     endfunction
 
 
 
     task run_phase(uvm_phase phase);
       super.run_phase(phase);
-      forever begin
-        @(internals_if.Bit_CLK);
-        cov_fifo.get(data_to_cover);
-        PMA_COV_gp.sample();
-        PCS_COV_gp.sample();
-        CONFIG_gp.sample();
-      end
+      fork
+        begin
+          forever begin
+            @(internals_if.Bit_CLK);
+            cov_fifo.get(data_to_cover);
+            PMA_COV_gp.sample();
+            PCS_COV_gp.sample();
+            CONFIG_gp.sample();
+          end
+        end
+        begin
+          forever begin
+            @(bfm_vif.Reset_n);
+            RESET_gp.sample();
+          end
+        end
+      join
+
     endtask
 
 
