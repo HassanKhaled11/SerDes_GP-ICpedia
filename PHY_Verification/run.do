@@ -1,10 +1,9 @@
 #vlib work
 #vlog   DLF.cpp DLF.sv -sv -dpiheader DLF.h
-#vlog  BBPD.v PMIX4.sv clk_generation.sv CDR_Loop.sv +define+THREE_CLKS
-vlog  PLL.v Clock_Div.v  Common_Block.v  PHY.v  PMA.v +define+OFFSET_TEST +cover
-vlog  BBPD.v PMIX4.sv clk_generation.sv CDR_Loop.sv +define+THREE_CLKS +cover
+vlog  PLL.v Clock_Div.v  Common_Block.v  PHY.v  PMA.v +define+OFFSET_TEST +cover=bcesf
+vlog  BBPD.v PMIX4.sv clk_generation.sv CDR_Loop.sv +define+THREE_CLKS +cover=bcesf
 #vlog Channel.c 
-vlog -f files.txt +cover
+vlog -f files.txt +cover=bcesf
 vsim -voptargs=+acc work.top  -debugDB -cover
 
 # Set UVM verbosity level to filter out UVM_MEDIUM messages

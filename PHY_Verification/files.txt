@@ -1,5 +1,8 @@
 8_10_decoding.v
 binToGray.v
+buffer_assertions.sv
+comma_assertions.sv
+phy_assertions.sv
 Comma_Detection.v
 elasticBuffer.v
 Encoding.v

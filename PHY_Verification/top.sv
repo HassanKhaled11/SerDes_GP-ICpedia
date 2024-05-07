@@ -75,6 +75,60 @@ module top;
       .TX_Out_P    (DUT.PMA_U.TX_Out_P)
 
   );
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////// PHY Assertions //////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+
+  bind DUT phy_assertions #(
+      .DATA_BUS_WIDTH(32)
+  ) PHY_A (
+      .clk     (DUT.PCLK),
+      .rst_n   (DUT.Reset_n),
+      .Data_in (DUT.MAC_TX_Data),
+      .Data_out(DUT.RX_Data),
+      .enable  (DUT.MAC_Data_En)
+  );
+
+  ///////////////////// COMMA Assertions ///////////////////
+
+  bind DUT.PCS_U.PCS_RX_U.Comma_Detection_U comma_assertions commaAssertion (
+      .clk         (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.clk),
+      .rst_n       (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.rst_n),
+      .rx_valid    (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.RxValid),
+      .comma_pulse (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.Comma_Pulse),
+      .COMMA_NUMBER(DUT.PCS_U.PCS_RX_U.Comma_Detection_U.COMMA_NUMBER),
+      .cs          (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.cs),
+      .ns          (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.ns),
+      .data        (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.Data_Collected),
+      .count_rst   (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.count_reset),
+      .count       (DUT.PCS_U.PCS_RX_U.Comma_Detection_U.count)
+
+  );
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////// Elastic Buffer Assertions /////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+
+  bind DUT.PCS_U.PCS_RX_U.buffer buffer_assertions #(
+      .MAXBUFFERADR(4),
+      .DATAWIDTH(DUT.PCS_U.PCS_RX_U.buffer.DATA_WIDTH)
+  ) bufferAssertion (
+      .clk          (DUT.Bit_Rate_Clk),
+      .writeclk     (DUT.PCS_U.PCS_RX_U.buffer.write_clk),
+      .readclk      (DUT.PCS_U.PCS_RX_U.buffer.read_clk),
+      .rst          (DUT.PCS_U.PCS_RX_U.buffer.rst_n),
+      .read_pointer (DUT.PCS_U.PCS_RX_U.buffer.read_address),
+      .write_pointer(DUT.PCS_U.PCS_RX_U.buffer.write_address),
+      .data_in      (DUT.PCS_U.PCS_RX_U.buffer.data_in),
+      .data_out     (DUT.PCS_U.PCS_RX_U.buffer.data_out),
+      .empty        (DUT.PCS_U.PCS_RX_U.buffer.underflow),
+      .full         (DUT.PCS_U.PCS_RX_U.buffer.overflow),
+      .addreq       (DUT.PCS_U.PCS_RX_U.buffer.add_req),
+      .deletereq    (DUT.PCS_U.PCS_RX_U.buffer.delete_req),
+      .skpAdd       (DUT.PCS_U.PCS_RX_U.buffer.skp_added),
+      .skpRemove    (DUT.PCS_U.PCS_RX_U.buffer.Skp_Removed)
+  );
+
 
 
   ///////////////////////////////////

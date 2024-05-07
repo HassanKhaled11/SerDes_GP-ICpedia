@@ -1,3 +1,4 @@
+// mentor coverage off
 `timescale 1ns / 1fs
 module CDR_Loop (
     input rst_n,  // Asynchronous reset active low
@@ -13,8 +14,8 @@ module CDR_Loop (
 
 `ifdef THREE_CLKS
 
-wire clk_90 ;
-wire clk_180;
+  wire clk_90;
+  wire clk_180;
 
 `endif
 
@@ -29,7 +30,8 @@ wire clk_180;
 
   initial begin
     voting_clk = 0;
-    forever #((period / 2) / 2*NUMBER_SAMPLES) voting_clk = ~voting_clk;  //200/5 (5 samples per bits)
+    forever
+      #((period / 2) / 2 * NUMBER_SAMPLES) voting_clk = ~voting_clk;  //200/5 (5 samples per bits)
   end
 
 
@@ -38,10 +40,10 @@ wire clk_180;
       .Din  (Din),
       .clk  (PI_Clk),
       .clk_ref(clk_0),
-      `ifdef THREE_CLKS
-        .clk_90  (clk_90)  ,
-        .clk_180 (clk_180) ,
-      `endif  
+`ifdef THREE_CLKS
+      .clk_90  (clk_90)  ,
+      .clk_180 (clk_180) ,
+`endif
       .rst_n(rst_n),
       .Up   (up),
       .Dn   (dn),
@@ -49,13 +51,15 @@ wire clk_180;
   );
 
 
-  Box_Car_Voting #(.NUMBER_SAMPLES(NUMBER_SAMPLES)) Voting_U (
-    .clk     (voting_clk),
-    .Dn      (dn),
-    .Up      (up),
-    .vote_Dn (vote_Dn),
-    .vote_Up (vote_Up)
-);
+  Box_Car_Voting #(
+      .NUMBER_SAMPLES(NUMBER_SAMPLES)
+  ) Voting_U (
+      .clk    (voting_clk),
+      .Dn     (dn),
+      .Up     (up),
+      .vote_Dn(vote_Dn),
+      .vote_Up(vote_Up)
+  );
 
 
   Digital_Loop_Filter DLF_U (
@@ -72,11 +76,11 @@ wire clk_180;
       .CLK   (clk_0),
       .Code   (code),
       // .clk_filter_(PI_Clk)
-      `ifdef THREE_CLKS
-        .rst_n(rst_n),
-        .clk_90 (clk_90)  ,
-        .clk_180 (clk_180),
-      `endif    
+`ifdef THREE_CLKS
+      .rst_n(rst_n),
+      .clk_90 (clk_90)  ,
+      .clk_180 (clk_180),
+`endif
       .CLK_Out_i(PI_Clk)
   );
 

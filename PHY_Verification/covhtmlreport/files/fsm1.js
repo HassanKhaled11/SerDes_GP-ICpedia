@@ -1,2 +1,0 @@
-var g_data = {"71":{"pr":"/top/DUT/PCS_U/PCS_RX_U/Comma_Detection_U","fsms":[["cs",149,35,[["IDLE",0,149,35,8802,"                 0"],["COMMA",0,149,43,5936,"                 1"],["DATA",0,149,82,8796,"                 2"],["IDLE -> COMMA",1,149,39,2968,0],["IDLE -> DATA",1,149,38,1432,1],["COMMA -> DATA",1,149,65,2966,2],["COMMA -> IDLE",1,149,63,2,3],["DATA -> IDLE",1,149,83,4398,4]],100.00,100.00]]}};
-processFsmData(g_data);

@@ -2,26 +2,27 @@
 
 module Digital_Loop_Filter (
 
-    input Up,Dn,
+    input Up,
+    Dn,
     input clk,  // Clock
     input rst_n,  // Asynchronous reset active low
     output [10:0] code
 
-); 
+);
 
-  parameter PHUG = 5;
+  parameter PHUG = 3;
   parameter PHASE_WIDTH = 16;
-  parameter FREQ_WIDTH  = 16;
+  parameter FREQ_WIDTH = 16;
   parameter FRUG = 3;
 
-  reg [ FREQ_WIDTH-1:0] freq_integrator;
+  reg [FREQ_WIDTH-1:0] freq_integrator;
   reg [PHASE_WIDTH-1:0] phase_integrator;
 
   wire [1:0] UP_DN;
 
-  assign code = phase_integrator[PHASE_WIDTH-1:PHASE_WIDTH-11];  // top 11
+  assign code  = phase_integrator[PHASE_WIDTH-1:PHASE_WIDTH-11];  // top 11
 
-  assign UP_DN = {Up,Dn};
+  assign UP_DN = {Up, Dn};
 
   always @(posedge clk or negedge rst_n) begin
 

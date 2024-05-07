@@ -1,0 +1,2 @@
+var g_data = {"97":{"pr":"/top/PPM_checker_PI_clk_U","ty":2,"dui":54,"dun":"work.PPM_checker","direct":[{"n":["cover_assert_PPM"],"h":1099805},{"n":["cover_no_glitch"],"h":1099815},{"n":["cover_assert__PI_PPM"],"h":991325},{"n":["cover_no_PI_glitch"],"h":1100351}]}};
+processDirectivesData(g_data);
