@@ -1,3 +1,5 @@
+// coverage off
+
 module Comma_Detection (
     input clk,
     input rst_n,

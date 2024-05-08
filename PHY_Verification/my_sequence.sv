@@ -44,7 +44,7 @@ package my_sequence_pkg;
       stim_seq_item.MAC_TX_Data_32c.constraint_mode(1);
 
 
-      repeat (1500) begin
+      repeat (3000) begin
 
         start_item(stim_seq_item);
         //`uvm_info("MY_SEQUENCE", "AFTER START ITEM", UVM_DEBUG);
@@ -141,7 +141,7 @@ package my_sequence_pkg;
 
       stim_seq_item.MAC_Data_En.rand_mode(1);
       stim_seq_item.MAC_Data_En_c.constraint_mode(1);
-      repeat (750) begin
+      repeat (3000) begin
 
         start_item(stim_seq_item);
         //`uvm_info("MY_SEQUENCE", "AFTER START ITEM", UVM_DEBUG);
@@ -198,7 +198,7 @@ package my_sequence_pkg;
       stim_seq_item.MAC_TX_Data_32c.constraint_mode(1);
 
 
-      repeat (1500) begin
+      repeat (3000) begin
 
         start_item(stim_seq_item);
         //`uvm_info("MY_SEQUENCE", "AFTER START ITEM", UVM_DEBUG);

@@ -149,8 +149,7 @@ module top;
 
   initial begin
     uvm_config_db#(virtual BFM_if)::set(null, "*", "bfm_if", dut_if);  // BUS FUNCTIONAL MODEL
-    uvm_config_db#(virtual INTERNALS_if)::set(null, "*", "internals_if",
-                                              internals_if);  // INTERNAL INTERFACE
+    uvm_config_db#(virtual INTERNALS_if)::set(null, "*", "internals_if",internals_if);  // INTERNAL INTERFACE
 
     //------ RUNNING THE TEST --------
     run_test("my_test");

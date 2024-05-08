@@ -1,4 +1,5 @@
 // coverage off
+
 module write_pointer_control (
     write_clk,
     data_in,

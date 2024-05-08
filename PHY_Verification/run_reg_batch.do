@@ -51,6 +51,8 @@ for {set i 0} {$i < $num_runs} {incr i} {
 }
 
 #vcover merge coverage/dff_merged_coverage.ucdb 	coverage/coverage_0_5_16_3_16.ucdb coverage/coverage_1_5_16_3_16.ucdb	coverage/coverage_2_5_16_3_16.ucdb coverage/coverage_3_5_16_3_16.ucdb	coverage/coverage_4_5_16_3_16.ucdb
+
 #vcover report coverage/dff_merged_coverage.ucdb -details -annotate -all -output coverage/dff_merged_functional_Report.txt 
+
 #vcover report -html -htmldir coverage/html_merged_coverage -verbose -threshL 50 -threshH 90 coverage/dff_merged_coverage.ucdb
 
