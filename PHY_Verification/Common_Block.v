@@ -42,25 +42,25 @@ module Common_Block (
 
  
  `ifdef OFFSET_TEST
-   // initial begin
-   //   Bit_Rate_Clk_offset = 0 ;
-   //   @(posedge Bit_Rate_Clk) ;
-   //   #0.00001
-   //   Bit_Rate_Clk_offset  = 1 ;
-   //   forever begin
-   //     #0.1 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
-   //   end 
-   // end
-
    initial begin
      Bit_Rate_Clk_offset = 0 ;
      @(posedge Bit_Rate_Clk) ;
-     //#0.00003
+     #0.00001
      Bit_Rate_Clk_offset  = 1 ;
      forever begin
-       #0.1001 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
-     end
-   end
+       #0.1 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
+     end 
+  end
+
+   // initial begin
+   //   Bit_Rate_Clk_offset = 0 ;
+   //   @(posedge Bit_Rate_Clk) ;
+   //   //#0.00003
+   //   Bit_Rate_Clk_offset  = 1 ;
+   //   forever begin
+   //     #0.1001 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
+   //   end
+   // end
 
 
  `endif

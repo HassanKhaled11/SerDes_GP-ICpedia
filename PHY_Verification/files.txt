@@ -31,7 +31,6 @@ Digital_Loop_Filter.sv
 Box_Car_Voting.sv
 golden_model.sv
 interface.sv
-parameters_pkg.sv
 my_sequence_item.sv
 my_sequence.sv
 my_sequencer.sv

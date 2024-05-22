@@ -50,7 +50,7 @@ module top;
   assign internals_if.PCLK             = DUT.PCLK;
   assign internals_if.DataBusWidth     = DUT.DataBusWidth;
   assign internals_if.TX_Out_P         = DUT.PMA_U.TX_Out_P;
-  assign internals_if.Clk_offset       = DUT.PMA_U.Bit_Rate_Clk_offset;
+ // assign internals_if.Clk_offset       = DUT.PMA_U.Bit_Rate_Clk_offset;
   assign internals_if.recovered_clk_5G = DUT.PMA_U.recovered_clk_5G;
   assign internals_if.MAC_Data_En      = DUT.MAC_Data_En;
   assign internals_if.Decode_Error     = DUT.PCS_U.PCS_RX_U.DecodeError;

@@ -21,7 +21,7 @@ module PMA (
     output       recovered_clk_5G
 );
   
-  // reg Bit_Rate_Clk_offset;
+   reg Bit_Rate_Clk_Rx;
   // reg Bit_Rate_Clk_10_offset;
 
   parameter OFFSET_PERIOD = 100.01;
@@ -38,12 +38,12 @@ module PMA (
   // end
 
 
-  //   initial begin
-  //   Bit_Rate_Clk_10_offset = 0;
-  //   forever begin
-  //     #(OFFSET_10_PERIOD) Bit_Rate_Clk_10_offset = ~Bit_Rate_Clk_10_offset;
-  //   end
-  // end
+    initial begin
+    Bit_Rate_Clk_Rx = 0;
+    forever begin
+      #(100) Bit_Rate_Clk_Rx = ~Bit_Rate_Clk_Rx;
+    end
+  end
 
 
 reg channel_clk;
@@ -101,14 +101,21 @@ end
   PMA_RX #(
       .DATA_WIDTH(10)
   ) PM_RX_U (
-      .RX_POS          (Data_out),
+      .RX_POS          (Data_from_channel),
       .RX_NEG          (TX_N),
       .Rst_n           (Rst_n),
-      .CLK_5G          (Bit_Rate_Clk),  //CLK_5G
+       
+      `ifdef SRNS_TEST                        // Separate Ref Clk No Spreading
+         .CLK_5G          (Bit_Rate_Clk_Rx),  
+      `elsif SRIS_TEST
+         .CLK_5G          (Bit_Rate_Clk),     // Separate Ref Clk WITH Indep. Spreading
+      `else
+         .CLK_5G          (Bit_Rate_Clk),     // Common Ref Clk 
+      `endif            
+
       .RxPolarity      (RxPolarity),
       .Data_out        (RX_Out),
       .recovered_clk_5G(recovered_clk_5G)
-      //.K285(K285)
   );
 
 

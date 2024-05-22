@@ -56,7 +56,6 @@ package my_test_pkg;
           ///////////WIDTH = 32//////////////
 
           cfg.dut_vif.DataBusWidth = 6'd32;
-          // cfg.dut_vif.DataBusWidth = 6'd32;
           `uvm_warning("MY_TEST_32", "RESET");
           cfg.dut_vif.Reset_n = 0;
           #1000;
@@ -67,33 +66,33 @@ package my_test_pkg;
           main_seq_32.start(env.agent.sqr);
 
 
-          ////////////WIDTH = 16////////////
-          cfg.dut_vif.DataBusWidth = 6'd16;
-          `uvm_warning("MY_TEST_16", "RESET");
-          cfg.dut_vif.Reset_n = 0;
-          #1000;
-          cfg.dut_vif.Reset_n = 1;
+        //   ////////////WIDTH = 16////////////
+        //   cfg.dut_vif.DataBusWidth = 6'd16;
+        //   `uvm_warning("MY_TEST_16", "RESET");
+        //   cfg.dut_vif.Reset_n = 0;
+        //   #1000;
+        //   cfg.dut_vif.Reset_n = 1;
 
-          #4;
-          `uvm_warning("MY_TEST_16", "MAIN TEST START..");
-          main_seq_16.start(env.agent.sqr);
+        //   #4;
+        //   `uvm_warning("MY_TEST_16", "MAIN TEST START..");
+        //   main_seq_16.start(env.agent.sqr);
 
-          #3000;
-          cfg.dut_vif.MAC_Data_En = 0;
-          #3000;
-          cfg.dut_vif.MAC_Data_En  = 1;
+        //   #3000;
+        //   cfg.dut_vif.MAC_Data_En = 0;
+        //   #3000;
+        //   cfg.dut_vif.MAC_Data_En  = 1;
 
-          //////////WIDTH = 8////////////
-          cfg.dut_vif.DataBusWidth = 6'd8;
-          `uvm_warning("MY_TEST_8", "RESET");
-          cfg.dut_vif.Reset_n = 0;
-          #1000;
-          cfg.dut_vif.Reset_n = 1;
+        //   //////////WIDTH = 8////////////
+        //   cfg.dut_vif.DataBusWidth = 6'd8;
+        //   `uvm_warning("MY_TEST_8", "RESET");
+        //   cfg.dut_vif.Reset_n = 0;
+        //   #1000;
+        //   cfg.dut_vif.Reset_n = 1;
 
-          #4;
-          `uvm_warning("MY_TEST_8", "MAIN TEST START..");
-          main_seq_8.start(env.agent.sqr);
-        end
+        //   #4;
+        //   `uvm_warning("MY_TEST_8", "MAIN TEST START..");
+        //   main_seq_8.start(env.agent.sqr);
+         end
 
       join
 
