@@ -71,11 +71,15 @@ end
       .DATA_WIDTH(10)
   ) PMA_TX_U (
       .Bit_Rate_Clk_10(Bit_Rate_Clk_10),
-        `ifdef OFFSET_TEST
+
+        `ifdef SRIS_TEST
+           .Bit_Rate_Clk(Bit_Rate_Clk),
+        `elsif OFFSET_TEST
            .Bit_Rate_Clk(Bit_Rate_Clk_offset),
         `else
            .Bit_Rate_Clk(Bit_Rate_Clk),   
         `endif
+
       .Rst_n          (Rst_n),
       .Data_in        (Data_in),
       .MAC_Data_En    (MAC_Data_En),
@@ -108,7 +112,7 @@ end
       `ifdef SRNS_TEST                        // Separate Ref Clk No Spreading
          .CLK_5G          (Bit_Rate_Clk_Rx),  
       `elsif SRIS_TEST
-         .CLK_5G          (Bit_Rate_Clk),     // Separate Ref Clk WITH Indep. Spreading
+         .CLK_5G          (Bit_Rate_Clk_Rx),     // Separate Ref Clk WITH Indep. Spreading
       `else
          .CLK_5G          (Bit_Rate_Clk),     // Common Ref Clk 
       `endif            

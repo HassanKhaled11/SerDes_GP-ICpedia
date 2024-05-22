@@ -34,7 +34,6 @@ add wave -noupdate /top/dut_if/Ref_CLK
 add wave -noupdate -color Magenta /top/dut_if/PCLK
 add wave -noupdate -color Magenta /top/internals_if/Word_CLK
 add wave -noupdate -color Magenta /top/internals_if/Bit_CLK
-add wave -noupdate /top/DUT/Common_Block_U/Bit_Rate_Clk_offset
 add wave -noupdate /top/internals_if/DataBusWidth
 add wave -noupdate /top/dut_if/MAC_TX_Data
 add wave -noupdate /top/dut_if/MAC_Data_En
@@ -283,6 +282,14 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_13
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_225
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/sign_315
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/phase_interpolator/clk_sin
+add wave -noupdate -divider -height 40 SSC
+add wave -noupdate -color Magenta /top/DUT/Common_Block_U/SSC_Generator_DUT/clk
+add wave -noupdate -color Magenta /top/DUT/Common_Block_U/SSC_Generator_DUT/jitter_value
+add wave -noupdate /top/DUT/Common_Block_U/SSC_Generator_DUT/jitterd_clk
+add wave -noupdate /top/DUT/Common_Block_U/SSC_Generator_DUT/Jittered_clk_period
+add wave -noupdate -radix unsigned /top/DUT/Common_Block_U/SSC_Generator_DUT/PPM
+add wave -noupdate /top/DUT/Common_Block_U/Bit_Rate_Clk_
+add wave -noupdate -color Magenta /top/DUT/Common_Block_U/Bit_Rate_Clk_SSC
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/rst_n
@@ -313,8 +320,8 @@ add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/dn
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/code
 add wave -noupdate /top/DUT/PMA_U/PM_RX_U/CDRLoopInst/voting_clk
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 11} {1448994250 fs} 0}
-quietly wave cursor active 1
+WaveRestoreCursors {{Cursor 11} {96149179 fs} 0} {{Cursor 2} {2744254033 fs} 0}
+quietly wave cursor active 2
 configure wave -namecolwidth 407
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -329,4 +336,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {4050027250 fs} {25061472250 fs}
+WaveRestoreZoom {3900775260 fs} {3904555724 fs}

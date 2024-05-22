@@ -21,12 +21,12 @@ module Common_Block (
 
   PLL PLL_frquency_mult (
       .Ref_Clk(Ref_Clk),
-      .CLK(Bit_Rate_Clk)  // 5G
+      .CLK(Bit_Rate_Clk_)  // 5G
   );
 
 
   Clock_Div clock_divider (
-      .Ref_Clk(Bit_Rate_Clk),  // 5G/10
+      .Ref_Clk(Bit_Rate_Clk_),  // 5G/10
       .rst(Rst_n),
       .div_ratio(8'b0000_1010),
       .divided_clk(Bit_Rate_CLK_10)
@@ -34,7 +34,7 @@ module Common_Block (
 
 
   Clock_Div clock_divider1 (
-      .Ref_Clk(Bit_Rate_Clk),  //PCLK
+      .Ref_Clk(Bit_Rate_Clk_),  //PCLK
       .rst(Rst_n),
       .div_ratio(ratio),
       .divided_clk(PCLK)
@@ -44,7 +44,7 @@ module Common_Block (
  `ifdef OFFSET_TEST
    initial begin
      Bit_Rate_Clk_offset = 0 ;
-     @(posedge Bit_Rate_Clk) ;
+     @(posedge Bit_Rate_Clk_) ;
      #0.00001
      Bit_Rate_Clk_offset  = 1 ;
      forever begin
@@ -61,9 +61,30 @@ module Common_Block (
    //     #0.1001 Bit_Rate_Clk_offset = ~ Bit_Rate_Clk_offset ;
    //   end
    // end
-
-
  `endif
+
+
+
+////////////////////////////
+///////// SRIS TESTING /////
+////////////////////////////
+
+ `ifdef SRIS_TEST
+    wire Bit_Rate_Clk_SSC; 
+    assign Bit_Rate_Clk = Bit_Rate_Clk_SSC; 
+    `ifdef OFFSET_TEST
+        SSC_Generator SSC_Generator_DUT (Bit_Rate_Clk_offset , Bit_Rate_Clk_SSC);
+    `else
+        SSC_Generator SSC_Generator_DUT (Bit_Rate_Clk_, Bit_Rate_Clk_SSC);
+    `endif
+ `else 
+     assign Bit_Rate_Clk = Bit_Rate_Clk_;
+ `endif
+
+
+////////////////////////////
+////////////////////////////
+////////////////////////////
 
 
 always @(*) begin
