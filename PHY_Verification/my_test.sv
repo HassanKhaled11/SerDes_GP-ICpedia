@@ -8,11 +8,33 @@ package my_test_pkg;
   import my_config_db_pkg::*;
 
 
+  import tx_gasket_env_pkg::*;
+  import encoding_env_pkg::*;
+  import tx_pma_env_pkg::*;
+  import rx_s2p_env_pkg::*;
+  import cdr_env_pkg::*;
+  import ebuffer_env_pkg::*;
+  import decoder_env_pkg::*;
+  import rx_gasket_env_pkg::*;
+
+
   class my_test extends uvm_test;
 
     `uvm_component_utils(my_test);
 
     my_env         env;
+
+    //////// PASSIVE AGENTS ///////////
+    tx_gasket_env  tx_gasket_env_inst;  
+    encoding_env   encoding_env_inst;
+    tx_pma_env     tx_pma_env_inst;
+    rx_s2p_env     rx_s2p_env_inst;
+    cdr_env        cdr_env_inst;
+    ebuffer_env    ebuffer_env_inst;
+    decoder_env    decoder_env_inst;
+    rx_gasket_env  rx_gasket_env_inst;
+    //////////////////////////////////
+
     my_sequence_32 main_seq_32;
     my_sequence_16 main_seq_16;
     my_sequence_8  main_seq_8;
@@ -27,12 +49,21 @@ package my_test_pkg;
       super.build_phase(phase);
       `uvm_info("MY_TEST", "BUILD_PHASE", UVM_MEDIUM);
 
-      env         = my_env::type_id::create("env", this);
-      main_seq_32 = my_sequence_32::type_id::create("main_seq_32", this);
-      main_seq_16 = my_sequence_16::type_id::create("main_seq_16", this);
-      main_seq_8  = my_sequence_8::type_id::create("main_seq_8", this);
-      cfg         = my_config_db::type_id::create("cfg", this);
+      env                = my_env::type_id::create("env", this);
+      tx_gasket_env_inst = tx_gasket_env::type_id::create("tx_gasket_env_inst",this);
+      encoding_env_inst  = encoding_env::type_id::create("encoding_env_inst",this);      
+      tx_pma_env_inst = tx_pma_env::type_id::create("tx_pma_env_inst",this);
+      rx_s2p_env_inst  = rx_s2p_env::type_id::create("rx_s2p_env_inst",this);
+      cdr_env_inst  = cdr_env::type_id::create("cdr_env_inst",this);
+      ebuffer_env_inst = ebuffer_env::type_id::create("ebuffer_env_inst",this);
+      decoder_env_inst  = decoder_env::type_id::create("decoder_env_inst",this);
+      rx_gasket_env_inst = rx_gasket_env::type_id::create("rx_gasket_env_inst",this);
 
+
+      main_seq_32        = my_sequence_32::type_id::create("main_seq_32", this);
+      main_seq_16        = my_sequence_16::type_id::create("main_seq_16", this);
+      main_seq_8         = my_sequence_8::type_id::create("main_seq_8", this);
+      cfg                = my_config_db::type_id::create("cfg", this);
 
       if (!uvm_config_db#(virtual BFM_if)::get(this, "", "bfm_if", cfg.dut_vif))
         `uvm_fatal("MY_TEST", "FATAL PUTTING BFM INTERFACE in CONFIG_DB");
