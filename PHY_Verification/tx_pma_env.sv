@@ -2,6 +2,8 @@ package tx_pma_env_pkg;
  
  import uvm_pkg::*;
 `include "uvm_macros.svh"
+import my_config_db_pkg::*;
+
 
 `define create(type , inst_name) type::type_id::create(inst_name,this);
 
@@ -10,6 +12,14 @@ package tx_pma_env_pkg;
 
 class tx_pma_seq_itm extends uvm_sequence_item;
     `uvm_object_utils(tx_pma_seq_itm);
+
+  logic                                 tx_pma_Bit_Rate_Clk_10      ;  
+  logic                                 tx_pma_Bit_Rate_Clk         ;
+  logic                                 tx_pma_Rst_n                ;
+  logic [10:0]                          tx_pma_Data_in              ; 
+  logic                                 tx_pma_MAC_Data_En          ; 
+  logic                                 tx_pma_TX_Out_P             ;   
+  logic                                 tx_pma_TX_Out_N             ;
 
 
     function new(string name = "tx_pma_seq_itm");
@@ -25,6 +35,7 @@ class tx_pma_mon extends uvm_monitor;
 
  uvm_analysis_port #(tx_pma_seq_itm) mon_port;
  tx_pma_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
 
 
    function new(string name = "tx_pma_mon" , uvm_component parent = null);
@@ -35,10 +46,24 @@ class tx_pma_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-      data_to_send = new("data_to_send");
      `uvm_info("tx_pma_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+
+     forever begin
+       data_to_send = `create(tx_pma_seq_itm, "data_to_send");
+       @(negedge  passive_vif.tx_pma_Bit_Rate_Clk);
+       data_to_send.tx_pma_TX_Out_P = passive_vif.tx_pma_TX_Out_P;
+
+       mon_port.write(data_to_send);
+     end
+
+   endtask
+
+
 endclass
 
 
@@ -52,6 +77,7 @@ class tx_pma_sb extends uvm_scoreboard;
  tx_pma_seq_itm  data_to_chk;
   uvm_tlm_analysis_fifo #(tx_pma_seq_itm)  sb_fifo;
 
+  virtual PASSIVE_if passive_vif;
 
 
    function void connect_phase(uvm_phase phase);
@@ -72,14 +98,26 @@ class tx_pma_sb extends uvm_scoreboard;
       sb_fifo       = new("sb_fifo", this);      
       data_to_chk  = new("data_to_chk");
 
+
+    if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("TX_PMA", "FATAL GETTING intf");
+      end
+
+
      `uvm_info("tx_pma_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.tx_pma_Bit_Rate_Clk);
       sb_fifo.get(data_to_chk);
+      `uvm_info("TX_PMA_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.tx_pma_TX_Out_P), UVM_LOW);             
+     end
    endtask 
+
+
 endclass
 
 
@@ -90,6 +128,7 @@ class tx_pma_agt extends uvm_agent;
 
  `uvm_component_utils(tx_pma_agt);
 
+ tx_pma_config_db tx_pma_cfg;
  tx_pma_mon mon;
 
   uvm_analysis_port #(tx_pma_seq_itm) agt_port;
@@ -105,6 +144,12 @@ class tx_pma_agt extends uvm_agent;
      agt_port = new("agt_port" , this);
      mon = `create(tx_pma_mon , "mon");
 
+     tx_pma_cfg = `create(tx_pma_config_db,"tx_pma_cfg");
+
+   if(!uvm_config_db#(tx_pma_config_db)::get(this,"","TX_PMA_CFG",tx_pma_cfg)) begin
+          `uvm_fatal("tx_pma_agt", "FATAL GETTING CFG");        
+     end
+
      `uvm_info("tx_pma_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
@@ -112,6 +157,7 @@ class tx_pma_agt extends uvm_agent;
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
      mon.mon_port.connect(agt_port);
+     mon.passive_vif = tx_pma_cfg.passive_vif;
    endfunction
  
 endclass

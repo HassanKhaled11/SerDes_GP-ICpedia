@@ -2,6 +2,8 @@ package rx_gasket_env_pkg;
  
  import uvm_pkg::*;
 `include "uvm_macros.svh"
+import my_config_db_pkg::*;
+
 
 `define create(type , inst_name) type::type_id::create(inst_name,this);
 
@@ -9,6 +11,15 @@ package rx_gasket_env_pkg;
 
 class rx_gasket_seq_itm extends uvm_sequence_item;
     `uvm_object_utils(rx_gasket_seq_itm);
+
+
+  logic                                 rx_gasket_clk_to_get           ;
+  logic                                 rx_gasket_PCLK                 ;
+  logic                                 rx_gasket_Rst_n                ;
+  logic                                 rx_gasket_Rx_Datak             ;
+  logic [ 5:0]                          rx_gasket_width                ;
+  logic [ 7:0]                          rx_gasket_Data_in              ;
+  logic [31:0]                          rx_gasket_Data_out             ;
 
 
     function new(string name = "rx_gasket_seq_itm");
@@ -24,6 +35,7 @@ class rx_gasket_mon extends uvm_monitor;
 
  uvm_analysis_port #(rx_gasket_seq_itm) mon_port;
  rx_gasket_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
 
 
    function new(string name = "rx_gasket_mon" , uvm_component parent = null);
@@ -34,10 +46,25 @@ class rx_gasket_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-      data_to_send = new("data_to_send");
      `uvm_info("rx_gasket_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
+
+
+  task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+
+     forever begin
+       data_to_send = `create(rx_gasket_seq_itm, "data_to_send");
+       @(negedge  passive_vif.rx_gasket_PCLK);
+       data_to_send.rx_gasket_Data_out = passive_vif.rx_gasket_Data_out;
+
+       mon_port.write(data_to_send);
+     end
+   endtask  
+
+
+
 endclass
 
 
@@ -51,6 +78,7 @@ class rx_gasket_sb extends uvm_scoreboard;
  rx_gasket_seq_itm  data_to_chk;
   uvm_tlm_analysis_fifo #(rx_gasket_seq_itm)  sb_fifo;
 
+  virtual PASSIVE_if passive_vif;
 
 
    function void connect_phase(uvm_phase phase);
@@ -71,14 +99,24 @@ class rx_gasket_sb extends uvm_scoreboard;
       sb_fifo       = new("sb_fifo", this);      
       data_to_chk  = new("data_to_chk");
 
+    if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("RX_GASKET", "FATAL GETTING intf");
+    end      
+
      `uvm_info("rx_gasket_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.rx_gasket_PCLK);
       sb_fifo.get(data_to_chk);
+      `uvm_info("RX_GASKET_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.rx_gasket_Data_out), UVM_LOW);             
+     end
    endtask 
+
+
 endclass
 
 
@@ -89,6 +127,7 @@ class rx_gasket_agt extends uvm_agent;
 
  `uvm_component_utils(rx_gasket_agt);
 
+ rx_gasket_config_db  rx_gasket_cfg;
  rx_gasket_mon mon;
 
   uvm_analysis_port #(rx_gasket_seq_itm) agt_port;
@@ -104,6 +143,12 @@ class rx_gasket_agt extends uvm_agent;
      agt_port = new("agt_port" , this);
      mon = `create(rx_gasket_mon , "mon");
 
+     rx_gasket_cfg = `create(rx_gasket_config_db , "rx_gasket_cfg");
+
+    if(!uvm_config_db#(rx_gasket_config_db)::get(this,"","RX_GASKET_CFG",rx_gasket_cfg)) begin
+          `uvm_fatal("rx_gasket_agt", "FATAL GETTING CFG");        
+    end  
+
      `uvm_info("rx_gasket_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
@@ -111,6 +156,7 @@ class rx_gasket_agt extends uvm_agent;
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
      mon.mon_port.connect(agt_port);
+     mon.passive_vif = rx_gasket_cfg.passive_vif;
    endfunction
  
 endclass

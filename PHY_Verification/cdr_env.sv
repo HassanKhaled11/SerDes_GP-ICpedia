@@ -2,6 +2,8 @@ package cdr_env_pkg;
  
  import uvm_pkg::*;
 `include "uvm_macros.svh"
+import my_config_db_pkg::*;
+
 
 `define create(type , inst_name) type::type_id::create(inst_name,this);
 
@@ -10,6 +12,16 @@ package cdr_env_pkg;
 
 class cdr_seq_itm extends uvm_sequence_item;
     `uvm_object_utils(cdr_seq_itm);
+
+
+  logic                                 cdr_rst_n                   ;  
+  logic                                 cdr_clk_0                   ;
+  logic                                 cdr_clk_data                ;  
+  logic                                 cdr_Din                     ;
+  logic                                 cdr_PI_Clk                  ;
+  logic                                 cdr_Dout                    ;
+  //...internal 
+  logic [10:0]                          cdr_code                    ;
 
 
     function new(string name = "cdr_seq_itm");
@@ -25,6 +37,7 @@ class cdr_mon extends uvm_monitor;
 
  uvm_analysis_port #(cdr_seq_itm) mon_port;
  cdr_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
 
 
    function new(string name = "cdr_mon" , uvm_component parent = null);
@@ -35,10 +48,24 @@ class cdr_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-      data_to_send = new("data_to_send");
      `uvm_info("cdr_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+
+     forever begin
+       data_to_send = `create(cdr_seq_itm, "data_to_send");
+       @(negedge  passive_vif.cdr_clk_0);
+       data_to_send.cdr_Dout = passive_vif.cdr_Dout;
+
+       mon_port.write(data_to_send);
+     end
+
+   endtask
+
+
 endclass
 
 
@@ -50,8 +77,9 @@ class cdr_sb extends uvm_scoreboard;
 
  uvm_analysis_export #(cdr_seq_itm)  sb_export;
  cdr_seq_itm  data_to_chk;
-  uvm_tlm_analysis_fifo #(cdr_seq_itm)  sb_fifo;
+ uvm_tlm_analysis_fifo #(cdr_seq_itm)  sb_fifo;
 
+  virtual PASSIVE_if passive_vif;
 
 
    function void connect_phase(uvm_phase phase);
@@ -72,14 +100,24 @@ class cdr_sb extends uvm_scoreboard;
       sb_fifo       = new("sb_fifo", this);      
       data_to_chk  = new("data_to_chk");
 
+    if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("CDR", "FATAL GETTING intf");
+      end
+
      `uvm_info("cdr_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.cdr_clk_0);
       sb_fifo.get(data_to_chk);
+      `uvm_info("CDR_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.cdr_Dout), UVM_LOW);             
+     end
    endtask 
+
+
 endclass
 
 
@@ -90,6 +128,7 @@ class cdr_agt extends uvm_agent;
 
  `uvm_component_utils(cdr_agt);
 
+ cdr_config_db  cdr_cfg;
  cdr_mon mon;
 
   uvm_analysis_port #(cdr_seq_itm) agt_port;
@@ -105,6 +144,12 @@ class cdr_agt extends uvm_agent;
      agt_port = new("agt_port" , this);
      mon = `create(cdr_mon , "mon");
 
+     cdr_cfg = `create(cdr_config_db, "cdr_cfg");
+
+   if(!uvm_config_db#(cdr_config_db)::get(this,"","CDR_CFG",cdr_cfg)) begin
+          `uvm_fatal("cdr_agt", "FATAL GETTING CFG");        
+    end
+
      `uvm_info("cdr_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
@@ -112,6 +157,7 @@ class cdr_agt extends uvm_agent;
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
      mon.mon_port.connect(agt_port);
+     mon.passive_vif = cdr_cfg.passive_vif;
    endfunction
  
 endclass

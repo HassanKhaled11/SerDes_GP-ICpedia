@@ -11,6 +11,13 @@ package rx_s2p_env_pkg;
 class rx_s2p_seq_itm extends uvm_sequence_item;
     `uvm_object_utils(rx_s2p_seq_itm);
 
+  logic                                 rx_s2p_Recovered_Bit_Clk    ;
+  logic                                 rx_s2p_Ser_in               ;
+  logic                                 rx_s2p_Rst_n                ;
+  logic                                 rx_s2p_RxPolarity           ;
+  logic [9:0]                           rx_s2p_Data_Collected       ;
+
+
 
     function new(string name = "rx_s2p_seq_itm");
       super.new(name);

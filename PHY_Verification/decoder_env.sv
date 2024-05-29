@@ -2,6 +2,8 @@ package decoder_env_pkg;
  
  import uvm_pkg::*;
 `include "uvm_macros.svh"
+import my_config_db_pkg::*;
+
 
 `define create(type , inst_name) type::type_id::create(inst_name,this);
 
@@ -10,6 +12,14 @@ package decoder_env_pkg;
 
 class decoder_seq_itm extends uvm_sequence_item;
     `uvm_object_utils(decoder_seq_itm);
+
+  logic                                 decoder_CLK                  ;
+  logic                                 decoder_Rst_n                ;
+  logic [9:0]                           decoder_Data_in              ;
+  logic [7:0]                           decoder_Data_out             ;
+  logic                                 decoder_DecodeError          ;
+  logic                                 decoder_DisparityError       ;
+  logic                                 decoder_RxDataK              ;
 
 
     function new(string name = "decoder_seq_itm");
@@ -25,6 +35,7 @@ class decoder_mon extends uvm_monitor;
 
  uvm_analysis_port #(decoder_seq_itm) mon_port;
  decoder_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
 
 
    function new(string name = "decoder_mon" , uvm_component parent = null);
@@ -35,9 +46,22 @@ class decoder_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-      data_to_send = new("data_to_send");
      `uvm_info("decoder_mon","BUILD_PHASE",UVM_LOW);
    endfunction
+
+
+  task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+
+     forever begin
+       data_to_send = `create(decoder_seq_itm, "data_to_send");
+       @(negedge  passive_vif.decoder_CLK);
+       data_to_send.decoder_Data_out = passive_vif.decoder_Data_out;
+
+       mon_port.write(data_to_send);
+     end
+   endtask  
+
  
 endclass
 
@@ -50,8 +74,10 @@ class decoder_sb extends uvm_scoreboard;
 
  uvm_analysis_export #(decoder_seq_itm)  sb_export;
  decoder_seq_itm  data_to_chk;
-  uvm_tlm_analysis_fifo #(decoder_seq_itm)  sb_fifo;
+ uvm_tlm_analysis_fifo #(decoder_seq_itm)  sb_fifo;
 
+
+  virtual PASSIVE_if passive_vif;
 
 
    function void connect_phase(uvm_phase phase);
@@ -72,14 +98,23 @@ class decoder_sb extends uvm_scoreboard;
       sb_fifo       = new("sb_fifo", this);      
       data_to_chk  = new("data_to_chk");
 
+    if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("DECODER", "FATAL GETTING intf");
+    end
+
      `uvm_info("decoder_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.decoder_CLK);
       sb_fifo.get(data_to_chk);
+      `uvm_info("DECODER_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.decoder_Data_out), UVM_LOW);             
+     end
    endtask 
+
 endclass
 
 
@@ -90,6 +125,7 @@ class decoder_agt extends uvm_agent;
 
  `uvm_component_utils(decoder_agt);
 
+ decoder_config_db  decoder_cfg;
  decoder_mon mon;
 
   uvm_analysis_port #(decoder_seq_itm) agt_port;
@@ -105,6 +141,12 @@ class decoder_agt extends uvm_agent;
      agt_port = new("agt_port" , this);
      mon = `create(decoder_mon , "mon");
 
+     decoder_cfg = `create(decoder_config_db, "decoder_cfg");
+
+    if(!uvm_config_db#(decoder_config_db)::get(this,"","DECODER_CFG",decoder_cfg)) begin
+          `uvm_fatal("decoder_agt", "FATAL GETTING CFG");        
+    end     
+
      `uvm_info("decoder_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
@@ -112,6 +154,7 @@ class decoder_agt extends uvm_agent;
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
      mon.mon_port.connect(agt_port);
+     mon.passive_vif = decoder_cfg.passive_vif;
    endfunction
  
 endclass

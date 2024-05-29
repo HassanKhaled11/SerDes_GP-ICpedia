@@ -2,6 +2,7 @@ package encoding_env_pkg;
  
  import uvm_pkg::*;
 `include "uvm_macros.svh"
+import my_config_db_pkg::*;
 
 `define create(type , inst_name) type::type_id::create(inst_name,this);
 
@@ -10,6 +11,13 @@ package encoding_env_pkg;
 
 class encoding_seq_itm extends uvm_sequence_item;
     `uvm_object_utils(encoding_seq_itm);
+
+  logic  [7:0]                          encoder_data                 ;
+  logic                                 encoder_MAC_Data_En          ;
+  logic                                 encoder_Bit_Rate_10          ;
+  logic                                 encoder_Rst                  ;
+  logic                                 encoder_TXDataK              ; 
+  logic  [9:0]                          encoder_data_out             ;
 
 
     function new(string name = "encoding_seq_itm");
@@ -25,6 +33,7 @@ class encoding_mon extends uvm_monitor;
 
  uvm_analysis_port #(encoding_seq_itm) mon_port;
  encoding_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
 
 
    function new(string name = "encoding_mon" , uvm_component parent = null);
@@ -35,10 +44,23 @@ class encoding_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-      data_to_send = new("data_to_send");
      `uvm_info("encoding_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+
+     forever begin
+       data_to_send = `create(encoding_seq_itm, "data_to_send");
+       @(negedge  passive_vif.encoder_Bit_Rate_10);
+       data_to_send.encoder_data_out = passive_vif.encoder_data_out;
+
+       mon_port.write(data_to_send);
+     end
+
+   endtask
+
 endclass
 
 
@@ -52,6 +74,7 @@ class encoding_sb extends uvm_scoreboard;
  encoding_seq_itm  data_to_chk;
   uvm_tlm_analysis_fifo #(encoding_seq_itm)  sb_fifo;
 
+  virtual PASSIVE_if passive_vif;
 
 
    function void connect_phase(uvm_phase phase);
@@ -70,7 +93,13 @@ class encoding_sb extends uvm_scoreboard;
       
       sb_export    = new("sb_export" , this);
       sb_fifo       = new("sb_fifo", this);      
-      data_to_chk  = new("data_to_chk");
+      data_to_chk = `create(encoding_seq_itm, "data_to_chk");
+
+
+     if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("ENCODING", "FATAL GETTING encoding_if");
+      end
+
 
      `uvm_info("encoding_sb","BUILD_PHASE",UVM_LOW);
    endfunction
@@ -78,8 +107,13 @@ class encoding_sb extends uvm_scoreboard;
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.encoder_Bit_Rate_10);
       sb_fifo.get(data_to_chk);
+      `uvm_info("ENCODING_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.encoder_data_out), UVM_LOW);             
+     end
    endtask 
+
 endclass
 
 
@@ -90,6 +124,7 @@ class encoding_agt extends uvm_agent;
 
  `uvm_component_utils(encoding_agt);
 
+ encoding_config_db encoding_cfg;
  encoding_mon mon;
 
   uvm_analysis_port #(encoding_seq_itm) agt_port;
@@ -105,6 +140,12 @@ class encoding_agt extends uvm_agent;
      agt_port = new("agt_port" , this);
      mon = `create(encoding_mon , "mon");
 
+     encoding_cfg = `create(encoding_config_db,"encoding_cfg");
+
+     if(!uvm_config_db#(encoding_config_db)::get(this,"","ENCODING_CFG",encoding_cfg)) begin
+          `uvm_fatal("encoding_agt", "FATAL GETTING ENCODING_CFG");        
+     end
+
      `uvm_info("encoding_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
@@ -112,6 +153,7 @@ class encoding_agt extends uvm_agent;
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
      mon.mon_port.connect(agt_port);
+     mon.passive_vif = encoding_cfg.passive_vif;
    endfunction
  
 endclass
