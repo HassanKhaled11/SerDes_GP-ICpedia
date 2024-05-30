@@ -103,7 +103,6 @@ class tx_pma_sb extends uvm_scoreboard;
           `uvm_fatal("TX_PMA", "FATAL GETTING intf");
       end
 
-
      `uvm_info("tx_pma_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
@@ -117,6 +116,70 @@ class tx_pma_sb extends uvm_scoreboard;
      end
    endtask 
 
+
+endclass
+
+
+
+
+///////////////// Coverage ////////////////////////
+
+
+class tx_pma_cov extends uvm_component;
+
+ `uvm_component_utils(tx_pma_cov);
+
+ uvm_analysis_export #(tx_pma_seq_itm)  cov_export;
+ tx_pma_seq_itm  data_to_chk;
+ uvm_tlm_analysis_fifo #(tx_pma_seq_itm)  cov_fifo;
+ 
+ virtual PASSIVE_if passive_vif;
+
+
+
+covergroup tx_pma_cg();
+ tx_out_p: coverpoint data_to_chk.tx_pma_TX_Out_P;
+endgroup
+
+
+
+   function void connect_phase(uvm_phase phase);
+      super.connect_phase(phase);
+      cov_export.connect(cov_fifo.analysis_export);
+    endfunction
+
+
+
+   function void build_phase(uvm_phase phase);
+     super.build_phase(phase);
+      
+      cov_export     = new("cov_export" , this);
+      cov_fifo       = new("cov_fifo", this);      
+      data_to_chk    = `create(tx_pma_seq_itm, "data_to_chk");
+
+      if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("TX_PMA", "FATAL GETTING if");
+      end
+
+     `uvm_info("tx_pma_cov","BUILD_PHASE",UVM_LOW);
+   endfunction
+
+
+   function new(string name = "tx_pma_cov" , uvm_component parent = null);
+     super.new(name,parent);
+     tx_pma_cg = new();
+   endfunction  
+
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.encoder_Bit_Rate_10);
+      cov_fifo.get(data_to_chk);
+      tx_pma_cg.sample();
+      `uvm_info("tx_pma_COVERAGE", "", UVM_LOW);             
+     end
+   endtask 
 
 endclass
 
@@ -163,6 +226,9 @@ class tx_pma_agt extends uvm_agent;
 endclass
 
 
+
+
+
 ////////////////// ENV /////////////////////////
 
  class tx_pma_env extends uvm_env;
@@ -170,7 +236,7 @@ endclass
    
   tx_pma_agt agt;
   tx_pma_sb  sb;
-
+  tx_pma_cov cov;
 
    function new(string name = "tx_pma_env" , uvm_component parent = null);
      super.new(name,parent);
@@ -182,6 +248,7 @@ endclass
      
      agt = `create(tx_pma_agt,"agt");
      sb  = `create(tx_pma_sb,"sb");
+     cov = `create(tx_pma_cov,"cov");
 
      `uvm_info("tx_pma_env","BUILD_PHASE",UVM_LOW);
    endfunction
@@ -190,6 +257,7 @@ endclass
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
       agt.agt_port.connect(sb.sb_export);
+      agt.agt_port.connect(cov.cov_export);
    endfunction
  
  endclass

@@ -55,6 +55,7 @@ class encoding_mon extends uvm_monitor;
        data_to_send = `create(encoding_seq_itm, "data_to_send");
        @(negedge  passive_vif.encoder_Bit_Rate_10);
        data_to_send.encoder_data_out = passive_vif.encoder_data_out;
+       data_to_send.encoder_TXDataK  = passive_vif.encoder_TXDataK;
 
        mon_port.write(data_to_send);
      end
@@ -159,6 +160,73 @@ class encoding_agt extends uvm_agent;
 endclass
 
 
+
+///////////////// Coverage ////////////////////////
+
+
+class encoding_cov extends uvm_component;
+
+ `uvm_component_utils(encoding_cov);
+
+ uvm_analysis_export #(encoding_seq_itm)  cov_export;
+ encoding_seq_itm  data_to_chk;
+ uvm_tlm_analysis_fifo #(encoding_seq_itm)  cov_fifo;
+ 
+  virtual PASSIVE_if passive_vif;
+
+
+
+covergroup encoding_cg();
+  
+data_out_cp: coverpoint data_to_chk.encoder_data_out;
+txdatak_cp: coverpoint data_to_chk.encoder_TXDataK;
+
+endgroup
+
+
+
+   function void connect_phase(uvm_phase phase);
+      super.connect_phase(phase);
+      cov_export.connect(cov_fifo.analysis_export);
+    endfunction
+
+
+
+   function void build_phase(uvm_phase phase);
+     super.build_phase(phase);
+      
+      cov_export    = new("cov_export" , this);
+      cov_fifo       = new("cov_fifo", this);      
+      data_to_chk = `create(encoding_seq_itm, "data_to_chk");
+
+      if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("ENCODING", "FATAL GETTING if");
+      end
+
+     `uvm_info("encoding_cov","BUILD_PHASE",UVM_LOW);
+   endfunction
+
+
+   function new(string name = "encoding_cov" , uvm_component parent = null);
+     super.new(name,parent);
+     encoding_cg = new();
+   endfunction  
+
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.encoder_Bit_Rate_10);
+      cov_fifo.get(data_to_chk);
+      encoding_cg.sample();
+      `uvm_info("ENCODING_COVERAGE", "", UVM_LOW);             
+     end
+   endtask 
+
+endclass
+
+
+
 ////////////////// ENV /////////////////////////
 
  class encoding_env extends uvm_env;
@@ -166,7 +234,7 @@ endclass
    
   encoding_agt agt;
   encoding_sb  sb;
-
+  encoding_cov cov;
 
    function new(string name = "encoding_env" , uvm_component parent = null);
      super.new(name,parent);
@@ -178,6 +246,7 @@ endclass
      
      agt = `create(encoding_agt,"agt");
      sb  = `create(encoding_sb,"sb");
+     cov = `create(encoding_cov,"cov");
 
      `uvm_info("encoding_env","BUILD_PHASE",UVM_LOW);
    endfunction
@@ -186,6 +255,7 @@ endclass
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
       agt.agt_port.connect(sb.sb_export);
+      agt.agt_port.connect(cov.cov_export);
    endfunction
  
  endclass

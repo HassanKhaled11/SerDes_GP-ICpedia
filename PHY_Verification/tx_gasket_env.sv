@@ -119,6 +119,70 @@ class tx_gasket_sb extends uvm_scoreboard;
 endclass
 
 
+///////////////// Coverage ////////////////////////
+
+
+class tx_gasket_cov extends uvm_component;
+
+ `uvm_component_utils(tx_gasket_cov);
+
+ uvm_analysis_export #(tx_gasket_seq_itm)  cov_export;
+ tx_gasket_seq_itm  data_to_chk;
+ uvm_tlm_analysis_fifo #(tx_gasket_seq_itm)  cov_fifo;
+ 
+  virtual PASSIVE_if passive_vif;
+
+
+
+covergroup tx_gasket_cg();
+  
+  txdata_cp: coverpoint data_to_chk.tx_gasket_TxData;
+  txdatak: coverpoint data_to_chk.tx_gasket_TxDataK;
+
+endgroup
+
+
+
+   function void connect_phase(uvm_phase phase);
+      super.connect_phase(phase);
+      cov_export.connect(cov_fifo.analysis_export);
+    endfunction
+
+
+
+   function void build_phase(uvm_phase phase);
+     super.build_phase(phase);
+      
+      cov_export    = new("cov_export" , this);
+      cov_fifo       = new("cov_fifo", this);      
+      data_to_chk = `create(tx_gasket_seq_itm, "data_to_chk");
+
+      if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("TX_GASKET", "FATAL GETTING tx_pma_if");
+      end
+
+     `uvm_info("tx_gasket_cov","BUILD_PHASE",UVM_LOW);
+   endfunction
+
+
+   function new(string name = "tx_gasket_cov" , uvm_component parent = null);
+     super.new(name,parent);
+     tx_gasket_cg = new();
+   endfunction  
+
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.tx_gasket_Bit_Rate_CLK_10);
+      cov_fifo.get(data_to_chk);
+      tx_gasket_cg.sample();
+      `uvm_info("TX_GASKET_COVERAGE", "", UVM_LOW);             
+     end
+   endtask 
+
+endclass
+
 
 //////////////////// AGENT ///////////////////////
 
@@ -167,7 +231,7 @@ endclass
    
   tx_gasket_agt agt;
   tx_gasket_sb  sb;
-
+  tx_gasket_cov cov;
 
    function new(string name = "tx_gasket_env" , uvm_component parent = null);
      super.new(name,parent);
@@ -179,6 +243,7 @@ endclass
      
      agt = `create(tx_gasket_agt,"agt");
      sb  = `create(tx_gasket_sb,"sb");
+     cov = `create(tx_gasket_cov , "cov");
 
      `uvm_info("tx_gasket_env","BUILD_PHASE",UVM_LOW);
    endfunction
@@ -187,6 +252,7 @@ endclass
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
       agt.agt_port.connect(sb.sb_export);
+      agt.agt_port.connect(cov.cov_export);
    endfunction
  
  endclass

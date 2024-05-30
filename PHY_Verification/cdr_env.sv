@@ -59,6 +59,7 @@ class cdr_mon extends uvm_monitor;
        data_to_send = `create(cdr_seq_itm, "data_to_send");
        @(negedge  passive_vif.cdr_clk_0);
        data_to_send.cdr_Dout = passive_vif.cdr_Dout;
+       data_to_send.cdr_code = passive_vif.cdr_code;
 
        mon_port.write(data_to_send);
      end
@@ -121,6 +122,69 @@ class cdr_sb extends uvm_scoreboard;
 endclass
 
 
+///////////////// Coverage ////////////////////////
+
+
+class cdr_cov extends uvm_component;
+
+ `uvm_component_utils(cdr_cov);
+
+ uvm_analysis_export #(cdr_seq_itm)  cov_export;
+ cdr_seq_itm  data_to_chk;
+ uvm_tlm_analysis_fifo #(cdr_seq_itm)  cov_fifo;
+ 
+ virtual PASSIVE_if passive_vif;
+
+
+
+covergroup cdr_cg();
+cdr_code: coverpoint data_to_chk.cdr_code;
+cdr_data: coverpoint data_to_chk.cdr_Dout; 
+endgroup
+
+
+
+   function void connect_phase(uvm_phase phase);
+      super.connect_phase(phase);
+      cov_export.connect(cov_fifo.analysis_export);
+    endfunction
+
+
+
+   function void build_phase(uvm_phase phase);
+     super.build_phase(phase);
+      
+      cov_export     = new("cov_export" , this);
+      cov_fifo       = new("cov_fifo", this);      
+      data_to_chk    = `create(cdr_seq_itm, "data_to_chk");
+
+      if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+          `uvm_fatal("TX_PMA", "FATAL GETTING if");
+      end
+
+     `uvm_info("cdr_cov","BUILD_PHASE",UVM_LOW);
+   endfunction
+
+
+   function new(string name = "cdr_cov" , uvm_component parent = null);
+     super.new(name,parent);
+     cdr_cg = new();
+   endfunction  
+
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+     forever begin
+      @(posedge passive_vif.cdr_clk_0);
+      cov_fifo.get(data_to_chk);
+      cdr_cg.sample();
+      `uvm_info("cdr_COVERAGE", "", UVM_LOW);             
+     end
+   endtask 
+
+endclass
+
+
 
 //////////////////// AGENT ///////////////////////
 
@@ -170,7 +234,7 @@ endclass
    
   cdr_agt agt;
   cdr_sb  sb;
-
+  cdr_cov cov;
 
    function new(string name = "cdr_env" , uvm_component parent = null);
      super.new(name,parent);
@@ -182,6 +246,7 @@ endclass
      
      agt = `create(cdr_agt,"agt");
      sb  = `create(cdr_sb,"sb");
+     cov = `create(cdr_cov,"cov");
 
      `uvm_info("cdr_env","BUILD_PHASE",UVM_LOW);
    endfunction
@@ -190,6 +255,7 @@ endclass
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
       agt.agt_port.connect(sb.sb_export);
+      agt.agt_port.connect(cov.cov_export);
    endfunction
  
  endclass
