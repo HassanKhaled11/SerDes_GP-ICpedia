@@ -32,7 +32,7 @@ endclass
 
 /////////////////// MONITOR /////////////////////
 
-class tx_gasket_mon extends uvm_monitor;
+class tx_gasket_mon extends uvm_monitor;              //REF MONITOR
  `uvm_component_utils(tx_gasket_mon);
 
  int counter;
@@ -64,7 +64,6 @@ class tx_gasket_mon extends uvm_monitor;
                      `uvm_info("MON_REF", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_MAC_TX_Data , $realtime() ), UVM_LOW);
          data_to_send.tx_gasket_Bit_Rate_CLK_10 = passive_vif.tx_gasket_Bit_Rate_CLK_10;
          data_to_send.tx_gasket_TxDataK = passive_vif.tx_gasket_TxDataK;
-         @(posedge passive_vif.tx_gasket_Bit_Rate_CLK_10);
          mon_port.write(data_to_send);
      end
 
@@ -74,7 +73,7 @@ endclass
 
 
 
-class tx_gasket_mon_after extends uvm_monitor;
+class tx_gasket_mon_after extends uvm_monitor;              //OUTPUT MONITOR
  `uvm_component_utils(tx_gasket_mon_after);
 
  int counter;
@@ -105,7 +104,7 @@ class tx_gasket_mon_after extends uvm_monitor;
          @(posedge  passive_vif.tx_gasket_Bit_Rate_CLK_10);
          data_to_send = `create(tx_gasket_seq_itm, "data_to_send");
          data_to_send.tx_gasket_TxData = passive_vif.tx_gasket_TxData;
-                     `uvm_info("MON_AFTER", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_TxData , $realtime() ), UVM_LOW);
+                // `uvm_info("MON_AFTER", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_TxData , $realtime() ), UVM_LOW);
          data_to_send.tx_gasket_TxDataK = passive_vif.tx_gasket_TxDataK;
          mon_port_aft.write(data_to_send);
      end
@@ -163,9 +162,9 @@ class tx_gasket_sb extends uvm_scoreboard;
       data_to_chk = `create(tx_gasket_seq_itm, "data_to_chk");
 
 
-      for (int i = 0; i < 4; i++) begin
-        data_to_chk_arr[i] = `create(tx_gasket_seq_itm, $sformatf("data_to_chk_arr[%0d]", i));
-      end
+      // for (int i = 0; i < 4; i++) begin
+      //   data_to_chk_arr[i] = `create(tx_gasket_seq_itm, $sformatf("data_to_chk_arr[%0d]", i));  //instantiate array
+      // end
 
       sb_export_ref     = new("sb_export_ref" , this);
       sb_fifo_ref       = new("sb_fifo_ref", this);      
@@ -215,11 +214,11 @@ class tx_gasket_sb extends uvm_scoreboard;
 
  function void compare(logic [31:0] expected_pkt , logic [31:0] actual_pkt);
    if(expected_pkt == actual_pkt) begin
-     `uvm_info("TX_GASKET_DATA RIGHT", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+     `uvm_info("TX_GASKET_DATA_TEST RIGHT", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
    end
 
    else begin
-     `uvm_info("TX_GASKET_DATA WRONG", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+     `uvm_info("TX_GASKET_DATA_TEST WRONG", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
    end
  endfunction
 

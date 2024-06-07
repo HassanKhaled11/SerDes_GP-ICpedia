@@ -30,7 +30,7 @@ endclass
 
 /////////////////// MONITOR /////////////////////
 
-class tx_pma_mon extends uvm_monitor;
+class tx_pma_mon extends uvm_monitor;         //INPUT MONITOR
  `uvm_component_utils(tx_pma_mon);
 
  uvm_analysis_port #(tx_pma_seq_itm) mon_port;
@@ -55,8 +55,8 @@ class tx_pma_mon extends uvm_monitor;
 
      forever begin
        data_to_send = `create(tx_pma_seq_itm, "data_to_send");
-       @(negedge  passive_vif.tx_pma_Bit_Rate_Clk);
-       data_to_send.tx_pma_TX_Out_P = passive_vif.tx_pma_TX_Out_P;
+       @(negedge   passive_vif.tx_pma_Bit_Rate_Clk_10);
+       data_to_send.tx_pma_Data_in = passive_vif.tx_pma_Data_in;
 
        mon_port.write(data_to_send);
      end
@@ -67,6 +67,48 @@ class tx_pma_mon extends uvm_monitor;
 endclass
 
 
+
+
+class tx_pma_mon_after extends uvm_monitor;         //OUTPUT MONITOR
+ `uvm_component_utils(tx_pma_mon_after);
+
+ uvm_analysis_port #(tx_pma_seq_itm) mon_port_aft;
+ tx_pma_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
+
+
+   function new(string name = "tx_pma_mon_after" , uvm_component parent = null);
+     super.new(name,parent);
+   endfunction  
+
+
+   function void build_phase(uvm_phase phase);
+     super.build_phase(phase);
+      mon_port_aft = new("mon_port_aft" , this);
+     //`uvm_info("tx_pma_mon_after","BUILD_PHASE",UVM_LOW);
+   endfunction
+ 
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+
+    @(posedge passive_vif.tx_gasket_PCLK);
+    @(posedge passive_vif.encoder_Bit_Rate_10);
+    @(posedge passive_vif.tx_pma_Bit_Rate_Clk);
+    @(posedge passive_vif.tx_pma_Bit_Rate_Clk);
+     forever begin
+       @(posedge  passive_vif.tx_pma_Bit_Rate_Clk);
+       data_to_send = `create(tx_pma_seq_itm, "data_to_send");
+       data_to_send.tx_pma_TX_Out_P = passive_vif.tx_pma_TX_Out_P;
+
+       mon_port_aft.write(data_to_send);
+     end
+
+   endtask
+
+
+endclass
+
 ///////////////// SB ////////////////////////
 
 class tx_pma_sb extends uvm_scoreboard;
@@ -75,7 +117,16 @@ class tx_pma_sb extends uvm_scoreboard;
 
  uvm_analysis_export #(tx_pma_seq_itm)  sb_export;
  tx_pma_seq_itm  data_to_chk;
-  uvm_tlm_analysis_fifo #(tx_pma_seq_itm)  sb_fifo;
+ uvm_tlm_analysis_fifo #(tx_pma_seq_itm)  sb_fifo;
+
+ uvm_analysis_export #(tx_pma_seq_itm)  sb_export_ref;
+ tx_pma_seq_itm  data_to_chk_ref;
+ uvm_tlm_analysis_fifo #(tx_pma_seq_itm)  sb_fifo_ref;
+
+
+logic [9:0] actual_data_collected ;
+logic [9:0] expected_data_collected ;
+
 
   virtual PASSIVE_if passive_vif;
 
@@ -83,6 +134,7 @@ class tx_pma_sb extends uvm_scoreboard;
    function void connect_phase(uvm_phase phase);
       super.connect_phase(phase);
       sb_export.connect(sb_fifo.analysis_export);
+      sb_export_ref.connect(sb_fifo_ref.analysis_export);      
     endfunction
 
 
@@ -99,7 +151,12 @@ class tx_pma_sb extends uvm_scoreboard;
       data_to_chk  = new("data_to_chk");
 
 
-    if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
+      sb_export_ref     = new("sb_export_ref" , this);
+      sb_fifo_ref       = new("sb_fifo_ref", this);      
+      data_to_chk_ref = `create(tx_pma_seq_itm, "data_to_chk_ref");
+
+
+      if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
           `uvm_fatal("TX_PMA", "FATAL GETTING intf");
       end
 
@@ -110,11 +167,30 @@ class tx_pma_sb extends uvm_scoreboard;
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
      forever begin
-      @(posedge passive_vif.tx_pma_Bit_Rate_Clk);
+      
+      sb_fifo_ref.get(data_to_chk_ref);
+      expected_data_collected = data_to_chk_ref.tx_pma_Data_in;
+
+      for (int i = 0; i < 10; i++) begin
       sb_fifo.get(data_to_chk);
-     // `uvm_info("TX_PMA_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.tx_pma_TX_Out_P), UVM_LOW);             
+      actual_data_collected[i] = data_to_chk.tx_pma_TX_Out_P;  
+      end
+
+     compare(expected_data_collected , actual_data_collected);
+           
      end
    endtask 
+
+
+   function void compare(logic [31:0] expected_pkt , logic [31:0] actual_pkt);
+   if(expected_pkt == actual_pkt) begin
+     `uvm_info("TX_PMA_DATA_TEST RIGHT", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+   end
+
+   else begin
+     `uvm_info("TX_PMA_DATA_TEST WRONG", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+   end
+ endfunction 
 
 
 endclass
@@ -193,8 +269,12 @@ class tx_pma_agt extends uvm_agent;
 
  tx_pma_config_db tx_pma_cfg;
  tx_pma_mon mon;
+ tx_pma_mon_after mon_aft;
+
 
   uvm_analysis_port #(tx_pma_seq_itm) agt_port;
+  uvm_analysis_port #(tx_pma_seq_itm) agt_port_aft;
+
 
    function new(string name = "tx_pma_agt" , uvm_component parent = null);
      super.new(name,parent);
@@ -205,7 +285,10 @@ class tx_pma_agt extends uvm_agent;
      super.build_phase(phase);
 
      agt_port = new("agt_port" , this);
+     agt_port_aft = new("agt_port_aft" , this);     
+  
      mon = `create(tx_pma_mon , "mon");
+     mon_aft = `create(tx_pma_mon_after , "mon_aft");
 
      tx_pma_cfg = `create(tx_pma_config_db,"tx_pma_cfg");
 
@@ -219,8 +302,10 @@ class tx_pma_agt extends uvm_agent;
    
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
-     mon.mon_port.connect(agt_port);
      mon.passive_vif = tx_pma_cfg.passive_vif;
+     mon.mon_port.connect(agt_port);
+     mon_aft.mon_port_aft.connect(agt_port_aft);
+     mon_aft.passive_vif = tx_pma_cfg.passive_vif;   
    endfunction
  
 endclass
@@ -256,8 +341,9 @@ endclass
 
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
-      agt.agt_port.connect(sb.sb_export);
+      agt.agt_port.connect(sb.sb_export_ref);
       agt.agt_port.connect(cov.cov_export);
+      agt.agt_port_aft.connect(sb.sb_export);
    endfunction
  
  endclass
