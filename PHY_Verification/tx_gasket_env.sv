@@ -35,6 +35,8 @@ endclass
 class tx_gasket_mon extends uvm_monitor;
  `uvm_component_utils(tx_gasket_mon);
 
+ int counter;
+
  uvm_analysis_port #(tx_gasket_seq_itm) mon_port;
  tx_gasket_seq_itm  data_to_send;
  virtual PASSIVE_if passive_vif;
@@ -47,25 +49,71 @@ class tx_gasket_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-     `uvm_info("tx_gasket_mon","BUILD_PHASE",UVM_LOW);
+      counter = 0;
+     //`uvm_info("tx_gasket_mon","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
-
+     
      forever begin
-        data_to_send = `create(tx_gasket_seq_itm, "data_to_send");
-       @(negedge  passive_vif.tx_gasket_Bit_Rate_CLK_10);
-       data_to_send.tx_gasket_TxData = passive_vif.tx_gasket_TxData;
-       data_to_send.tx_gasket_Bit_Rate_CLK_10 = passive_vif.tx_gasket_Bit_Rate_CLK_10;
-
-       mon_port.write(data_to_send);
+         @(posedge  passive_vif.tx_gasket_PCLK);
+         data_to_send = `create(tx_gasket_seq_itm, "data_to_send");
+         data_to_send.tx_gasket_MAC_TX_Data = passive_vif.tx_gasket_MAC_TX_Data;
+                     `uvm_info("MON_REF", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_MAC_TX_Data , $realtime() ), UVM_LOW);
+         data_to_send.tx_gasket_Bit_Rate_CLK_10 = passive_vif.tx_gasket_Bit_Rate_CLK_10;
+         data_to_send.tx_gasket_TxDataK = passive_vif.tx_gasket_TxDataK;
+         @(posedge passive_vif.tx_gasket_Bit_Rate_CLK_10);
+         mon_port.write(data_to_send);
      end
 
    endtask
  
 endclass
+
+
+
+class tx_gasket_mon_after extends uvm_monitor;
+ `uvm_component_utils(tx_gasket_mon_after);
+
+ int counter;
+
+ uvm_analysis_port #(tx_gasket_seq_itm) mon_port_aft;
+ tx_gasket_seq_itm  data_to_send;
+ virtual PASSIVE_if passive_vif;
+
+   function new(string name = "tx_gasket_mon_after" , uvm_component parent = null);
+     super.new(name,parent);
+   endfunction  
+
+
+   function void build_phase(uvm_phase phase);
+     super.build_phase(phase);
+      mon_port_aft = new("mon_port_aft" , this);
+      counter = 0;
+     //`uvm_info("tx_gasket_mon_after","BUILD_PHASE",UVM_LOW);
+   endfunction
+
+
+   task run_phase(uvm_phase phase);
+     super.run_phase(phase);
+     
+     @(posedge  passive_vif.tx_gasket_PCLK);
+     @(posedge passive_vif.tx_gasket_Bit_Rate_CLK_10);
+     forever begin
+         @(posedge  passive_vif.tx_gasket_Bit_Rate_CLK_10);
+         data_to_send = `create(tx_gasket_seq_itm, "data_to_send");
+         data_to_send.tx_gasket_TxData = passive_vif.tx_gasket_TxData;
+                     `uvm_info("MON_AFTER", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_TxData , $realtime() ), UVM_LOW);
+         data_to_send.tx_gasket_TxDataK = passive_vif.tx_gasket_TxDataK;
+         mon_port_aft.write(data_to_send);
+     end
+
+   endtask
+ 
+endclass
+
 
 
 ///////////////// SB ////////////////////////
@@ -78,43 +126,103 @@ class tx_gasket_sb extends uvm_scoreboard;
  tx_gasket_seq_itm  data_to_chk;
  uvm_tlm_analysis_fifo #(tx_gasket_seq_itm)  sb_fifo;
  
+
+
+ uvm_analysis_export #(tx_gasket_seq_itm)  sb_export_ref;
+ tx_gasket_seq_itm  data_to_chk_ref;
+ uvm_tlm_analysis_fifo #(tx_gasket_seq_itm)  sb_fifo_ref;
+
   virtual PASSIVE_if passive_vif;
 
+
+  logic [31:0] expected_MAC_TX_DATA;
+  logic [7:0] expected_TX_DATA;
+  logic [31:0] actual_TX_DATA;
+
+  tx_gasket_seq_itm data_to_chk_arr [4];
+  int counter;
 
    function void connect_phase(uvm_phase phase);
       super.connect_phase(phase);
       sb_export.connect(sb_fifo.analysis_export);
+      sb_export_ref.connect(sb_fifo_ref.analysis_export);
     endfunction
 
 
    function new(string name = "tx_gasket_sb" , uvm_component parent = null);
      super.new(name,parent);
+     counter = 0;
    endfunction  
 
 
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
-      
-      sb_export    = new("sb_export" , this);
+
+      sb_export     = new("sb_export" , this);
       sb_fifo       = new("sb_fifo", this);      
       data_to_chk = `create(tx_gasket_seq_itm, "data_to_chk");
+
+
+      for (int i = 0; i < 4; i++) begin
+        data_to_chk_arr[i] = `create(tx_gasket_seq_itm, $sformatf("data_to_chk_arr[%0d]", i));
+      end
+
+      sb_export_ref     = new("sb_export_ref" , this);
+      sb_fifo_ref       = new("sb_fifo_ref", this);      
+      data_to_chk_ref = `create(tx_gasket_seq_itm, "data_to_chk_ref");
+
 
       if (!uvm_config_db#(virtual PASSIVE_if)::get(this, "" , "passive_if" , passive_vif)) begin
           `uvm_fatal("TX_GASKET", "FATAL GETTING tx_pma_if");
       end
 
-     `uvm_info("tx_gasket_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_gasket_sb","BUILD_PHASE",UVM_LOW);
    endfunction
+
+
 
 
    task run_phase(uvm_phase phase);
      super.run_phase(phase);
-     forever begin
-      @(posedge passive_vif.tx_gasket_Bit_Rate_CLK_10);
-      sb_fifo.get(data_to_chk);
-      `uvm_info("TX_GASKET_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.tx_gasket_TxData), UVM_LOW);             
-     end
-   endtask 
+
+
+    forever begin
+
+       sb_fifo_ref.get(data_to_chk_ref);
+       expected_MAC_TX_DATA = data_to_chk_ref.tx_gasket_MAC_TX_Data;
+     
+       
+       sb_fifo.get(data_to_chk);
+       actual_TX_DATA[7:0]  = data_to_chk.tx_gasket_TxData;
+
+
+       sb_fifo.get(data_to_chk);
+       actual_TX_DATA[15:8] = data_to_chk.tx_gasket_TxData;
+      
+
+       sb_fifo.get(data_to_chk);
+       actual_TX_DATA[23:16] = data_to_chk.tx_gasket_TxData;
+      
+
+       sb_fifo.get(data_to_chk);
+       actual_TX_DATA[31:24] = data_to_chk.tx_gasket_TxData;
+
+      compare(expected_MAC_TX_DATA , actual_TX_DATA); 
+
+  end
+
+ endtask 
+
+ function void compare(logic [31:0] expected_pkt , logic [31:0] actual_pkt);
+   if(expected_pkt == actual_pkt) begin
+     `uvm_info("TX_GASKET_DATA RIGHT", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+   end
+
+   else begin
+     `uvm_info("TX_GASKET_DATA WRONG", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+   end
+ endfunction
+
 
 endclass
 
@@ -161,7 +269,7 @@ endgroup
           `uvm_fatal("TX_GASKET", "FATAL GETTING tx_pma_if");
       end
 
-     `uvm_info("tx_gasket_cov","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_gasket_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -177,7 +285,7 @@ endgroup
       @(posedge passive_vif.tx_gasket_Bit_Rate_CLK_10);
       cov_fifo.get(data_to_chk);
       tx_gasket_cg.sample();
-      `uvm_info("TX_GASKET_COVERAGE", "", UVM_LOW);             
+      //`uvm_info("TX_GASKET_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -191,8 +299,10 @@ class tx_gasket_agt extends uvm_agent;
 
  tx_gasket_config_db tx_gasket_cfg;
  tx_gasket_mon mon;
+ tx_gasket_mon_after mon_aft;
 
   uvm_analysis_port #(tx_gasket_seq_itm) agt_port;
+  uvm_analysis_port #(tx_gasket_seq_itm) agt_port_aft;
 
    function new(string name = "tx_gasket_agt" , uvm_component parent = null);
      super.new(name,parent);
@@ -203,7 +313,11 @@ class tx_gasket_agt extends uvm_agent;
      super.build_phase(phase);
 
      agt_port = new("agt_port" , this);
+     agt_port_aft = new("agt_port_aft" , this);
+
      mon = `create(tx_gasket_mon , "mon");
+     mon_aft = `create(tx_gasket_mon_after , "mon_aft");
+
 
      tx_gasket_cfg = `create(tx_gasket_config_db, "tx_gasket_cfg");
 
@@ -211,14 +325,16 @@ class tx_gasket_agt extends uvm_agent;
           `uvm_fatal("tx_gasket_agt", "FATAL GETTING TX_GASKET_CFG");        
      end
 
-     `uvm_info("tx_gasket_agt","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_gasket_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
-     mon.mon_port.connect(agt_port);
      mon.passive_vif = tx_gasket_cfg.passive_vif;
+     mon_aft.passive_vif = tx_gasket_cfg.passive_vif;
+     mon.mon_port.connect(agt_port);
+     mon_aft.mon_port_aft.connect(agt_port_aft);
    endfunction
  
 endclass
@@ -245,14 +361,15 @@ endclass
      sb  = `create(tx_gasket_sb,"sb");
      cov = `create(tx_gasket_cov , "cov");
 
-     `uvm_info("tx_gasket_env","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_gasket_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
    function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
-      agt.agt_port.connect(sb.sb_export);
-      agt.agt_port.connect(cov.cov_export);
+     agt.agt_port.connect(sb.sb_export_ref);
+     agt.agt_port.connect(cov.cov_export);
+     agt.agt_port_aft.connect(sb.sb_export);
    endfunction
  
  endclass

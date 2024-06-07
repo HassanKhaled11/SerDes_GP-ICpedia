@@ -51,7 +51,7 @@ class ebuffer_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-     `uvm_info("ebuffer_mon","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("ebuffer_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
 
@@ -111,7 +111,7 @@ class ebuffer_sb extends uvm_scoreboard;
           `uvm_fatal("EBUFFER", "FATAL GETTING intf");
     end
 
-     `uvm_info("ebuffer_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("ebuffer_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -120,7 +120,7 @@ class ebuffer_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.ebuffer_read_clk);
       sb_fifo.get(data_to_chk);
-      `uvm_info("EBUFFER_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.ebuffer_data_out), UVM_LOW);             
+     // `uvm_info("EBUFFER_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.ebuffer_data_out), UVM_LOW);             
      end
    endtask 
 
@@ -170,7 +170,7 @@ endgroup
           `uvm_fatal("TX_PMA", "FATAL GETTING if");
       end
 
-     `uvm_info("ebuffer_cov","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("ebuffer_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -186,7 +186,7 @@ endgroup
       @(posedge passive_vif.ebuffer_read_clk);
       cov_fifo.get(data_to_chk);
       ebuffer_cg.sample();
-      `uvm_info("ebuffer_COVERAGE", "", UVM_LOW);             
+      //`uvm_info("ebuffer_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -221,7 +221,7 @@ class ebuffer_agt extends uvm_agent;
           `uvm_fatal("ebuffer_agt", "FATAL GETTING CFG");        
     end
 
-     `uvm_info("ebuffer_agt","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("ebuffer_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -255,7 +255,7 @@ endclass
      sb  = `create(ebuffer_sb,"sb");
      cov = `create(ebuffer_cov,"cov");
 
-     `uvm_info("ebuffer_env","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("ebuffer_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 

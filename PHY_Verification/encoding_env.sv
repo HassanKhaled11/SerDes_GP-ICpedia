@@ -44,7 +44,7 @@ class encoding_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-     `uvm_info("encoding_mon","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("encoding_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
 
@@ -102,7 +102,7 @@ class encoding_sb extends uvm_scoreboard;
       end
 
 
-     `uvm_info("encoding_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("encoding_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -111,7 +111,7 @@ class encoding_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.encoder_Bit_Rate_10);
       sb_fifo.get(data_to_chk);
-      `uvm_info("ENCODING_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.encoder_data_out), UVM_LOW);             
+    //  `uvm_info("ENCODING_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.encoder_data_out), UVM_LOW);             
      end
    endtask 
 
@@ -147,7 +147,7 @@ class encoding_agt extends uvm_agent;
           `uvm_fatal("encoding_agt", "FATAL GETTING ENCODING_CFG");        
      end
 
-     `uvm_info("encoding_agt","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("encoding_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -203,7 +203,7 @@ endgroup
           `uvm_fatal("ENCODING", "FATAL GETTING if");
       end
 
-     `uvm_info("encoding_cov","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("encoding_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -219,7 +219,7 @@ endgroup
       @(posedge passive_vif.encoder_Bit_Rate_10);
       cov_fifo.get(data_to_chk);
       encoding_cg.sample();
-      `uvm_info("ENCODING_COVERAGE", "", UVM_LOW);             
+     // `uvm_info("ENCODING_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -248,7 +248,7 @@ endclass
      sb  = `create(encoding_sb,"sb");
      cov = `create(encoding_cov,"cov");
 
-     `uvm_info("encoding_env","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("encoding_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 

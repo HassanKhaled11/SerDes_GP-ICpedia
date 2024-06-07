@@ -46,7 +46,7 @@ class rx_gasket_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-     `uvm_info("rx_gasket_mon","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_gasket_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
 
@@ -103,7 +103,7 @@ class rx_gasket_sb extends uvm_scoreboard;
           `uvm_fatal("RX_GASKET", "FATAL GETTING intf");
     end      
 
-     `uvm_info("rx_gasket_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_gasket_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -112,7 +112,7 @@ class rx_gasket_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.rx_gasket_PCLK);
       sb_fifo.get(data_to_chk);
-      `uvm_info("RX_GASKET_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.rx_gasket_Data_out), UVM_LOW);             
+      //`uvm_info("RX_GASKET_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.rx_gasket_Data_out), UVM_LOW);             
      end
    endtask 
 
@@ -159,7 +159,7 @@ endgroup
           `uvm_fatal("TX_PMA", "FATAL GETTING if");
       end
 
-     `uvm_info("rx_gasket_cov","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_gasket_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -175,7 +175,7 @@ endgroup
       @(posedge passive_vif.rx_gasket_PCLK);
       cov_fifo.get(data_to_chk);
       rx_gasket_cg.sample();
-      `uvm_info("rx_gasket_COVERAGE", "", UVM_LOW);             
+     // `uvm_info("rx_gasket_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -209,7 +209,7 @@ class rx_gasket_agt extends uvm_agent;
           `uvm_fatal("rx_gasket_agt", "FATAL GETTING CFG");        
     end  
 
-     `uvm_info("rx_gasket_agt","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_gasket_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -244,7 +244,7 @@ endclass
      sb  = `create(rx_gasket_sb,"sb");
      cov = `create(rx_gasket_cov,"cov");
 
-     `uvm_info("rx_gasket_env","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_gasket_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 

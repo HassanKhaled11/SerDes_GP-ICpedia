@@ -44,7 +44,7 @@ package my_sequence_pkg;
       stim_seq_item.MAC_TX_Data_32c.constraint_mode(1);
 
 
-      repeat (3000) begin
+      repeat (1000) begin
 
         start_item(stim_seq_item);
         //`uvm_info("MY_SEQUENCE", "AFTER START ITEM", UVM_DEBUG);

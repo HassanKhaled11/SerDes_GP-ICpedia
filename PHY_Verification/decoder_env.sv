@@ -102,7 +102,7 @@ class decoder_sb extends uvm_scoreboard;
           `uvm_fatal("DECODER", "FATAL GETTING intf");
     end
 
-     `uvm_info("decoder_sb","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("decoder_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -111,7 +111,7 @@ class decoder_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.decoder_CLK);
       sb_fifo.get(data_to_chk);
-      `uvm_info("DECODER_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.decoder_Data_out), UVM_LOW);             
+     // `uvm_info("DECODER_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.decoder_Data_out), UVM_LOW);             
      end
    endtask 
 
@@ -159,7 +159,7 @@ endgroup
           `uvm_fatal("TX_PMA", "FATAL GETTING if");
       end
 
-     `uvm_info("decoder_cov","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("decoder_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -175,7 +175,7 @@ endgroup
       @(posedge passive_vif.decoder_CLK);
       cov_fifo.get(data_to_chk);
       decoder_cg.sample();
-      `uvm_info("decoder_COVERAGE", "", UVM_LOW);             
+    //  `uvm_info("decoder_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -210,7 +210,7 @@ class decoder_agt extends uvm_agent;
           `uvm_fatal("decoder_agt", "FATAL GETTING CFG");        
     end     
 
-     `uvm_info("decoder_agt","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("decoder_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -245,7 +245,7 @@ endclass
      sb  = `create(decoder_sb,"sb");
      cov = `create(decoder_cov,"cov");
 
-     `uvm_info("decoder_env","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("decoder_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 

@@ -98,7 +98,7 @@ class rx_s2p_sb extends uvm_scoreboard;
           `uvm_fatal("ENCODING", "FATAL GETTING intf");
     end
 
-     `uvm_info("rx_s2p_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_s2p_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -107,7 +107,7 @@ class rx_s2p_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.rx_s2p_Recovered_Bit_Clk);
       sb_fifo.get(data_to_chk);
-      `uvm_info("RX_S2P_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.rx_s2p_Data_Collected), UVM_LOW);             
+     // `uvm_info("RX_S2P_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.rx_s2p_Data_Collected), UVM_LOW);             
      end
    endtask 
 
@@ -154,7 +154,7 @@ endgroup
           `uvm_fatal("RX_S2P", "FATAL GETTING if");
       end
 
-     `uvm_info("rx_s2p_cov","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_s2p_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -170,7 +170,7 @@ endgroup
       @(posedge passive_vif.rx_s2p_Recovered_Bit_Clk);
       cov_fifo.get(data_to_chk);
       rx_s2p_cg.sample();
-      `uvm_info("RX_S2P_COVERAGE", "", UVM_LOW);             
+      //`uvm_info("RX_S2P_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -207,7 +207,7 @@ class rx_s2p_agt extends uvm_agent;
           `uvm_fatal("rx_s2p_agt", "FATAL GETTING RX_S2P_CFG");        
      end     
 
-     `uvm_info("rx_s2p_agt","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("rx_s2p_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -241,7 +241,7 @@ endclass
      sb  = `create(rx_s2p_sb,"sb");
      cov  = `create(rx_s2p_cov,"cov");
 
-     `uvm_info("rx_s2p_env","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("rx_s2p_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 

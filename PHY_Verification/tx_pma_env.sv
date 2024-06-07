@@ -46,7 +46,7 @@ class tx_pma_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-     `uvm_info("tx_pma_mon","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_pma_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
 
@@ -103,7 +103,7 @@ class tx_pma_sb extends uvm_scoreboard;
           `uvm_fatal("TX_PMA", "FATAL GETTING intf");
       end
 
-     `uvm_info("tx_pma_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_pma_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -112,7 +112,7 @@ class tx_pma_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.tx_pma_Bit_Rate_Clk);
       sb_fifo.get(data_to_chk);
-      `uvm_info("TX_PMA_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.tx_pma_TX_Out_P), UVM_LOW);             
+     // `uvm_info("TX_PMA_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.tx_pma_TX_Out_P), UVM_LOW);             
      end
    endtask 
 
@@ -161,7 +161,7 @@ endgroup
           `uvm_fatal("TX_PMA", "FATAL GETTING if");
       end
 
-     `uvm_info("tx_pma_cov","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_pma_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -177,7 +177,7 @@ endgroup
       @(posedge passive_vif.encoder_Bit_Rate_10);
       cov_fifo.get(data_to_chk);
       tx_pma_cg.sample();
-      `uvm_info("tx_pma_COVERAGE", "", UVM_LOW);             
+      //`uvm_info("tx_pma_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -213,7 +213,7 @@ class tx_pma_agt extends uvm_agent;
           `uvm_fatal("tx_pma_agt", "FATAL GETTING CFG");        
      end
 
-     `uvm_info("tx_pma_agt","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_pma_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -250,7 +250,7 @@ endclass
      sb  = `create(tx_pma_sb,"sb");
      cov = `create(tx_pma_cov,"cov");
 
-     `uvm_info("tx_pma_env","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("tx_pma_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 

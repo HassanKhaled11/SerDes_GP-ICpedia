@@ -42,5 +42,13 @@ my_config_db.sv
 my_driver.sv
 my_agent.sv
 my_env.sv
+tx_gasket_env.sv
+encoding_env.sv
+tx_pma_env.sv
+cdr_env.sv
+ebuffer_env.sv
+decoder_env.sv
+rx_gasket_env.sv
+rx_s2p_env.sv
 my_test.sv
 top.sv

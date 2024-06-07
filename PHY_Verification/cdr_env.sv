@@ -48,7 +48,7 @@ class cdr_mon extends uvm_monitor;
    function void build_phase(uvm_phase phase);
      super.build_phase(phase);
       mon_port = new("mon_port" , this);
-     `uvm_info("cdr_mon","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("cdr_mon","BUILD_PHASE",UVM_LOW);
    endfunction
  
 
@@ -105,7 +105,7 @@ class cdr_sb extends uvm_scoreboard;
           `uvm_fatal("CDR", "FATAL GETTING intf");
       end
 
-     `uvm_info("cdr_sb","BUILD_PHASE",UVM_LOW);
+     //`uvm_info("cdr_sb","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -114,7 +114,7 @@ class cdr_sb extends uvm_scoreboard;
      forever begin
       @(posedge passive_vif.cdr_clk_0);
       sb_fifo.get(data_to_chk);
-      `uvm_info("CDR_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.cdr_Dout), UVM_LOW);             
+      //`uvm_info("CDR_SCOREBOARD", $sformatf("OUT_DATA = %h", data_to_chk.cdr_Dout), UVM_LOW);             
      end
    endtask 
 
@@ -162,7 +162,7 @@ endgroup
           `uvm_fatal("TX_PMA", "FATAL GETTING if");
       end
 
-     `uvm_info("cdr_cov","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("cdr_cov","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
@@ -178,7 +178,7 @@ endgroup
       @(posedge passive_vif.cdr_clk_0);
       cov_fifo.get(data_to_chk);
       cdr_cg.sample();
-      `uvm_info("cdr_COVERAGE", "", UVM_LOW);             
+      //`uvm_info("cdr_COVERAGE", "", UVM_LOW);             
      end
    endtask 
 
@@ -214,7 +214,7 @@ class cdr_agt extends uvm_agent;
           `uvm_fatal("cdr_agt", "FATAL GETTING CFG");        
     end
 
-     `uvm_info("cdr_agt","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("cdr_agt","BUILD_PHASE",UVM_LOW);
    endfunction
 
    
@@ -248,7 +248,7 @@ endclass
      sb  = `create(cdr_sb,"sb");
      cov = `create(cdr_cov,"cov");
 
-     `uvm_info("cdr_env","BUILD_PHASE",UVM_LOW);
+    // `uvm_info("cdr_env","BUILD_PHASE",UVM_LOW);
    endfunction
 
 
