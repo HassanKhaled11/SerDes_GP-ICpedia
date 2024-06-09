@@ -48,9 +48,9 @@ module write_pointer_control (
 
   always @(posedge write_clk or negedge rst_n) begin
     if (!rst_n) begin
-      write_address <= 0;
-      Skp_Removed   <= 0;
-      Skp_Added     <= 0;
+      write_address   <= 0;
+      Skp_Removed     <= 0;
+      Skp_Added       <= 0;
     end else if (!full_val) begin  //check not skp
       if (!(data_in == 10'b001111_1001 || data_in == 10'b110000_0110)) begin
         write_address <= write_address + 1;

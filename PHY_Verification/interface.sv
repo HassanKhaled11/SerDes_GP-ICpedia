@@ -110,7 +110,12 @@ interface PASSIVE_if;
   logic                                 ebuffer_overflow             ;
   logic                                 ebuffer_underflow            ;
   logic [10:0]                          ebuffer_data_out             ;
-
+  logic [4 :0]                          ebuffer_gray_write_pointer   ;
+  logic [4 :0]                          ebuffer_gray_read_pointer    ;
+  logic [4: 0]                          ebuffer_binary_read_pointer  ;
+  logic [4: 0]                          ebuffer_binary_write_pointer ;
+  logic                                 ebuffer_add_req              ;
+  logic                                 ebuffer_delete_req           ;
 
 ////////////// DECODER /////////////////
 
@@ -124,13 +129,13 @@ interface PASSIVE_if;
 
 ////////////// RX_GASKET ///////////////
 
-  logic                                 rx_gasket_clk_to_get           ;
-  logic                                 rx_gasket_PCLK                 ;
-  logic                                 rx_gasket_Rst_n                ;
-  logic                                 rx_gasket_Rx_Datak             ;
-  logic [ 5:0]                          rx_gasket_width                ;
-  logic [ 7:0]                          rx_gasket_Data_in              ;
-  logic [31:0]                          rx_gasket_Data_out             ;
+  logic                                 rx_gasket_clk_to_get         ;
+  logic                                 rx_gasket_PCLK               ;
+  logic                                 rx_gasket_Rst_n              ;
+  logic                                 rx_gasket_Rx_Datak           ;
+  logic [ 5:0]                          rx_gasket_width              ;
+  logic [ 7:0]                          rx_gasket_Data_in            ;
+  logic [31:0]                          rx_gasket_Data_out           ;
 
 
 endinterface  

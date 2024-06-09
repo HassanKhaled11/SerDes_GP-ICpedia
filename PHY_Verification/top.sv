@@ -134,16 +134,21 @@ module top;
 
 ////////////// EBUFFER /////////////////
 
-  assign passive_if.ebuffer_write_clk         = DUT.PCS_U.PCS_RX_U.buffer.write_clk;
-  assign passive_if.ebuffer_read_clk          = DUT.PCS_U.PCS_RX_U.buffer.read_clk;
-  assign passive_if.ebuffer_data_in           = DUT.PCS_U.PCS_RX_U.buffer.data_in;
-  assign passive_if.ebuffer_rst_n             = DUT.PCS_U.PCS_RX_U.buffer.rst_n;
-  assign passive_if.ebuffer_skp_added         = DUT.PCS_U.PCS_RX_U.buffer.skp_added;
-  assign passive_if.ebuffer_Skp_Removed       = DUT.PCS_U.PCS_RX_U.buffer.Skp_Removed;
-  assign passive_if.ebuffer_overflow          = DUT.PCS_U.PCS_RX_U.buffer.overflow;
-  assign passive_if.ebuffer_underflow         = DUT.PCS_U.PCS_RX_U.buffer.underflow;
-  assign passive_if.ebuffer_data_out          = DUT.PCS_U.PCS_RX_U.buffer.data_out;
-
+  assign passive_if.ebuffer_write_clk              = DUT.PCS_U.PCS_RX_U.buffer.write_clk;
+  assign passive_if.ebuffer_read_clk               = DUT.PCS_U.PCS_RX_U.buffer.read_clk;
+  assign passive_if.ebuffer_data_in                = DUT.PCS_U.PCS_RX_U.buffer.data_in;
+  assign passive_if.ebuffer_rst_n                  = DUT.PCS_U.PCS_RX_U.buffer.rst_n;
+  assign passive_if.ebuffer_skp_added              = DUT.PCS_U.PCS_RX_U.buffer.skp_added;
+  assign passive_if.ebuffer_Skp_Removed            = DUT.PCS_U.PCS_RX_U.buffer.Skp_Removed;
+  assign passive_if.ebuffer_overflow               = DUT.PCS_U.PCS_RX_U.buffer.overflow;
+  assign passive_if.ebuffer_underflow              = DUT.PCS_U.PCS_RX_U.buffer.underflow;
+  assign passive_if.ebuffer_data_out               = DUT.PCS_U.PCS_RX_U.buffer.data_out;
+  assign passive_if.ebuffer_gray_write_pointer     = DUT.PCS_U.PCS_RX_U.buffer.gray_write_pointer;
+  assign passive_if.ebuffer_gray_read_pointer      = DUT.PCS_U.PCS_RX_U.buffer.gray_read_pointer;   
+  assign passive_if.ebuffer_binary_read_pointer    = DUT.PCS_U.PCS_RX_U.buffer.Threshold_Monitor_Inst.binary_read_pointer ;
+  assign passive_if.ebuffer_binary_write_pointer   = DUT.PCS_U.PCS_RX_U.buffer.Threshold_Monitor_Inst.binary_write_pointer ;
+  assign passive_if.ebuffer_delete_req             = DUT.PCS_U.PCS_RX_U.buffer.delete_req;
+  assign passive_if.ebuffer_add_req                = DUT.PCS_U.PCS_RX_U.buffer.add_req;     
 
 ////////////// DECODER /////////////////
 
