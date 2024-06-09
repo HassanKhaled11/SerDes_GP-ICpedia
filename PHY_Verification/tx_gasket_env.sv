@@ -60,10 +60,10 @@ class tx_gasket_mon extends uvm_monitor;              //REF MONITOR
      forever begin
          @(posedge  passive_vif.tx_gasket_PCLK);
          data_to_send = `create(tx_gasket_seq_itm, "data_to_send");
-         data_to_send.tx_gasket_MAC_TX_Data = passive_vif.tx_gasket_MAC_TX_Data;
-                     `uvm_info("MON_REF", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_MAC_TX_Data , $realtime() ), UVM_LOW);
-         data_to_send.tx_gasket_Bit_Rate_CLK_10 = passive_vif.tx_gasket_Bit_Rate_CLK_10;
-         data_to_send.tx_gasket_TxDataK = passive_vif.tx_gasket_TxDataK;
+
+         data_to_send.tx_gasket_MAC_TX_Data   = passive_vif.tx_gasket_MAC_TX_Data;
+         data_to_send.tx_gasket_MAC_TX_DataK  = passive_vif.tx_gasket_MAC_TX_DataK;
+
          mon_port.write(data_to_send);
      end
 
@@ -103,9 +103,10 @@ class tx_gasket_mon_after extends uvm_monitor;              //OUTPUT MONITOR
      forever begin
          @(posedge  passive_vif.tx_gasket_Bit_Rate_CLK_10);
          data_to_send = `create(tx_gasket_seq_itm, "data_to_send");
+
          data_to_send.tx_gasket_TxData = passive_vif.tx_gasket_TxData;
-                // `uvm_info("MON_AFTER", $sformatf("data= %h , time = %t", data_to_send.tx_gasket_TxData , $realtime() ), UVM_LOW);
          data_to_send.tx_gasket_TxDataK = passive_vif.tx_gasket_TxDataK;
+
          mon_port_aft.write(data_to_send);
      end
 
@@ -137,6 +138,8 @@ class tx_gasket_sb extends uvm_scoreboard;
   logic [31:0] expected_MAC_TX_DATA;
   logic [7:0] expected_TX_DATA;
   logic [31:0] actual_TX_DATA;
+  logic [3:0] actual_TX_DATA_K;
+  logic [3:0] expected_MAC_TX_DATA_K;
 
   tx_gasket_seq_itm data_to_chk_arr [4];
   int counter;
@@ -188,33 +191,43 @@ class tx_gasket_sb extends uvm_scoreboard;
     forever begin
 
        sb_fifo_ref.get(data_to_chk_ref);
-       expected_MAC_TX_DATA = data_to_chk_ref.tx_gasket_MAC_TX_Data;
+       expected_MAC_TX_DATA   = data_to_chk_ref.tx_gasket_MAC_TX_Data;
+       expected_MAC_TX_DATA_K = data_to_chk_ref.tx_gasket_MAC_TX_DataK;
      
        
        sb_fifo.get(data_to_chk);
        actual_TX_DATA[7:0]  = data_to_chk.tx_gasket_TxData;
-
+       actual_TX_DATA_K[0]  = data_to_chk.tx_gasket_TxDataK;
 
        sb_fifo.get(data_to_chk);
        actual_TX_DATA[15:8] = data_to_chk.tx_gasket_TxData;
-      
+       actual_TX_DATA_K[1]  = data_to_chk.tx_gasket_TxDataK;
 
        sb_fifo.get(data_to_chk);
        actual_TX_DATA[23:16] = data_to_chk.tx_gasket_TxData;
-      
+       actual_TX_DATA_K[2]  = data_to_chk.tx_gasket_TxDataK;      
 
        sb_fifo.get(data_to_chk);
        actual_TX_DATA[31:24] = data_to_chk.tx_gasket_TxData;
+       actual_TX_DATA_K[3]  = data_to_chk.tx_gasket_TxDataK;
 
-      compare(expected_MAC_TX_DATA , actual_TX_DATA); 
+      compare(expected_MAC_TX_DATA , actual_TX_DATA , expected_MAC_TX_DATA_K , actual_TX_DATA_K); 
 
   end
 
  endtask 
 
- function void compare(logic [31:0] expected_pkt , logic [31:0] actual_pkt);
+ function void compare(logic [31:0] expected_pkt , logic [31:0] actual_pkt , logic [3:0] expedted_k , logic [3:0] actual_k);
    if(expected_pkt == actual_pkt) begin
      `uvm_info("TX_GASKET_DATA_TEST RIGHT", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_pkt , expected_pkt), UVM_LOW);
+
+      if(expedted_k == actual_k) begin     //DATA_K TEST
+         `uvm_info("TX_GASKET_DATA_K_TEST RIGHT", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_k , expedted_k), UVM_LOW);
+      end
+      else begin
+         `uvm_info("TX_GASKET_DATA_K_TEST WRONG", $sformatf("COLLECTED_DATA= %h , EXPECTED = %h", actual_k , expedted_k), UVM_LOW);        
+      end
+   
    end
 
    else begin
