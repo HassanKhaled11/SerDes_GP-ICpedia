@@ -69,6 +69,9 @@ interface PASSIVE_if;
   logic                                 encoder_Rst                  ;
   logic                                 encoder_TXDataK              ; 
   logic  [9:0]                          encoder_data_out             ;
+  logic  [9:0]                          encoder_encoded_neg_data     ;
+  logic  [9:0]                          encoder_encoded_pos_data     ;
+  logic                                 encoder_enable               ;   
 
 ////////////// TX_PMA /////////////////
 
@@ -126,6 +129,8 @@ interface PASSIVE_if;
   logic                                 decoder_DecodeError          ;
   logic                                 decoder_DisparityError       ;
   logic                                 decoder_RxDataK              ;
+  logic [7:0]                           decoder_encoded_data_N       ;
+  logic [7:0]                           decoder_encoded_data_P       ;  
 
 ////////////// RX_GASKET ///////////////
 

@@ -29,4 +29,6 @@ do wave.do
 
 run -all
 
+write transcript "HK_RUN_TRANSCRIPT.log"
+
 #vcover report system.ucdb -details -annotate -all -output system_functional_Report.txt  

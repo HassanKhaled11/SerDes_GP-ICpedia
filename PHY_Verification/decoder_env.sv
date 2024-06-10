@@ -20,6 +20,8 @@ class decoder_seq_itm extends uvm_sequence_item;
   logic                                 decoder_DecodeError          ;
   logic                                 decoder_DisparityError       ;
   logic                                 decoder_RxDataK              ;
+  logic [7:0]                           decoder_encoded_data_N       ;
+  logic [7:0]                           decoder_encoded_data_P       ;
 
 
     function new(string name = "decoder_seq_itm");
@@ -313,3 +315,7 @@ endclass
  
  endclass
 endpackage
+
+
+
+

@@ -102,7 +102,10 @@ module top;
   assign passive_if.encoder_Rst               = DUT.PCS_U.PCS_TX_U.Encoding_U.Rst;
   assign passive_if.encoder_TXDataK           = DUT.PCS_U.PCS_TX_U.Encoding_U.TXDataK; 
   assign passive_if.encoder_data_out          = DUT.PCS_U.PCS_TX_U.Encoding_U.data_out;
-
+  assign passive_if.encoder_encoded_pos_data  = DUT.PCS_U.PCS_TX_U.Encoding_U.line_coding_8_10_U.encoded_data_pos;
+  assign passive_if.encoder_encoded_neg_data  = DUT.PCS_U.PCS_TX_U.Encoding_U.line_coding_8_10_U.encoded_data_neg;
+  assign passive_if.encoder_enable            = DUT.PCS_U.PCS_TX_U.Encoding_U.line_coding_8_10_U.enable;
+  
 ////////////// TX_PMA /////////////////
 
   assign passive_if.tx_pma_Bit_Rate_Clk_10    = DUT.PMA_U.PMA_TX_U.Bit_Rate_Clk_10;  
@@ -159,6 +162,8 @@ module top;
   assign passive_if.decoder_DecodeError       = DUT.PCS_U.PCS_RX_U.decode.DecodeError;
   assign passive_if.decoder_DisparityError    = DUT.PCS_U.PCS_RX_U.decode.DisparityError;
   assign passive_if.decoder_RxDataK           = DUT.PCS_U.PCS_RX_U.decode.RxDataK;
+  assign passive_if.decoder_encoded_data_N    = DUT.PCS_U.PCS_RX_U.decode.encoded_data_N;
+  assign passive_if.decoder_encoded_data_P    = DUT.PCS_U.PCS_RX_U.decode.encoded_data_P;
 
 ////////////// RX_GASKET ///////////////
 

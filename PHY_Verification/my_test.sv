@@ -17,6 +17,8 @@ package my_test_pkg;
   import decoder_env_pkg::*;
   import rx_gasket_env_pkg::*;
 
+  import Enc_Dec_RAL_pkg::*;
+  
 
   class my_test extends uvm_test;
 
@@ -43,6 +45,12 @@ package my_test_pkg;
     ////////////////////////////////
 
 
+   ///////// BACKDOOR ACCESS  SEQ ///////
+   encoder_reg_seq encoder_reg_seq_backdoor;
+   /////////////////////////////////////            
+
+
+
    //////// CONFIGIGURATIONS ////////////
     my_config_db   cfg;
     tx_gasket_config_db tx_gasket_cfg;
@@ -54,7 +62,6 @@ package my_test_pkg;
     decoder_config_db   decoder_cfg;
     rx_gasket_config_db rx_gasket_cfg; 
    //////////////////////////////////////
-               
 
     function new(string name = "my_test", uvm_component parent = null);
       super.new(name, parent);
@@ -80,6 +87,8 @@ package my_test_pkg;
       main_seq_32        = my_sequence_32::type_id::create("main_seq_32", this);
       main_seq_16        = my_sequence_16::type_id::create("main_seq_16", this);
       main_seq_8         = my_sequence_8::type_id::create("main_seq_8", this);
+
+      encoder_reg_seq_backdoor = encoder_reg_seq::type_id::create("encoder_reg_seq_backdoor");
 
 
 //..... CONFIGURATIONS      
@@ -177,6 +186,8 @@ package my_test_pkg;
         //   `uvm_warning("MY_TEST","MAIN SEQ START");
         // end
         begin
+
+
           ///////////WIDTH = 32//////////////
 
           cfg.dut_vif.DataBusWidth = 6'd32;
@@ -188,6 +199,14 @@ package my_test_pkg;
           #4;
           `uvm_warning("MY_TEST_32", "MAIN TEST START..");
           main_seq_32.start(env.agent.sqr);
+
+
+          
+          `uvm_warning("BACKDOOR TEST", "ENCODING BACKDOOR TEST START..");
+           //encoding_cfg.is_active = UVM_ACTIVE;
+           encoder_reg_seq_backdoor.reg_block = encoding_env_inst.reg_block;
+           encoder_reg_seq_backdoor.start(encoding_env_inst.agt.sequencer);
+
 
 
         //   ////////////WIDTH = 16////////////
@@ -220,9 +239,18 @@ package my_test_pkg;
 
       join
 
-
       phase.drop_objection(this);
+      phase.phase_done.set_drain_time(this , 500);
+      
     endtask
+
+
+function void report_phase (uvm_phase phase);
+  super.report_phase(phase);
+  
+    uvm_top.print_topology();
+
+endfunction
 
 
 

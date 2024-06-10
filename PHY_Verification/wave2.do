@@ -13,10 +13,9 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/flag
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/rx_gasket/temp_reg
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/CLK
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Rst_n
-add wave -noupdate -radix unsigned /top/DUT/PCS_U/PCS_RX_U/decode/Data_in
-add wave -noupdate -radix binary /top/DUT/PCS_U/PCS_RX_U/decode/Data_in
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_in
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_out
-add wave -noupdate -radix unsigned /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError
+add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DisparityError
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/temp
@@ -74,32 +73,10 @@ add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/sync_gray_read_out
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/sync_gray_write_out
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/delete_req
 add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/buffer/add_req
-add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/Encoding_U/line_coding_8_10_U/enable
-add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/Encoding_U/line_coding_8_10_U/TXDataK
-add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/Encoding_U/line_coding_8_10_U/data
-add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/Encoding_U/line_coding_8_10_U/encoded_data_pos
-add wave -noupdate /top/DUT/PCS_U/PCS_TX_U/Encoding_U/line_coding_8_10_U/encoded_data_neg
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/CLK
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Rst_n
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_in
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/Data_out
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DisparityError
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/temp
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/encoded_data_N
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/encoded_data_P
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError_N
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/DecodeError_P
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK_N
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/RxDataK_P
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag_n
-add wave -noupdate /top/DUT/PCS_U/PCS_RX_U/decode/flag_p
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {2031 fs} 0}
+WaveRestoreCursors {{Cursor 1} {4604900000 fs} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 441
+configure wave -namecolwidth 302
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -113,4 +90,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {2006 fs} {2047 fs}
+WaveRestoreZoom {0 fs} {72816768 fs}
