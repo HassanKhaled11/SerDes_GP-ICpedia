@@ -1,0 +1,153 @@
+**************************************************
+Report         : passing_points
+
+Reference      : Ref:/WORK/Digital_Loop_Filter
+Implementation : Imp:/WORK/Digital_Loop_Filter
+Version        : L-2016.03-SP1
+Date           : Fri Jun  7 14:22:09 2024
+**************************************************
+
+39 Passing compare points:
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[10]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[10]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[11]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[11]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[12]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[12]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[13]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[13]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[14]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[14]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[3]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[3]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[4]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[4]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[5]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[5]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[6]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[6]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[7]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[7]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[8]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[8]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/freq_integrator_reg[9]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/freq_integrator_reg[9]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[0]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[0]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[10]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[10]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[11]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[11]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[12]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[12]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[13]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[13]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[14]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[14]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[15]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[15]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[1]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[1]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[2]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[2]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[3]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[3]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[4]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[4]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[5]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[5]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[6]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[6]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[7]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[7]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[8]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[8]
+
+  Ref  DFF        Ref:/WORK/Digital_Loop_Filter/phase_integrator_reg[9]
+  Impl DFF        Imp:/WORK/Digital_Loop_Filter/phase_integrator_reg[9]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[0]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[0]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[10]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[10]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[1]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[1]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[2]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[2]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[3]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[3]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[4]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[4]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[5]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[5]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[6]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[6]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[7]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[7]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[8]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[8]
+
+  Ref  Port       Ref:/WORK/Digital_Loop_Filter/code[9]
+  Impl Port       Imp:/WORK/Digital_Loop_Filter/code[9]
+
+ [BBNet: multiply-driven net
+  BBPin: black-box pin
+  Cut:   cut-point
+  DFF:   non-constant DFF register
+  DFF0:  constant 0 DFF register
+  DFF1:  constant 1 DFF register
+  DFFX:  constant X DFF register
+  DFF0X: constrained 0X DFF register
+  DFF1X: constrained 1X DFF register
+  LAT:   non-constant latch register
+  LAT0:  constant 0 latch register
+  LAT1:  constant 1 latch register
+  LATX:  constant X latch register
+  LAT0X: constrained 0X latch register
+  LAT1X: constrained 1X latch register
+  LATCG: clock-gating latch register
+  TLA:   transparent latch register
+  TLA0X: transparent constrained 0X latch register
+  TLA1X: transparent constrained 1X latch register
+  Loop:  cycle break point
+  Port:  primary (top-level) port
+  Und:   undriven signal cut-point
+  Unk:   unknown signal cut-point]
+
+1
