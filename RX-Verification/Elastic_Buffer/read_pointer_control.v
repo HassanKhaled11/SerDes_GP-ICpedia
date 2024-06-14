@@ -2,16 +2,13 @@ module read_pointer_control (
     // data_in,
     read_clk,
     gray_write_pointer,
-    buffer_mode,
+  //  buffer_mode,
     rst_n,
     data_out,
     add_req,
 
     ////outputs/////
     empty,
-    insert,
-    skp_added,
-    read_enable,
     read_address,
     gray_read_pointer
     // loopback_tx,
@@ -24,16 +21,14 @@ module read_pointer_control (
 
   // input [DATA_WIDTH-1:0] data_in;
   input read_clk;
-  input read_enable;
-  input buffer_mode;
+  // input read_enable;
+  //  input buffer_mode;
   input add_req;  //////////////
   input rst_n;
   input [max_buffer_addr:0] gray_write_pointer;
   input [DATA_WIDTH-1:0] data_out;  ////////////
 
   output reg empty;
-  output reg insert;
-  output reg skp_added;
   output reg [max_buffer_addr:0] read_address;
   output [max_buffer_addr:0] gray_read_pointer;
 
@@ -49,26 +44,17 @@ module read_pointer_control (
   always @(posedge read_clk or negedge rst_n) begin
     if (!rst_n) begin
       read_address <= 0;
-      insert <= 0;
-      skp_added <= 0;
-    end else if (read_enable && !empty) begin
-      if (!(add_req && (data_out == 10'b001111_1001 || data_out == 10'b110000_0110))) begin  //skp
+    end
+
+    else if (empty || add_req) begin
+       read_address <= read_address;
+    end 
+
+    else  begin
         read_address <= read_address + 1;
-        insert <= 0;
-        skp_added <= 0;
-      end else begin
-        insert <= 1;
-        skp_added <= 1;
-      end
     end
   end
-  // always @(posedge read_clk or negedge rst_n) begin
-  //   if (!rst_n) begin
-  //     read_address <= 0;
-  //   end else if ( read_enable && !empty)begin
-  //     read_address <= read_address + 1;
-  //   end 
-  // end
+
 
   assign empty_val = (gray_read_pointer == gray_write_pointer);
 
