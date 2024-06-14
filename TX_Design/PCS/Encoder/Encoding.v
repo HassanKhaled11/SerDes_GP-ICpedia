@@ -14,8 +14,8 @@ module Encoding(
 wire[9:0] encoded_pos_data , encoded_neg_data;
 
 
-line_coding_8_10 u0(
-	        .TXDataK(TXDataK),
+line_coding_8_10  line_coding_8_10_U(
+	                .TXDataK(TXDataK),
 			.enable(MAC_Data_En),
 			.data(data),
 			.encoded_data_pos(encoded_pos_data),
@@ -23,7 +23,7 @@ line_coding_8_10 u0(
 			 );
 
 
-FSM_RD u1(
+FSM_RD  FSM_RD_U (
 	        .enable(MAC_Data_En),
 	        .TXDataK(TXDataK),	
 			.data_neg(encoded_neg_data),
