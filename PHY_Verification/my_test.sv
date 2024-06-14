@@ -201,29 +201,22 @@ package my_test_pkg;
           main_seq_32.start(env.agent.sqr);
 
 
-          
-          `uvm_warning("BACKDOOR TEST", "ENCODING BACKDOOR TEST START..");
-           //encoding_cfg.is_active = UVM_ACTIVE;
-           encoder_reg_seq_backdoor.reg_block = encoding_env_inst.reg_block;
-           encoder_reg_seq_backdoor.start(encoding_env_inst.agt.sequencer);
 
+          // ////////////WIDTH = 16////////////
+          // cfg.dut_vif.DataBusWidth = 6'd16;
+          // `uvm_warning("MY_TEST_16", "RESET");
+          // cfg.dut_vif.Reset_n = 0;
+          // #1000;
+          // cfg.dut_vif.Reset_n = 1;
 
+          // #4;
+          // `uvm_warning("MY_TEST_16", "MAIN TEST START..");
+          // main_seq_16.start(env.agent.sqr);
 
-        //   ////////////WIDTH = 16////////////
-        //   cfg.dut_vif.DataBusWidth = 6'd16;
-        //   `uvm_warning("MY_TEST_16", "RESET");
-        //   cfg.dut_vif.Reset_n = 0;
-        //   #1000;
-        //   cfg.dut_vif.Reset_n = 1;
-
-        //   #4;
-        //   `uvm_warning("MY_TEST_16", "MAIN TEST START..");
-        //   main_seq_16.start(env.agent.sqr);
-
-        //   #3000;
-        //   cfg.dut_vif.MAC_Data_En = 0;
-        //   #3000;
-        //   cfg.dut_vif.MAC_Data_En  = 1;
+          // #3000;
+          // cfg.dut_vif.MAC_Data_En = 0;
+          // #3000;
+          // cfg.dut_vif.MAC_Data_En  = 1;
 
         //   //////////WIDTH = 8////////////
         //   cfg.dut_vif.DataBusWidth = 6'd8;
@@ -235,6 +228,14 @@ package my_test_pkg;
         //   #4;
         //   `uvm_warning("MY_TEST_8", "MAIN TEST START..");
         //   main_seq_8.start(env.agent.sqr);
+
+
+         ////////// BACKDOOR SEQUENCE //////////
+          `uvm_warning("BACKDOOR TEST", "ENCODING BACKDOOR TEST START..");
+           encoder_reg_seq_backdoor.reg_block = encoding_env_inst.reg_block;
+           encoder_reg_seq_backdoor.start(encoding_env_inst.agt.sequencer);
+
+
          end
 
       join

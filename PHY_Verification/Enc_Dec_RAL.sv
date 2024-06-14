@@ -23,33 +23,33 @@ class Enc_Data_In_Reg extends uvm_reg ;
 rand uvm_reg_field Enc_Data_In_Reg_f ;
 
 
-covergroup Enc_Data_In_Reg_cg();
-	option.per_instance = 1;
+// covergroup Enc_Data_In_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Enc_Data_In_Reg_f.value[7:0];
-endgroup
+// 	coverpoint Enc_Data_In_Reg_f.value[7:0];
+// endgroup
 
 
 function new(string name = "Enc_Data_In_Reg");
 	super.new(name , 8 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Enc_Data_In_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Enc_Data_In_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Enc_Data_In_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Enc_Data_In_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Enc_Data_In_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Enc_Data_In_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -82,33 +82,33 @@ class Enc_Pos_Out_Reg extends uvm_reg ;
 rand uvm_reg_field Enc_Pos_Out_Reg_f ;
 
 
-covergroup Enc_Pos_Out_Reg_cg();
-	option.per_instance = 1;
+// covergroup Enc_Pos_Out_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Enc_Pos_Out_Reg_f.value[9:0];
-endgroup
+// 	coverpoint Enc_Pos_Out_Reg_f.value[9:0];
+// endgroup
 
 
 function new(string name = "Enc_Pos_Out_Reg");
 	super.new(name , 10 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Enc_Pos_Out_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Enc_Pos_Out_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Enc_Pos_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Enc_Pos_Out_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Enc_Pos_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Enc_Pos_Out_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -140,33 +140,33 @@ class Enc_Neg_Out_Reg extends uvm_reg ;
 rand uvm_reg_field Enc_Neg_Out_Reg_f ;
 
 
-covergroup Enc_Neg_Out_Reg_cg();
-	option.per_instance = 1;
+// covergroup Enc_Neg_Out_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Enc_Neg_Out_Reg_f.value[9:0];
-endgroup
+// 	coverpoint Enc_Neg_Out_Reg_f.value[9:0];
+// endgroup
 
 
 function new(string name = "Enc_Neg_Out_Reg");
 	super.new(name , 10 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Enc_Neg_Out_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Enc_Neg_Out_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Enc_Neg_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Enc_Neg_Out_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Enc_Neg_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Enc_Neg_Out_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -199,33 +199,33 @@ class TX_DataK_Reg extends uvm_reg ;
 rand uvm_reg_field TX_DataK_Reg_f ;
 
 
-covergroup TX_DataK_Reg_cg();
-	option.per_instance = 1;
+// covergroup TX_DataK_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint TX_DataK_Reg_f.value[0];
-endgroup
+// 	coverpoint TX_DataK_Reg_f.value[0];
+// endgroup
 
 
 function new(string name = "TX_DataK_Reg");
 	super.new(name , 1 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		TX_DataK_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	TX_DataK_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  TX_DataK_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   TX_DataK_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- TX_DataK_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  TX_DataK_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -268,23 +268,23 @@ endgroup
 function new(string name = "Enable_Reg");
 	super.new(name , 1 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Enable_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Enable_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Enable_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Enable_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Enable_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Enable_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -317,33 +317,33 @@ class Dec_Data_In_Reg extends uvm_reg ;
 rand uvm_reg_field Dec_Data_In_Reg_f ;
 
 
-covergroup Dec_Data_In_Reg_cg();
-	option.per_instance = 1;
+// covergroup Dec_Data_In_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Dec_Data_In_Reg_f.value[9:0];
-endgroup
+// 	coverpoint Dec_Data_In_Reg_f.value[9:0];
+// endgroup
 
 
 function new(string name = "Dec_Data_In_Reg");
 	super.new(name , 10 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Dec_Data_In_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Dec_Data_In_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Dec_Data_In_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Dec_Data_In_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Dec_Data_In_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Dec_Data_In_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -376,33 +376,33 @@ class Dec_Data_Out_Reg extends uvm_reg ;
 rand uvm_reg_field Dec_Data_Out_Reg_f ;
 
 
-covergroup Dec_Data_Out_Reg_cg();
-	option.per_instance = 1;
+// covergroup Dec_Data_Out_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Dec_Data_Out_Reg_f.value[7:0];
-endgroup
+// 	coverpoint Dec_Data_Out_Reg_f.value[7:0];
+// endgroup
 
 
 function new(string name = "Dec_Data_Out_Reg");
 	super.new(name , 8 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Dec_Data_Out_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))
+	//    	Dec_Data_Out_Reg_cg = new();
+	
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Dec_Data_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Dec_Data_Out_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Dec_Data_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Dec_Data_Out_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -435,33 +435,33 @@ class Dec_Neg_Out_Reg extends uvm_reg ;
 rand uvm_reg_field Dec_Neg_Out_Reg_f ;
 
 
-covergroup Dec_Neg_Out_Reg_cg();
-	option.per_instance = 1;
+// covergroup Dec_Neg_Out_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Dec_Neg_Out_Reg_f.value[7:0];
-endgroup
+// 	coverpoint Dec_Neg_Out_Reg_f.value[7:0];
+// endgroup
 
 
 function new(string name = "Dec_Neg_Out_Reg");
 	super.new(name , 8 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Dec_Neg_Out_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Dec_Neg_Out_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Dec_Neg_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Dec_Neg_Out_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Dec_Neg_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Dec_Neg_Out_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -493,33 +493,33 @@ class Dec_Pos_Out_Reg extends uvm_reg ;
 rand uvm_reg_field Dec_Pos_Out_Reg_f ;
 
 
-covergroup Dec_Pos_Out_Reg_cg();
-	option.per_instance = 1;
+// covergroup Dec_Pos_Out_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Dec_Pos_Out_Reg_f.value[7:0];
-endgroup
+// 	coverpoint Dec_Pos_Out_Reg_f.value[7:0];
+// endgroup
 
 
 function new(string name = "Dec_Pos_Out_Reg");
 	super.new(name , 8 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Dec_Pos_Out_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Dec_Pos_Out_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Dec_Pos_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Dec_Pos_Out_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Dec_Pos_Out_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Dec_Pos_Out_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -552,33 +552,33 @@ class Dec_CLK_Reg extends uvm_reg ;
 rand uvm_reg_field Dec_CLK_Reg_f ;
 
 
-covergroup Dec_CLK_Reg_cg();
-	option.per_instance = 1;
+// covergroup Dec_CLK_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Dec_CLK_Reg_f.value[9:0];
-endgroup
+// 	coverpoint Dec_CLK_Reg_f.value[9:0];
+// endgroup
 
 
 function new(string name = "Dec_CLK_Reg");
 	super.new(name , 1 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Dec_CLK_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Dec_CLK_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Dec_CLK_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Dec_CLK_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Dec_CLK_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Dec_CLK_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -611,33 +611,33 @@ class Dec_RST_Reg extends uvm_reg ;
 rand uvm_reg_field Dec_RST_Reg_f ;
 
 
-covergroup Dec_RST_Reg_cg();
-	option.per_instance = 1;
+// covergroup Dec_RST_Reg_cg();
+// 	option.per_instance = 1;
 
-	coverpoint Dec_RST_Reg_f.value[9:0];
-endgroup
+// 	coverpoint Dec_RST_Reg_f.value[9:0];
+// endgroup
 
 
 function new(string name = "Dec_RST_Reg");
 	super.new(name , 1 , UVM_CVR_FIELD_VALS);
 
-	if(has_coverage(UVM_CVR_FIELD_VALS))begin
-		Dec_RST_Reg_cg = new();
-	end
+	// if(has_coverage(UVM_CVR_FIELD_VALS))begin
+	// 	Dec_RST_Reg_cg = new();
+	// end
 endfunction
 
 
 //------- TWO FUNCS FOR COV ----
 
-virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
-  Dec_RST_Reg_cg.sample();
-endfunction
+// virtual function void sample(uvm_reg_data_t data , uvm_reg_data_t byte_en , bit is_read , uvm_reg_map map);
+//   Dec_RST_Reg_cg.sample();
+// endfunction
 
 
-virtual function void sample_values();
- super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
- Dec_RST_Reg_cg.sample();
-endfunction
+// virtual function void sample_values();
+//  super.sample_values();                      // TO ENSURE ANY CONFIGURATIONS IN BASE CLASS IS PRESERVED AS DEFAULT
+//  Dec_RST_Reg_cg.sample();
+// endfunction
 
 //-----------------------------
 
@@ -693,93 +693,97 @@ virtual function void build();
 	  Enc_Data_In_Reg_inst = `create(Enc_Data_In_Reg , "Enc_Data_In_Reg_inst");
 	  Enc_Data_In_Reg_inst.build();
 	  Enc_Data_In_Reg_inst.configure(this,null);
+    Enc_Data_In_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
 
     Enc_Pos_Out_Reg_inst = `create(Enc_Pos_Out_Reg, "Enc_Pos_Out_Reg_inst")
     Enc_Pos_Out_Reg_inst.build();
     Enc_Pos_Out_Reg_inst.configure(this,null);
+    Enc_Pos_Out_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
+
 
     Enc_Neg_Out_Reg_inst = `create(Enc_Neg_Out_Reg , "Enc_Neg_Out_Reg_inst");
     Enc_Neg_Out_Reg_inst.build();
     Enc_Neg_Out_Reg_inst.configure(this,null);
+    Enc_Neg_Out_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
 
 
     TX_DataK_Reg_inst = `create(TX_DataK_Reg , "TX_DataK_Reg_inst");
     TX_DataK_Reg_inst.build();
     TX_DataK_Reg_inst.configure(this,null);
-
+    TX_DataK_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
+    
 
     Enable_Reg_inst = `create(Enable_Reg , "Enable_Reg_inst");
     Enable_Reg_inst.build();
     Enable_Reg_inst.configure(this,null);
+    Enable_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
 
 
     Dec_Data_In_Reg_inst = `create(Dec_Data_In_Reg , "Dec_Data_In_Reg_inst");
     Dec_Data_In_Reg_inst.build();
     Dec_Data_In_Reg_inst.configure(this,null);
+    Dec_Data_In_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);    
   
 
     Dec_Neg_Out_Reg_inst = `create(Dec_Neg_Out_Reg , "Dec_Neg_Out_Reg_inst");
     Dec_Neg_Out_Reg_inst.build();
     Dec_Neg_Out_Reg_inst.configure(this,null);
+    Dec_Neg_Out_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
+
     
 
     Dec_Pos_Out_Reg_inst = `create(Dec_Pos_Out_Reg , "Dec_Pos_Out_Reg_inst");
     Dec_Pos_Out_Reg_inst.build();
     Dec_Pos_Out_Reg_inst.configure(this,null);
+    Dec_Pos_Out_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
+   
 
 
     Dec_CLK_Reg_inst = `create(Dec_CLK_Reg , "Dec_CLK_Reg_inst");
     Dec_CLK_Reg_inst.build();
     Dec_CLK_Reg_inst.configure(this,null);    
+    Dec_CLK_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
 
 
     Dec_RST_Reg_inst = `create(Dec_RST_Reg , "Dec_RST_Reg_inst");
     Dec_RST_Reg_inst.build();
-    Dec_RST_Reg_inst.configure(this,null);      
-  
+    Dec_RST_Reg_inst.configure(this,null);
+    Dec_RST_Reg_inst.set_coverage(UVM_CVR_FIELD_VALS);	  
 
-   uvm_reg::include_coverage("*" , UVM_CVR_ALL);
+
+  // uvm_reg::include_coverage("*" , UVM_CVR_ALL);        // ENABLING COVERAGE
 
 
 ////////// DEFINE BACKDOOR ACCESS ///////////
    add_hdl_path ("top.DUT.PCS_U" , "RTL");
 
-   Enc_Data_In_Reg_inst.add_hdl_path_slice("PCS_TX_U.Encoding_U.line_coding_8_10_U.data" , 0 , 8);
+   Enc_Data_In_Reg_inst.add_hdl_path_slice("PCS_TX_U.Encoding_U.line_coding_8_10_U.data" , 0 , 8); // THIS IS SLICE OF THE PATH PREV LINE 
 
 
-   //add_hdl_path ("top.DUT.PCS_U" , "RTL");
    TX_DataK_Reg_inst.add_hdl_path_slice("PCS_TX_U.Encoding_U.line_coding_8_10_U.TXDataK" , 0 , 1);
 
 
-   //add_hdl_path ("top.DUT.PCS_U" , "RTL");
    Enable_Reg_inst.add_hdl_path_slice("PCS_TX_U.Encoding_U.line_coding_8_10_U.enable" , 0 , 1);
 
 
-   //add_hdl_path ("top.DUT.PCS_U" , "RTL");
    Enc_Pos_Out_Reg_inst.add_hdl_path_slice("PCS_TX_U.Encoding_U.line_coding_8_10_U.encoded_data_pos" , 0 , 10);
 
    
-   //add_hdl_path ("top.DUT.PCS_U" , "RTL");
    Enc_Neg_Out_Reg_inst.add_hdl_path_slice("PCS_TX_U.Encoding_U.line_coding_8_10_U.encoded_data_neg" , 0 , 10);
 
    
-   // add_hdl_path("top.DUT.PCS_U.PCS_RX_U.decode" , "RTL");
    Dec_Data_In_Reg_inst.add_hdl_path_slice("PCS_RX_U.decode.Data_in", 0 , 10);
 
 
-   // add_hdl_path("top.DUT.PCS_U.PCS_RX_U.decode" , "RTL");
    Dec_Neg_Out_Reg_inst.add_hdl_path_slice("PCS_RX_U.decode.encoded_data_N", 0 , 8);
 
 
-   // add_hdl_path("top.DUT.PCS_U.PCS_RX_U.decode" , "RTL");
    Dec_Pos_Out_Reg_inst.add_hdl_path_slice("PCS_RX_U.decode.encoded_data_P", 0 , 8);
 
 
-   // add_hdl_path("top.DUT.PCS_U.PCS_RX_U.decode" , "RTL");
    Dec_CLK_Reg_inst.add_hdl_path_slice("PCS_RX_U.decode.CLK", 0 , 1);   
 
 
-   // add_hdl_path("top.DUT.PCS_U.PCS_RX_U.decode" , "RTL");
    Dec_RST_Reg_inst.add_hdl_path_slice("PCS_RX_U.decode.Rst_n", 0 , 1);   
 
 /////////////////////////////////////////////   
