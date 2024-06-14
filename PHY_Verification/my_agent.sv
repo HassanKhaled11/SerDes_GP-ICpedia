@@ -33,16 +33,20 @@ endfunction
 function void build_phase(uvm_phase phase);
 	super.build_phase(phase);
 
-	driver     = my_driver    :: type_id :: create("driver"    ,this) ;
-	sqr        = my_sequencer :: type_id :: create("sqr"       ,this) ;
-	monitor    = my_monitor   :: type_id :: create("monitor"   ,this) ;
-	scoreboard = my_scoreboard:: type_id :: create("scoreboard",this) ;
 	cfg        = my_config_db :: type_id :: create ("cfg"      ,this) ; 
-    agt_port   = new("agt_port", this);
-
 
 	if(!uvm_config_db#(my_config_db)::get(this, "", "CFG",cfg))
 		`uvm_fatal("MY_AGENT" , "FAILED GETTING CONFIG DB");
+
+    if(cfg.is_active == UVM_ACTIVE) begin
+    	driver     = my_driver    :: type_id :: create("driver"    ,this) ;
+    	sqr        = my_sequencer :: type_id :: create("sqr"       ,this) ;	
+    end
+
+	monitor    = my_monitor   :: type_id :: create("monitor"   ,this) ;
+	scoreboard = my_scoreboard:: type_id :: create("scoreboard",this) ;
+    agt_port   = new("agt_port", this);
+
 
 	`uvm_info("MY_AGENT","BUILD_PHASE",UVM_MEDIUM);
 endfunction 
@@ -51,14 +55,17 @@ endfunction
 
 function void connect_phase(uvm_phase phase);
 	super.connect_phase(phase)                       ;
+   
+	`uvm_info("MY_AGENT","CONNECT_PHASE",UVM_MEDIUM) ;
+
     monitor.bfm_vif = cfg.dut_vif                    ;
     monitor.internals_if = cfg.internals_if          ;
-    //scoreboard.bfm_vif = cfg.dut_vif                 ;
-    //scoreboard.internals_if = cfg.internals_if       ;
-    driver.bfm_vif  = cfg.dut_vif                    ;
-	`uvm_info("MY_AGENT","CONNECT_PHASE",UVM_MEDIUM) ;
-    driver.seq_item_port.connect(sqr.seq_item_export);
     monitor.mon_port.connect(agt_port)               ;
+
+if(cfg.is_active == UVM_ACTIVE) begin
+    driver.bfm_vif  = cfg.dut_vif                    ;
+    driver.seq_item_port.connect(sqr.seq_item_export);
+end
 
 endfunction
 

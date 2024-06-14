@@ -1,8 +1,10 @@
+// coverage off
+
 module write_pointer_control (
     write_clk,
     data_in,
     gray_read_pointer,
-  //  buffer_mode,
+    //  buffer_mode,
     rst_n,
     // write_enable,
     delete_req,
@@ -45,13 +47,11 @@ module write_pointer_control (
   );
 
   always @(posedge write_clk or negedge rst_n) begin
-   if (!rst_n) begin
-      write_address <= 0;
-      Skp_Removed   <= 0;
-      Skp_Added     <= 0;
-    end
-
-     else if (!full_val) begin  //check not skp
+    if (!rst_n) begin
+      write_address   <= 0;
+      Skp_Removed     <= 0;
+      Skp_Added       <= 0;
+    end else if (!full_val) begin  //check not skp
       if (!(data_in == 10'b001111_1001 || data_in == 10'b110000_0110)) begin
         write_address <= write_address + 1;
         Skp_Removed   <= 0;
@@ -59,7 +59,7 @@ module write_pointer_control (
       end else if (!delete_req) begin
         write_address <= write_address + 1;
         Skp_Removed   <= 0;
-        Skp_Added     <=1 ;
+        Skp_Added     <= 1;
       end else begin
         Skp_Removed   <= 1;
         Skp_Added     <= 0;

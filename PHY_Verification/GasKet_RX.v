@@ -33,25 +33,25 @@ module GasKet_RX (
       case (count)
         2'b00: begin 
           data_out[7 :0] <= Data_in;
-          if(Data_in == 8'h7c) flag[0] <= 0 ;
+          if(Data_in == 8'h7c && Rx_Datak) flag[0] <= 0 ;
           else flag[0] <= 1 ; 
         end
         
         2'b01:begin 
           data_out[15:8] <= Data_in;
-          if(Data_in == 8'h7c) flag[1] <= 0 ;
+          if(Data_in == 8'h7c && Rx_Datak) flag[1] <= 0 ;
           else flag[1] <= 1 ;
         end   
         
         2'b10:begin
           data_out[23:16] <= Data_in; 
-          if(Data_in == 8'h7c) flag[2] <= 0 ;
+          if(Data_in == 8'h7c && Rx_Datak) flag[2] <= 0 ;
           else flag[2] <= 1 ;           
         end
         
         2'b11:begin 
           data_out[31:24] <= Data_in;
-          if(Data_in == 8'h7c) flag[3] <= 0 ;
+          if(Data_in == 8'h7c && Rx_Datak) flag[3] <= 0 ;
           else flag[3] <= 1 ;            
         end
       

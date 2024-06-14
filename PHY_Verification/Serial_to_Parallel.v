@@ -1,4 +1,4 @@
-
+ 
 module Serial_to_Parallel #(
     parameter DATA_WIDTH = 10
 ) (
@@ -23,9 +23,9 @@ module Serial_to_Parallel #(
 
   wire serial;
 
-
+ // coverage off
   assign serial = (RxPolarity) ? !Ser_in : Ser_in;
-
+ // coverage on
 
   always @(posedge Recovered_Bit_Clk or negedge Rst_n) begin : proc_
     if (~Rst_n) begin

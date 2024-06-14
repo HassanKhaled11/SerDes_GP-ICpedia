@@ -8,9 +8,10 @@ module PCS_RX #(
     input [DATA_WIDTH-1:0] Collected_Data,
     input WordClk,  // to elastic buffer & decoder & Gasket
     input PCLK,
-    input CLK_5G,  // used for comma pulse generator and CLK_5G main input port to PMA_RX
+    // input CLK_5G,  // used for comma pulse generator and CLK_5G main input port to PMA_RX
+    input recovered_clk_5G,
     input Rst_n,
-   // input buffer_mode,
+    // input buffer_mode,
     input [5:0] DataBusWidth,
 
     output [31:0] RX_Data,
@@ -33,14 +34,15 @@ module PCS_RX #(
   //////////////// 	Comma Detection 	   /////////////////
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
-  
-Comma_Detection #(.COMMA_NUMBER(4))Comma_Detection_U (
-    .clk    (CLK_5G)     ,
-    .rst_n  (Rst_n)     ,
-    .Data_Collected(Collected_Data),
-    .RxValid(RX_Valid),
-    .Comma_Pulse(Comma_pulse)
-);
+
+  Comma_Detection Comma_Detection_U (
+      .clk           (recovered_clk_5G),
+      .rst_n         (Rst_n),
+      .COMMA_NUMBER  (DataBusWidth / 8),
+      .Data_Collected(Collected_Data),
+      .RxValid       (RX_Valid),
+      .Comma_Pulse   (Comma_pulse)
+  );
 
 
   ////////////////////////////////////////////////////////////

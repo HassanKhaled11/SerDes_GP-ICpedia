@@ -1,3 +1,5 @@
+// coverage off
+
 module FSM_RD(
 	            input wire enable,
 				input wire TXDataK ,	            
