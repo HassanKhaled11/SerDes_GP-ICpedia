@@ -6,8 +6,16 @@ module PMIX #(
 ) (
     input             CLK,
     input      [10:0] Code,
+
     // output reg        clk_filter_
+    `ifdef THREE_CLKS
+        input   rst_n         ,
+        output  clk_90        ,
+        output  clk_180       ,
+    `endif
+
     output reg        CLK_Out_i
+    
 );
 
 
@@ -15,7 +23,16 @@ module PMIX #(
 
   reg             clk_index;
   int             index;
-  reg      [15:0] sin_sum;
+  reg      [15:0] sin_sum ;
+
+
+// `ifdef THREE_CLKS
+//   reg [15:0] sin_sum2 , sin_sum3;
+// `endif 
+
+
+
+
   integer         PHASE_SHIFT;
 
   realtime        t1;
@@ -41,7 +58,7 @@ module PMIX #(
   //////////////////////////////////
   /////// CLK FILTERING SIGNALS/////
   //////////////////////////////////
-  reg             clk_filter;
+  // reg             clk_filter;
   reg glitchR_found, glitchF_found;
   //////////////////////////////////
   //////////////////////////////////  
@@ -79,7 +96,18 @@ module PMIX #(
 
 
 
+`ifdef THREE_CLKS
 
+   Clk_Gen Clk_gen_U(
+   
+   .clk_in(CLK_Out_i)  ,
+   .rst_n (rst_n)  ,
+   
+   .clk_90  (clk_90),
+   .clk_180 (clk_180)
+   );
+
+`endif
 
   ////////////////////////////////////////////////
   //////////////// SIGN OF SIN WAVES //////////////
@@ -157,24 +185,10 @@ module PMIX #(
     last_time     = 0;
     T1            = 0;
     // clk_filter_   = 0;
-    clk_filter    = 0;
+    // clk_filter    = 0;
     glitchF_found = 0;
     glitchR_found = 0;
   end
-
-
-
-  // initial begin
-  //    forever @(posedge CLK) begin
-  //        Queue.push_back($realtime());
-  //         if(Queue.size() == 2) begin
-  //           T = Queue[1] - Queue[0];
-  //              Queue.pop_front();
-  //         end
-
-  //    end 
-
-  // end
 
 
   initial begin
@@ -245,7 +259,7 @@ module PMIX #(
 
 
   initial clk_index = 0;
-  always #(0.0002) clk_index = ~clk_index;  //0.0002
+  always #(0.0001) clk_index = ~clk_index;  //0.0002
 
 
   ////////////////////////////////////////////////
@@ -272,35 +286,38 @@ module PMIX #(
         end
 
         3'b001: begin
-          sin_sum  = ((Code[7:0]/255.0 * sin_90[index]  + ((255.0 - Code[7:0])/255.0 * sin_45[index] )))    ;
+          sin_sum   = ((Code[7:0]/255.0 * sin_90[index]  + ((255.0 - Code[7:0])/255.0 * sin_45[index] )))       ;
+
         end
 
         3'b010: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_135[index] + ((255.0 - Code[7:0])/255.0 * sin_90[index] )))    ;
+
         end
 
         3'b011: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_180[index]  + ((255.0 - Code[7:0])/255.0 * sin_135[index] )))  ;
+   
         end
 
         3'b100: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_225[index]  + ((255.0 - Code[7:0])/255.0 * sin_180[index] )))  ;
+
         end
 
         3'b101: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_270[index]  + ((255.0 - Code[7:0])/255.0 * sin_225[index] )))  ;
+
         end
 
         3'b110: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_315[index]  + ((255.0 - Code[7:0])/255.0 * sin_270[index] )))  ;
+
         end
 
         3'b111: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] )))    ;
-          $display(
-              "%t,sin_sum=%d(%h), Code= %0d(%0h), sin0= %0d(%0h), index= %0d(%0h), sin315= %0d(%0h) ",
-              $time, sin_sum, sin_sum, Code[7:0], Code[7:0], sin_0[index], sin_0[index], index,
-              index, sin_315[index], sin_315[index]);
+     
         end
       endcase
 
@@ -747,11 +764,26 @@ module PMIX_Tb;
   // reg       CLK_225       ;
   // reg       CLK_315       ;
 
-  wire           CLK_Out;
+  wire           CLK_Out_i;
+  wire           CLK_Out_i2;
+  wire           CLK_Out_i3;
+  
 
   integer        i;
 
-  PMIX PMIX_DUT (.*);
+  PMIX PMIX_DUT (
+      .CLK (CLK),
+      .Code(Code),
+
+    // output reg        clk_filter_
+    `ifdef THREE_CLKS
+      .CLK_Out_i2(CLK_Out_i2),
+      .CLK_Out_i3(CLK_Out_i3),
+    `endif
+
+    .CLK_Out_i(CLK_Out_i)
+    
+);
 
   always #0.0999 CLK = ~CLK;  //5.001Ghz --> 0.1999
   // assign CLK_180  = ~CLK   ;
@@ -827,5 +859,6 @@ module PMIX_Tb;
 
   end
 endmodule
+
 
 
