@@ -1,3 +1,4 @@
+// mentor coverage off
 `timescale 1ns / 1fs
 module CDR_Loop (
     input rst_n,  // Asynchronous reset active low
@@ -11,54 +12,89 @@ module CDR_Loop (
     output Dout
 );
 
+`ifdef THREE_CLKS
 
+  wire clk_90;
+  wire clk_180;
 
-
-  cdr_assertion #(
-      .clk_period_expected_min(19),
-      .clk_period_expected_max(21),
-      .clk_ppm_expected_max(10000)
-  ) pi_assertion (
-      .PI_CLK_OUT (PI_Clk),
-      .Data_CLK_IN(clk_data)
-  );
-  realtime t1, t2, T1_in_CDRLOOP;
-  initial begin
-    forever begin
-      @(posedge clk_data);
-      t1 = $realtime;
-      @(posedge clk_data);
-      t2 = $realtime;
-      T1_in_CDRLOOP = t2 - t1;
-      // PPM = int'(((5 - (1 / T1)) / (5)) * (10 ** 6));
-    end
-  end
+`endif
 
 
   // wire PI_clk;
   wire up, dn;
   wire [10:0] code;
+  reg voting_clk;
+
+  parameter NUMBER_SAMPLES = 3;
+  parameter period = 0.2;
+
+  initial begin
+    voting_clk = 0;
+    forever
+      #((period / 2) / 2 * NUMBER_SAMPLES) voting_clk = ~voting_clk;  //200/5 (5 samples per bits)
+  end
+
+
+
   BBPD phaseDetector (
       .Din  (Din),
       .clk  (PI_Clk),
+      .clk_ref(clk_0),
+`ifdef THREE_CLKS
+      .clk_90  (clk_90)  ,
+      .clk_180 (clk_180) ,
+`endif
       .rst_n(rst_n),
       .Up   (up),
       .Dn   (dn),
       .A(Dout)
   );
-  Digital_Loop_Filter DLF (
+
+
+  Box_Car_Voting #(
+      .NUMBER_SAMPLES(NUMBER_SAMPLES)
+  ) Voting_U (
+      .clk    (voting_clk),
+      .Dn     (dn),
+      .Up     (up),
+      .vote_Dn(vote_Dn),
+      .vote_Up(vote_Up)
+  );
+
+
+  Digital_Loop_Filter DLF_U (
       .clk  (clk_0),
       .rst_n(rst_n),
-      .Dn   (dn),
-      .Up   (up),
+      .Up   (vote_Up),
+      .Dn   (vote_Dn),
       .code (code)
   );
+
+
 
   PMIX phase_interpolator (
       .CLK   (clk_0),
       .Code   (code),
-      .clk_filter_(PI_Clk)
+      // .clk_filter_(PI_Clk)
+`ifdef THREE_CLKS
+      .rst_n(rst_n),
+      .clk_90 (clk_90)  ,
+      .clk_180 (clk_180),
+`endif
+      .CLK_Out_i(PI_Clk)
   );
+
+
+
+  // int fd;
+  // initial begin
+  //   fd = $fopen("./Up_Dn.hex", "w");
+
+  // end
+
+  // always @(up, dn) begin
+  //   $fwrite(fd, "%h,%h\n", up, dn);
+  // end
 
 
 endmodule

@@ -4,9 +4,18 @@ module PMIX #(
     parameter THRESHOLD = 25,
     parameter WIDTH = 9
 ) (
-    input         CLK,
-    input  [10:0] Code,
-    output   reg     clk_filter_
+    input             CLK,
+    input      [10:0] Code,
+
+    // output reg        clk_filter_
+    `ifdef THREE_CLKS
+        input   rst_n         ,
+        output  clk_90        ,
+        output  clk_180       ,
+    `endif
+
+    output reg        CLK_Out_i
+    
 );
 
 
@@ -14,38 +23,49 @@ module PMIX #(
 
   reg             clk_index;
   int             index;
-  reg      [15:0] sin_sum;
+  reg      [15:0] sin_sum ;
+
+
+// `ifdef THREE_CLKS
+//   reg [15:0] sin_sum2 , sin_sum3;
+// `endif 
+
+
+
+
   integer         PHASE_SHIFT;
 
   realtime        t1;
   realtime        t2;
   realtime T1, T_;
-  reg      [     15:0] sin1;
+  reg      [15:0] sin1;
 
 
-  realtime             t3;
-  realtime             t4;
-  realtime             T1_P2;
-  reg      [     15:0] sin2;
+  realtime        t3;
+  realtime        t4;
+  realtime        T1_P2;
+  reg      [15:0] sin2;
 
-  realtime             t5;
-  realtime             t6;
-  realtime             RESULT_PERIOD;
+  realtime        t5;
+  realtime        t6;
+  realtime        RESULT_PERIOD;
 
 
-  reg                  CLK_Out_i;
-  realtime             time_now;
-  reg                  preparation_flag;
+  // reg             CLK_Out_i;
+  realtime        time_now;
+  reg             preparation_flag;
 
-//////////////////////////////////
-/////// CLK FILTERING SIGNALS/////
-//////////////////////////////////
-  reg clk_filter;
+  //////////////////////////////////
+  /////// CLK FILTERING SIGNALS/////
+  //////////////////////////////////
+  // reg             clk_filter;
   reg glitchR_found, glitchF_found;
-//////////////////////////////////
-//////////////////////////////////  
+  //////////////////////////////////
+  //////////////////////////////////  
 
-  reg      [WIDTH-1:0] sine             [0:359];
+  reg [WIDTH-1:0] sine[0:359];
+
+  int PPM;
 
 
   assign CLK_Out = CLK_Out_i;
@@ -76,14 +96,18 @@ module PMIX #(
 
 
 
+`ifdef THREE_CLKS
 
-  // cdr_assertion #(
-  //     .clk_period_expected_min(19),
-  //     .clk_period_expected_max(21)
-  // ) pi_assertion (
-  //     .PI_CLK_OUT(CLK_Out_i)
-  // );
+   Clk_Gen Clk_gen_U(
+   
+   .clk_in(CLK_Out_i)  ,
+   .rst_n (rst_n)  ,
+   
+   .clk_90  (clk_90),
+   .clk_180 (clk_180)
+   );
 
+`endif
 
   ////////////////////////////////////////////////
   //////////////// SIGN OF SIN WAVES //////////////
@@ -155,30 +179,16 @@ module PMIX #(
 
 
   initial begin
-    i         = 0;
-    j         = 0;
-    k         = 0;
-    last_time = 0;
-    T1        = 0;
-    clk_filter_ = 0;
-    clk_filter = 0;
+    i             = 0;
+    j             = 0;
+    k             = 0;
+    last_time     = 0;
+    T1            = 0;
+    // clk_filter_   = 0;
+    // clk_filter    = 0;
     glitchF_found = 0;
     glitchR_found = 0;
   end
-
-
-
-  // initial begin
-  //    forever @(posedge CLK) begin
-  //        Queue.push_back($realtime());
-  //         if(Queue.size() == 2) begin
-  //           T = Queue[1] - Queue[0];
-  //              Queue.pop_front();
-  //         end
-
-  //    end 
-
-  // end
 
 
   initial begin
@@ -186,8 +196,9 @@ module PMIX #(
       @(posedge CLK);
       t1 = $realtime;
       @(posedge CLK);
-      t2 = $realtime;
-      T1 = t2 - t1;
+      t2  = $realtime;
+      T1  = t2 - t1;
+      PPM = int'(((5 - (1 / T1)) / (5)) * (10 ** 6));
     end
   end
 
@@ -221,7 +232,7 @@ module PMIX #(
 
   reg clk_sin;
   initial clk_sin = 0;
-  always #(((T1 / 360) / 2) + 0.000001) clk_sin = ~clk_sin;
+  always #(((0.2 / 360) / 2)) clk_sin = ~clk_sin;
 
 
 
@@ -248,7 +259,7 @@ module PMIX #(
 
 
   initial clk_index = 0;
-  always #(0.002) clk_index = ~clk_index;   //0.0002
+  always #(0.0001) clk_index = ~clk_index;  //0.0002
 
 
   ////////////////////////////////////////////////
@@ -275,31 +286,38 @@ module PMIX #(
         end
 
         3'b001: begin
-          sin_sum  = ((Code[7:0]/255.0 * sin_90[index]  + ((255.0 - Code[7:0])/255.0 * sin_45[index] )))    ;
+          sin_sum   = ((Code[7:0]/255.0 * sin_90[index]  + ((255.0 - Code[7:0])/255.0 * sin_45[index] )))       ;
+
         end
 
         3'b010: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_135[index] + ((255.0 - Code[7:0])/255.0 * sin_90[index] )))    ;
+
         end
 
         3'b011: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_180[index]  + ((255.0 - Code[7:0])/255.0 * sin_135[index] )))  ;
+   
         end
 
         3'b100: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_225[index]  + ((255.0 - Code[7:0])/255.0 * sin_180[index] )))  ;
+
         end
 
         3'b101: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_270[index]  + ((255.0 - Code[7:0])/255.0 * sin_225[index] )))  ;
+
         end
 
         3'b110: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_315[index]  + ((255.0 - Code[7:0])/255.0 * sin_270[index] )))  ;
+
         end
 
         3'b111: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] )))    ;
+     
         end
       endcase
 
@@ -308,93 +326,44 @@ module PMIX #(
 
 
 
-always@(*) begin
-   if(!glitchF_found) begin
-    @(posedge CLK_Out_i);
-       clk_filter = 1;
-       #0.000002;
-        $display("HERE 11,out = %b , filter = %b ,t= %t",CLK_Out_i,clk_filter,$realtime);
+  // always @(*) begin
+  //   // if (!glitchF_found) begin
+  //   @(posedge CLK_Out_i);
+  //   clk_filter = 1;
+  //   // #0.000002;
+  //   #0.01;
+  //   // $display("HERE 11,out = %b , filter = %b ,t= %t", CLK_Out_i, clk_filter, $realtime);
 
-       if(clk_filter != CLK_Out_i) begin
-         clk_filter_ = 0;
-         glitchR_found = 1;
-         $display("HERE 1, t= %t",$realtime);
-       end
-       else begin
-         clk_filter_ = 1;
-         glitchR_found = 0;
-         // $display("HERE 2");
-       end
-   end 
-end
-
-
-always@(*) begin
-    if(!glitchR_found) begin
-     @(negedge CLK_Out_i);
-            clk_filter = 0 ;
-            #0.000002;
-            if(clk_filter != CLK_Out_i) begin
-              clk_filter_ = 1;
-              glitchF_found = 1;
-              $display("HERE 3");
-            end
-            else begin
-              clk_filter_ = 0;
-              glitchF_found = 1'b0;
-              // $display("HERE 4");
-            end        
-    end
-end
+  //   if (clk_filter != CLK_Out_i) begin
+  //     clk_filter_ = 0;
+  //     // glitchR_found = 1;
+  //     // $display("HERE 1, t= %t", $realtime);
+  //   end else begin
+  //     clk_filter_ = 1;
+  //     // glitchR_found = 0;
+  //     // $display("HERE 2");
+  //   end
+  //   // end
+  // end
 
 
-
-
-
-
-// always@(CLK_Out_i) begin
-//    if(CLK_Out_i && !glitchF_found) begin
-//      @(posedge CLK_Out_i);
-//        clk_filter = 1;
-//        #0.0002;
-//        if(clk_filter != CLK_Out_i) begin
-//          clk_filter_ = 0;
-//          glitchR_found = 1;
-//          $display("HHHHHHHHEEEEEEEEEEEERRRRRRRRRREEEEEEEE");
-//        end
-//        else begin
-//          clk_filter_ = 1;
-//          glitchR_found = 0;
-//        end
-//    end 
-
-//     else if (!CLK_Out_i && !glitchR_found) begin
-//         @(negedge CLK_Out_i);
-//             clk_filter = 0 ;
-//             #0.0002;
-//             if(clk_filter != CLK_Out_i) begin
-//               clk_filter_ = 1;
-//               glitchF_found = 1;
-//             end
-//             else begin
-//               clk_filter_ = 0;
-//               glitchF_found = 1'b0;
-//             end        
-//     end
-
-// end
-
-
-always@(*) begin
-
-end
-
-
-
-
-
-
-
+  // always @(*) begin
+  //   // if (!glitchR_found) begin
+  //   @(negedge CLK_Out_i);
+  //   clk_filter = 0;
+  //   // #0.000002;
+  //   #0.01;
+  //   if (clk_filter != CLK_Out_i) begin
+  //     clk_filter_ = 1;
+  //     // glitchF_found = 1;
+  //     // $display("HERE 3");
+  //   end else begin
+  //     clk_filter_ = 0;
+  //     // glitchF_found = 1'b0;
+  //     // $display("HERE 4");
+  //   end
+  //   // end
+  // end
 
 
 
@@ -763,8 +732,14 @@ end
     sine[359] = 25;
 
 
+
   end
 endmodule
+
+
+
+
+
 
 
 ///////////////////////////////////////
@@ -772,6 +747,8 @@ endmodule
 ///////////// TESTBENCH ///////////////
 ///////////////////////////////////////
 ///////////////////////////////////////
+
+
 
 module PMIX_Tb;
 
@@ -787,13 +764,28 @@ module PMIX_Tb;
   // reg       CLK_225       ;
   // reg       CLK_315       ;
 
-  wire           CLK_Out;
+  wire           CLK_Out_i;
+  wire           CLK_Out_i2;
+  wire           CLK_Out_i3;
+  
 
   integer        i;
 
-  PMIX PMIX_DUT (.*);
+  PMIX PMIX_DUT (
+      .CLK (CLK),
+      .Code(Code),
 
-  always #(0.2002 / 2) CLK = ~CLK;  //5.001Ghz --> 0.1999
+    // output reg        clk_filter_
+    `ifdef THREE_CLKS
+      .CLK_Out_i2(CLK_Out_i2),
+      .CLK_Out_i3(CLK_Out_i3),
+    `endif
+
+    .CLK_Out_i(CLK_Out_i)
+    
+);
+
+  always #0.0999 CLK = ~CLK;  //5.001Ghz --> 0.1999
   // assign CLK_180  = ~CLK   ;
   // assign CLK_270  = ~CLK_90; 
 
@@ -861,7 +853,7 @@ module PMIX_Tb;
 
     for (i = 0; i < 2050; i = (i + 1) % 2048) begin
       Code = i;
-      #(0.088);  //SLOPE    0.06 (-ppm)
+      #(0.03);
     end
     $stop();
 
@@ -870,25 +862,3 @@ endmodule
 
 
 
-// module cdr_assertion #(
-//     clk_period_expected_min = 0.18,
-//     clk_period_expected_max = 0.31
-// ) (
-//     input PI_CLK_OUT
-// );
-
-
-//   property CLK_OUT_PERIOD_prop(time clk_period_expected_min, time clk_period_expected_max);
-//     realtime current_time;
-//     @(posedge PI_CLK_OUT) ('1,
-//     current_time = $realtime()
-//     ) |=> ((clk_period_expected_min <= int'(100 * ($realtime() - current_time))) &&
-//            (clk_period_expected_max >= int'(100 * ($realtime() - current_time))));
-//   endproperty
-
-//   CLK_OUT_PERIOD_assert :
-//   assert property (CLK_OUT_PERIOD_prop(clk_period_expected_min, clk_period_expected_max));
-//   CLK_OUT_PERIOD_cover :
-//   cover property (CLK_OUT_PERIOD_prop(clk_period_expected_min, clk_period_expected_max));
-
-// endmodule

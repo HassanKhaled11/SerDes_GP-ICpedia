@@ -10,19 +10,19 @@ module Digital_Loop_Filter (
 
 );
 
-  parameter GAIN = 80;
+  parameter PHUG = 3;
   parameter PHASE_WIDTH = 16;
-  parameter FREQ_WIDTH = 24;
-  parameter FRUG = 500;
+  parameter FREQ_WIDTH = 16;
+  parameter FRUG = 3;
 
   reg [FREQ_WIDTH-1:0] freq_integrator;
   reg [PHASE_WIDTH-1:0] phase_integrator;
 
+  wire [1:0] UP_DN;
 
+  assign code  = phase_integrator[PHASE_WIDTH-1:PHASE_WIDTH-11];  // top 11
 
-  assign code = phase_integrator[PHASE_WIDTH-1:PHASE_WIDTH-11];  // top 11
-
-
+  assign UP_DN = {Up, Dn};
 
   always @(posedge clk or negedge rst_n) begin
 
@@ -40,7 +40,7 @@ module Digital_Loop_Filter (
         2'b10: begin  // late
 
           freq_integrator <= FRUG * (Up - Dn) + (freq_integrator);
-          phase_integrator  <=  phase_integrator  + freq_integrator[FREQ_WIDTH-2:FREQ_WIDTH-10] + GAIN*(Up - Dn); //$unsigned(~freq_integrator[18:11])
+          phase_integrator  <=  phase_integrator  + freq_integrator[FREQ_WIDTH-2:FREQ_WIDTH-10] + PHUG*(Up - Dn); //$unsigned(~freq_integrator[18:11])
 
         end
 
@@ -49,7 +49,7 @@ module Digital_Loop_Filter (
           freq_integrator <= FRUG * (Up - Dn) + (freq_integrator);
           phase_integrator <= phase_integrator - $unsigned(
               ~freq_integrator[FREQ_WIDTH-2:FREQ_WIDTH-10]
-          ) + GAIN * (Up - Dn);  //$unsigned(~freq_integrator[18:11])		 
+          ) + PHUG * (Up - Dn);  //$unsigned(~freq_integrator[18:11])     
 
         end
 
@@ -72,7 +72,7 @@ module Digital_Loop_Filter (
   //   end else begin
 
   //     freq_integrator <= FRUG * (Up - Dn) + signed'(freq_integrator);
-  //     phase_integrator  <=  (phase_integrator)  + signed'(freq_integrator[WIDTH-2:WIDTH-10]) + GAIN*(Up - Dn); //$unsigned(~freq_integrator[18:11])
+  //     phase_integrator  <=  (phase_integrator)  + signed'(freq_integrator[WIDTH-2:WIDTH-10]) + PHUG*(Up - Dn); //$unsigned(~freq_integrator[18:11])
 
   //   end
   // end
