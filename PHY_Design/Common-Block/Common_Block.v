@@ -1,17 +1,16 @@
-`timescale 1ns/10ps
+`timescale 1ns / 10ps
 
 module Common_Block (
     input Ref_Clk,  // 100 MG 
     input Rst_n,
-    //input [7:0]div_ratio,
-    input  [5:0] DataBusWidth ,
+    input [5:0] DataBusWidth,
     output Bit_Rate_Clk,
     output Bit_Rate_CLK_10,
     output PCLK
 );
 
 
-reg [7:0] ratio ;
+  reg [7:0] ratio;
 
   PLL PLL_frquency_mult (
       .Ref_Clk(Ref_Clk),
@@ -34,18 +33,18 @@ reg [7:0] ratio ;
 
 
 
-always @(*) begin
-  
- case (DataBusWidth)
-   
-   6'd8    :  ratio = 8'd10 ;
-   6'd16   :  ratio = 8'd20 ;
-   6'd32   :  ratio = 8'd40 ;  
+  always @(*) begin
 
-   default :  ratio = 8'd10 ;
+    case (DataBusWidth)
 
- endcase
+      6'd8:  ratio = 8'd10;
+      6'd16: ratio = 8'd20;
+      6'd32: ratio = 8'd40;
 
-end
+      default: ratio = 8'd10;
+
+    endcase
+
+  end
 
 endmodule

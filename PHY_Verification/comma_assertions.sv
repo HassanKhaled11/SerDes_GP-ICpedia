@@ -45,7 +45,6 @@ module comma_assertions (
   ///////////////////////// check transition from idle to data
 
   property chk_data;
-    // (cs == 2'b00) and (data == 10'h0fa or data == 10'h305) |-> (ns == 2'b01);
     cs_data1(
         2'b00, 10'h0fa, 10'h305
     ) and(COMMA_NUMBER == 1) |-> (ns == 2'b10);
@@ -170,8 +169,6 @@ module comma_assertions (
   cover property (check_comma29_to_comma);
 
 
-  // comma9_idle 	: assert property()
-  // cvg_comma9_idle : cover  property()
   //////////////////////////////////////////////////////////////////////////////////
   ///////////////////////// check correct collecting comma data across comma state
   ///////////////////////// Fails for cases no comma data collected so return back 
@@ -179,7 +176,6 @@ module comma_assertions (
   ///////////////////////// the selected number of commas
 
   property chk_comma_state;
-    // (cs == 2'b00) and (data != 10'h0fa and data != 10'h305) |-> (ns == 2'b00);
     (cs == 2'b01 and($past(
         cs, 1
     ) == 2'b00)) |-> ##9 (data == 10'h0fa or data == 10'h305);

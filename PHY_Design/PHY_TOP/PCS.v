@@ -8,18 +8,11 @@ module PCS (
     input [31 : 0] MAC_TX_Data,
     input [ 3 : 0] MAC_TX_Datak,
     input          MAC_Data_En,
-    // input          buffer_mode,
-    //input 				  K285						,
-    input          WordClk,
-    // input          CLK_5G,
-    input          recovered_clk_5G,
-    input [   9:0] Collected_Data,
 
-    // input                Loopback_Path          ,
-    // ///////// CONTROL  //////////               
-    // input                TxElecIdle             ,
-    // input                TxDetectRx_Loopback    ,
-    // input                Tx_Compilance          ,
+    input       WordClk,
+    input       recovered_clk_5G,
+    input [9:0] Collected_Data,
+
     ////////  OUTPUTS  //////////
     output [9 : 0] Data_In_PMA,
 
@@ -40,10 +33,6 @@ module PCS (
       .MAC_TX_Data    (MAC_TX_Data),
       .MAC_TX_Datak   (MAC_TX_Datak),
       .MAC_Data_En    (MAC_Data_En),
-      // .Loopback_Path        (Loopback_Path)           , 
-      // .TxElecIdle           (TxElecIdle)              ,
-      // .TxDetectRx_Loopback  (TxDetectRx_Loopback)     ,
-      // .Tx_Compilance        (Tx_Compilance)           ,
       .Data_In_PMA    (Data_In_PMA)
 
   );
@@ -54,13 +43,11 @@ module PCS (
       .BUFFER_WIDTH(10),
       .BUFFER_DEPTH(16)
   ) PCS_RX_U (
-      //.K285          (K285),	// from pma
       .WordClk         (WordClk),           // 
       .Collected_Data  (Collected_Data),    //from PMA
       .PCLK            (PCLK),
       .recovered_clk_5G(recovered_clk_5G),  //  in port
       .Rst_n           (RST_n),
-      //.buffer_mode   (buffer_mode),     // in port
       .DataBusWidth    (DataBusWidth),
       .RX_Data         (RX_Data),
       .RX_DataK        (RX_DataK),

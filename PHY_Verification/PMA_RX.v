@@ -3,13 +3,11 @@ module PMA_RX #(
 ) (
     input RX_POS,
     input RX_NEG,
-    //input Ser_in,
     input Rst_n,
     input CLK_5G,
     input RxPolarity,
     output [DATA_WIDTH-1:0] Data_out,
     output recovered_clk_5G
-    //output K285
 );
   wire Recoverd_data;
   wire rec_clk_5G;

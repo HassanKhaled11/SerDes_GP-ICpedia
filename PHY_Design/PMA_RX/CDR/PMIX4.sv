@@ -4,18 +4,16 @@ module PMIX #(
     parameter THRESHOLD = 25,
     parameter WIDTH = 9
 ) (
-    input             CLK,
-    input      [10:0] Code,
+    input         CLK,
+    input  [10:0] Code,
+`ifdef THREE_CLKS
+    input         rst_n,
+    output        clk_90,
+    output        clk_180,
+`endif
 
-    // output reg        clk_filter_
-    `ifdef THREE_CLKS
-        input   rst_n         ,
-        output  clk_90        ,
-        output  clk_180       ,
-    `endif
+    output reg CLK_Out_i
 
-    output reg        CLK_Out_i
-    
 );
 
 
@@ -23,13 +21,7 @@ module PMIX #(
 
   reg             clk_index;
   int             index;
-  reg      [15:0] sin_sum ;
-
-
-// `ifdef THREE_CLKS
-//   reg [15:0] sin_sum2 , sin_sum3;
-// `endif 
-
+  reg      [15:0] sin_sum;
 
 
 
@@ -58,7 +50,6 @@ module PMIX #(
   //////////////////////////////////
   /////// CLK FILTERING SIGNALS/////
   //////////////////////////////////
-  // reg             clk_filter;
   reg glitchR_found, glitchF_found;
   //////////////////////////////////
   //////////////////////////////////  
@@ -98,14 +89,14 @@ module PMIX #(
 
 `ifdef THREE_CLKS
 
-   Clk_Gen Clk_gen_U(
-   
-   .clk_in(CLK_Out_i)  ,
-   .rst_n (rst_n)  ,
-   
-   .clk_90  (clk_90),
-   .clk_180 (clk_180)
-   );
+  Clk_Gen Clk_gen_U (
+
+      .clk_in(CLK_Out_i),
+      .rst_n (rst_n),
+
+      .clk_90 (clk_90),
+      .clk_180(clk_180)
+  );
 
 `endif
 
@@ -184,8 +175,6 @@ module PMIX #(
     k             = 0;
     last_time     = 0;
     T1            = 0;
-    // clk_filter_   = 0;
-    // clk_filter    = 0;
     glitchF_found = 0;
     glitchR_found = 0;
   end
@@ -297,7 +286,7 @@ module PMIX #(
 
         3'b011: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_180[index]  + ((255.0 - Code[7:0])/255.0 * sin_135[index] )))  ;
-   
+
         end
 
         3'b100: begin
@@ -317,7 +306,7 @@ module PMIX #(
 
         3'b111: begin
           sin_sum  = ((Code[7:0]/255.0 * sin_0[index]  + ((255.0 - Code[7:0])/255.0 * sin_315[index] )))    ;
-     
+
         end
       endcase
 
@@ -325,45 +314,6 @@ module PMIX #(
   end
 
 
-
-  // always @(*) begin
-  //   // if (!glitchF_found) begin
-  //   @(posedge CLK_Out_i);
-  //   clk_filter = 1;
-  //   // #0.000002;
-  //   #0.01;
-  //   // $display("HERE 11,out = %b , filter = %b ,t= %t", CLK_Out_i, clk_filter, $realtime);
-
-  //   if (clk_filter != CLK_Out_i) begin
-  //     clk_filter_ = 0;
-  //     // glitchR_found = 1;
-  //     // $display("HERE 1, t= %t", $realtime);
-  //   end else begin
-  //     clk_filter_ = 1;
-  //     // glitchR_found = 0;
-  //     // $display("HERE 2");
-  //   end
-  //   // end
-  // end
-
-
-  // always @(*) begin
-  //   // if (!glitchR_found) begin
-  //   @(negedge CLK_Out_i);
-  //   clk_filter = 0;
-  //   // #0.000002;
-  //   #0.01;
-  //   if (clk_filter != CLK_Out_i) begin
-  //     clk_filter_ = 1;
-  //     // glitchF_found = 1;
-  //     // $display("HERE 3");
-  //   end else begin
-  //     clk_filter_ = 0;
-  //     // glitchF_found = 1'b0;
-  //     // $display("HERE 4");
-  //   end
-  //   // end
-  // end
 
 
 
@@ -754,20 +704,10 @@ module PMIX_Tb;
 
   reg            CLK;
   reg     [10:0] Code;
-  // reg       CLK           ;
-  // reg       CLK_90        ;
-  // wire      CLK_180       ;
-  // wire      CLK_270       ;
-
-  // reg       CLK_45        ;
-  // reg       CLK_135       ;
-  // reg       CLK_225       ;
-  // reg       CLK_315       ;
-
   wire           CLK_Out_i;
   wire           CLK_Out_i2;
   wire           CLK_Out_i3;
-  
+
 
   integer        i;
 
@@ -775,53 +715,17 @@ module PMIX_Tb;
       .CLK (CLK),
       .Code(Code),
 
-    // output reg        clk_filter_
-    `ifdef THREE_CLKS
+`ifdef THREE_CLKS
       .CLK_Out_i2(CLK_Out_i2),
       .CLK_Out_i3(CLK_Out_i3),
-    `endif
+`endif
 
-    .CLK_Out_i(CLK_Out_i)
-    
-);
+      .CLK_Out_i(CLK_Out_i)
+
+  );
 
   always #0.0999 CLK = ~CLK;  //5.001Ghz --> 0.1999
-  // assign CLK_180  = ~CLK   ;
-  // assign CLK_270  = ~CLK_90; 
 
-
-  // initial begin
-  //   CLK_90  = 0;
-  //   #(0.05)      ;
-  //   forever #0.1 CLK_90 = ~CLK_90;
-  // end
-
-  // initial begin
-  //   CLK_45  = 0;
-  //   #(0.025)      ;
-  //   forever #0.1 CLK_45 = ~CLK_45;
-  // end
-
-
-  // initial begin
-  //   CLK_135  = 0;
-  //   #(0.075)      ;
-  //   forever #0.1 CLK_135 = ~CLK_135;
-  // end
-
-
-  // initial begin
-  //   CLK_225  = 0;
-  //   #(0.125)      ;
-  //   forever #0.1 CLK_225 = ~CLK_225;
-  // end
-
-
-  // initial begin
-  //   CLK_315  = 0;
-  //   #(0.175)      ;
-  //   forever #0.1 CLK_315 = ~CLK_315;
-  // end
 
 
 

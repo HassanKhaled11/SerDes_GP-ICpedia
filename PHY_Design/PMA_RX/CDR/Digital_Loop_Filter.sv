@@ -60,23 +60,6 @@ module Digital_Loop_Filter (
   end
 
 
-  ///////////////////////////
-
-  // always @(posedge clk or negedge rst_n) begin
-
-  //   if (!rst_n) begin
-
-  //     phase_integrator <= 0;
-  //     freq_integrator  <= 0;
-
-  //   end else begin
-
-  //     freq_integrator <= FRUG * (Up - Dn) + signed'(freq_integrator);
-  //     phase_integrator  <=  (phase_integrator)  + signed'(freq_integrator[WIDTH-2:WIDTH-10]) + PHUG*(Up - Dn); //$unsigned(~freq_integrator[18:11])
-
-  //   end
-  // end
-
 endmodule
 
 

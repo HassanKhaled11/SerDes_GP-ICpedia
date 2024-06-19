@@ -5,7 +5,7 @@ module elastic_memory (
     read_pointer,
     write_pointer,
     data_out,
-    add_req,  
+    add_req,
     full,
     empty
 );
@@ -17,24 +17,20 @@ module elastic_memory (
   input read_clk, write_clk;
   input full, empty;
   input [DATA_WIDTH-1:0] data_in;
-  input add_req; 
+  input add_req;
   input [max_buffer_addr-1:0] read_pointer;
   input [max_buffer_addr-1:0] write_pointer;
-  // input rd_en, wr_en;
   output reg [DATA_WIDTH-1:0] data_out;
 
   reg [DATA_WIDTH-1:0] buffer[0:BUFFER_DEPTH-1];
 
   //reading
   always @(posedge read_clk) begin
-  if(empty || add_req) begin
-     data_out = 10'h0f3;
+    if (empty || add_req) begin
+      data_out = 10'h0f3;
+    end else data_out = buffer[read_pointer];
   end
 
-  else 
-     data_out = buffer[read_pointer];
-  end
- 
 
   //writing
   always @(posedge write_clk) begin

@@ -5,25 +5,20 @@ module PMA (
     input [9:0] Data_in,
     input       MAC_Data_En,
     input       RxPolarity,
-    //input                    RX_POS          ,
-    //input                    RX_NEG          ,
-    // input       Ser_in,
-
 
     output       TX_Out_P,
     output       TX_Out_N,
-    //output                   K285            ,
     output [9:0] RX_Out
 );
 
 
 
- wire TX_P ;
- wire TX_N ;
+  wire TX_P;
+  wire TX_N;
 
 
-assign TX_Out_P = TX_P ;
-assign TX_Out_N = TX_N ;
+  assign TX_Out_P = TX_P;
+  assign TX_Out_N = TX_N;
 
 
   PMA_TX #(
@@ -34,7 +29,7 @@ assign TX_Out_N = TX_N ;
       .Rst_n          (Rst_n),
       .Data_in        (Data_in),
       .MAC_Data_En    (MAC_Data_En),
-      .TX_Out_P       (TX_P)     ,
+      .TX_Out_P       (TX_P),
       .TX_Out_N       (TX_N)
   );
 
@@ -45,12 +40,10 @@ assign TX_Out_N = TX_N ;
   ) PM_RX_U (
       .RX_POS    (TX_P),
       .RX_NEG    (TX_N),
-     // .Ser_in    (TX_Out_P),
       .Rst_n     (Rst_n),
       .CLK_5G    (Bit_Rate_Clk),  //CLK_5G
       .RxPolarity(RxPolarity),
       .Data_out  (RX_Out)
-      //.K285(K285)
   );
 
 

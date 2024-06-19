@@ -5,7 +5,6 @@ module PLL (
 );
 
   integer first, second;
-  // reg[3:0] first , second;
   initial begin
     CLK = 0;
     @(posedge Ref_Clk);
@@ -18,8 +17,7 @@ module PLL (
 
 
 
-    // if (!RST) CLK = 0;
-    forever #((second - first) / 100) CLK = ~CLK;  //#((first - second) / 100)
+    forever #((second - first) / 100) CLK = ~CLK;
 
 
   end
