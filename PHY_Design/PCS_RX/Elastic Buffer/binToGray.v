@@ -17,5 +17,4 @@ module binToGray (
     end
   endgenerate
 
-  // assign gray[COUNTER_WIDTH-1] = binary[COUNTER_WIDTH-1];
 endmodule

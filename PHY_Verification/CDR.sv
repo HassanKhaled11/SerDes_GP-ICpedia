@@ -217,23 +217,6 @@ module Digital_Loop_Filter (
   end
 
 
-  ///////////////////////////
-
-  // always @(posedge clk or negedge rst_n) begin
-
-  //   if (!rst_n) begin
-
-  //     phase_integrator <= 0;
-  //     freq_integrator  <= 0;
-
-  //   end else begin
-
-  //     freq_integrator <= FRUG * (Up - Dn) + signed'(freq_integrator);
-  //     phase_integrator  <=  (phase_integrator)  + signed'(freq_integrator[WIDTH-2:WIDTH-10]) + PHUG*(Up - Dn); //$unsigned(~freq_integrator[18:11])
-
-  //   end
-  // end
-
 endmodule
 
 
@@ -524,10 +507,6 @@ module PMIX #(
   reg      [15:0] sin_sum;
 
 
-  // `ifdef THREE_CLKS
-  //   reg [15:0] sin_sum2 , sin_sum3;
-  // `endif 
-
 
 
 
@@ -670,10 +649,6 @@ module PMIX #(
   ////////////////////////////////////////////////
   ////////////////////////////////////////////////
 
-
-  // always @* begin
-  // PHASE_SHIFT    = t3 - t1 ;
-  // end
 
 
   initial begin
@@ -821,47 +796,6 @@ module PMIX #(
 
     end
   end
-
-
-
-  // always @(*) begin
-  //   // if (!glitchF_found) begin
-  //   @(posedge CLK_Out_i);
-  //   clk_filter = 1;
-  //   // #0.000002;
-  //   #0.01;
-  //   // $display("HERE 11,out = %b , filter = %b ,t= %t", CLK_Out_i, clk_filter, $realtime);
-
-  //   if (clk_filter != CLK_Out_i) begin
-  //     clk_filter_ = 0;
-  //     // glitchR_found = 1;
-  //     // $display("HERE 1, t= %t", $realtime);
-  //   end else begin
-  //     clk_filter_ = 1;
-  //     // glitchR_found = 0;
-  //     // $display("HERE 2");
-  //   end
-  //   // end
-  // end
-
-
-  // always @(*) begin
-  //   // if (!glitchR_found) begin
-  //   @(negedge CLK_Out_i);
-  //   clk_filter = 0;
-  //   // #0.000002;
-  //   #0.01;
-  //   if (clk_filter != CLK_Out_i) begin
-  //     clk_filter_ = 1;
-  //     // glitchF_found = 1;
-  //     // $display("HERE 3");
-  //   end else begin
-  //     clk_filter_ = 0;
-  //     // glitchF_found = 1'b0;
-  //     // $display("HERE 4");
-  //   end
-  //   // end
-  // end
 
 
 
@@ -1249,9 +1183,6 @@ module CDR_Loop (
     input rst_n,  // Asynchronous reset active low
     input clk_0,
     input clk_data,
-    // input clk_90,
-    // input clk_180,
-    // input clk_270,
     input Din,
     output PI_Clk,
     output Dout
@@ -1265,7 +1196,6 @@ module CDR_Loop (
 `endif
 
 
-  // wire PI_clk;
   wire up, dn;
   wire [10:0] code;
   reg voting_clk;
@@ -1320,7 +1250,6 @@ module CDR_Loop (
   PMIX phase_interpolator (
       .CLK   (clk_0),
       .Code   (code),
-      // .clk_filter_(PI_Clk)
 `ifdef THREE_CLKS
       .rst_n(rst_n),
       .clk_90 (clk_90)  ,
@@ -1373,18 +1302,7 @@ module cdr_assertion #(
 
 
 
-  // property CLK_OUT_PPM_prop(int clk_ppm_expected_max);
-  //   realtime current_time;
-  //   @(posedge PI_CLK_OUT) ('1,
-  //   current_time = $realtime()
-  //   ) |=> (clk_ppm_expected_max >= int
-  //          '(((5000.0 - (1000.0 / ($realtime() - current_time))) / (5000)) * (10 ** 6)), $display(
-  //       "PI clk: PPM = %f,curr freq=%f, curr period=%f",
-  //       int'(((5000.0 - (1000.0 / ($realtime() - current_time))) / (5000.0)) * (10 ** 6)),
-  //       (1000.0 / ($realtime() - current_time)),
-  //       ($realtime() - current_time)
-  //   ));
-  // endproperty
+
   property CLK_OUT_PPM_prop(int clk_ppm_expected_max);
     realtime current_time;
     @(posedge PI_CLK_OUT) ('1,
@@ -1442,46 +1360,12 @@ module cdr_assertion #(
 
 
 
-  //   property PPM_ERROR_prop(clk_ppm_error_expected_max = 0.1);
-  //     // realtime data = 0
-  //     // ;
-  //     realtime clk = 0
-  //     ;
-  //     realtime clk_out = 0;
-  //     @(posedge Data_CLK_IN)('1,     clk_out = $realtime()
-  // )|=> (clk_ppm_error_expected_max >= (clk - clk_out))
-  //     // @(data) ('1,data= $realtime());
-  //     @(posedge PI_CLK_OUT) ('1,
-  //     clk = $realtime()
-  //     ) |=> (clk_ppm_error_expected_max >= (clk - clk_out))
-  //   endproperty
-
-  //   PPM_error_assert :
-  //   assert property (PPM_ERROR_prop(clk_ppm_error_expected_max));
-  //   PPM_error_cover :
-  //   cover property (PPM_ERROR_prop(clk_ppm_error_expected_max));
-
 
   realtime clks_queue[$];
   realtime curr_pi_clk;
   realtime curr_data_clk;
   realtime ppm_error;
-  // always @(posedge PI_CLK_OUT) begin
-  //   curr_pi_clk = $realtime();
-  //   clks_queue.push_front(curr_pi_clk);
-  // end
 
-  // always @(posedge Data_CLK_IN) begin
-  //   curr_data_clk = $realtime();
-  //   clks_queue.push_front(curr_data_clk);
-  // end
-
-  // always @(clks_queue) begin
-  //   if (clks_queue.size() == 2) ppm_error = clks_queue[1] - clks_queue[0];
-  //   $display("ppm_error=%t", ppm_error);
-  //   clks_queue.pop_back();
-  //   clks_queue.pop_back();
-  // end
 
   always @(PI_CLK_OUT or Data_CLK_IN) begin
     curr_pi_clk = $realtime();

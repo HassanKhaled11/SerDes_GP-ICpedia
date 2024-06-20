@@ -1,4 +1,4 @@
- 
+
 module Serial_to_Parallel #(
     parameter DATA_WIDTH = 10
 ) (
@@ -11,21 +11,16 @@ module Serial_to_Parallel #(
 
     input RxPolarity,
 
-    //output K285,
-
     output reg [DATA_WIDTH-1:0] Data_Collected  //change
 
 );
 
-  // reg [3:0] count;
-  // reg [9:0] collect_register;
-
 
   wire serial;
 
- // coverage off
+  // coverage off
   assign serial = (RxPolarity) ? !Ser_in : Ser_in;
- // coverage on
+  // coverage on
 
   always @(posedge Recovered_Bit_Clk or negedge Rst_n) begin : proc_
     if (~Rst_n) begin

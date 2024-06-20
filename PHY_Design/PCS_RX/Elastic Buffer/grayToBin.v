@@ -10,7 +10,6 @@ module GrayToBinary #(
   assign binary[2] = gray[3] ^ gray[2];
   assign binary[3] = gray[3];
   */
-  // OR
   genvar i;
   generate
     for (i = 0; i < WIDTH; i = i + 1) begin

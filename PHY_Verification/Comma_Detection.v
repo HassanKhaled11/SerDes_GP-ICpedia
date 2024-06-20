@@ -11,10 +11,9 @@ module Comma_Detection (
 );
 
   reg [1:0] cs, ns;
-  wire [5:0] CP1, CP2;  /// ?????
+  wire [5:0] CP1, CP2;
   reg [5:0] count;
   reg count_reset;
-  //reg[2:0] symbol_count;
 
   localparam IDLE = 2'b00, COMMA = 2'b01, DATA = 2'b10;
 
@@ -71,13 +70,6 @@ module Comma_Detection (
 
           default: ns = COMMA;
         endcase
-
-        // if(Data_Collected!=10'h0FA && Data_Collected!=10'h305)
-        //   ns = IDLE;
-        // else begin
-        //   if(count == CP1) ns = DATA;
-        //   else ns = COMMA;
-        // end      
       end
 
 

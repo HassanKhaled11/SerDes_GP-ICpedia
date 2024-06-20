@@ -1,7 +1,7 @@
 module line_coding_8_10  //#(parameter DATAWIDTH = 8)
-(  // inut wire pclk,
+(
     input wire enable,
-    input wire  TXDataK,
+    input wire TXDataK,
     input wire [7:0] data,
     output reg [9:0] encoded_data_pos,
     output reg [9:0] encoded_data_neg
@@ -528,11 +528,13 @@ module line_coding_8_10  //#(parameter DATAWIDTH = 8)
           encoded_data_neg = 10'b101011_0011;
           encoded_data_pos = 10'b010100_1100;
         end
+
         ////////////////////  D0.4 --> D31.4
         ///////////////
         ///////////////
         ///////////////
         ///////////////
+
         8'b1000_0000: begin
           encoded_data_neg = 10'b100111_0010;
           encoded_data_pos = 10'b011000_1101;
@@ -1052,8 +1054,8 @@ module line_coding_8_10  //#(parameter DATAWIDTH = 8)
           encoded_data_pos = 10'b010100_1110;
         end
       endcase
-    end else if (enable && TXDataK) begin // send command k28.0 --> k30.7
-        case(data)
+    end else if (enable && TXDataK) begin  // send command k28.0 --> k30.7
+      case (data)
         8'b0001_1100: begin
           encoded_data_neg = 10'b001111_0100;
           encoded_data_pos = 10'b110000_1011;
@@ -1102,7 +1104,7 @@ module line_coding_8_10  //#(parameter DATAWIDTH = 8)
           encoded_data_neg = 10'b011110_1000;
           encoded_data_pos = 10'b100001_0111;
         end
-        endcase
+      endcase
     end else begin
       encoded_data_neg = 10'b100111_0100;
       encoded_data_pos = 10'b011000_1011;

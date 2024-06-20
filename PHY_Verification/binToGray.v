@@ -9,7 +9,6 @@ module binToGray (
   genvar i;
   generate
     for (i = 0; i < COUNTER_WIDTH; i = i + 1) begin
-      // assign gray[i] = binary[i] ^ binary[i+1];
       always @(*) begin
         if (i != COUNTER_WIDTH - 1) gray[i] = binary[i] ^ binary[i+1];
         else gray[i] = binary[i];
@@ -17,5 +16,4 @@ module binToGray (
     end
   endgenerate
 
-  // assign gray[COUNTER_WIDTH-1] = binary[COUNTER_WIDTH-1];
 endmodule

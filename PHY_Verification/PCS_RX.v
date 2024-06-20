@@ -8,10 +8,8 @@ module PCS_RX #(
     input [DATA_WIDTH-1:0] Collected_Data,
     input WordClk,  // to elastic buffer & decoder & Gasket
     input PCLK,
-    // input CLK_5G,  // used for comma pulse generator and CLK_5G main input port to PMA_RX
     input recovered_clk_5G,
     input Rst_n,
-    // input buffer_mode,
     input [5:0] DataBusWidth,
 
     output [31:0] RX_Data,
@@ -58,9 +56,6 @@ module PCS_RX #(
       .read_clk   (WordClk),          // in port
       .data_in    (Collected_Data),   // from serial to parallel
       .rst_n      (Rst_n),            // inport
-      //.buffer_mode(buffer_mode),      // in port
-      // .read_enable 		(read_enable), 			// -------
-      // .write_enable		(Comma_pulse), 			// pulse from comma detection
       .data_out   (data_to_decoder),  // to decoder
       .overflow   (overflow),         // to rx status
       .skp_added  (skp_added),        // to rx status

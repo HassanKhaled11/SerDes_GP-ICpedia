@@ -2,7 +2,6 @@
 module CDR_Tb ();
 
 
-  // parameter N = 8;
   parameter CLK_Period = 200;
 
   reg rst_n, clk_0, clk_90, clk_180, clk_270, Din;
@@ -37,9 +36,7 @@ module CDR_Tb ();
   ////////////////////////////////////////////////////////////////
   ///////////////////////// Din Clock ////////////////////////////
   ////////////////////////////////////////////////////////////////
-  // always begin 
-  // #100 clk_data = ~clk_data; //CLK_Period/2.0
-  // end
+
   initial begin
     // #110;
     forever #99.9 clk_data = ~clk_data;
@@ -63,7 +60,6 @@ module CDR_Tb ();
     rst_n = 1;
     for (int i = 0; i < 2000000; i++) begin
       Din = ~Din;
-      // #(50);
       @(negedge clk_data);
     end
     $stop();

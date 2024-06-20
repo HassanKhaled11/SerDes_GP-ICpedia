@@ -63,7 +63,7 @@ endmodule
 //     clk = 0;
 //     forever #(period / 2) clk = ~clk;  //200/5 (5 samples per bits)
 //   end
-  
+
 //   Box_Car_Voting #(N) Box_Car_Voting_U (
 //       .clk(voting_clk),
 //       .Dn(Dn),
